@@ -12,11 +12,11 @@ public class EvenOdd {
         {
             if(i%2==0)
             {
-                System.out.println(i+" is even");
+                System.out.println("even");
             }
             else
             {
-                System.out.println(i+" is odd");
+                System.out.println("odd");
             }
             i++;
         }
