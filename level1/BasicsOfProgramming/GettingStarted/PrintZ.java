@@ -1,4 +1,4 @@
-package level1.BasicsOfProgramming.GettingStarted;
+
 public class PrintZ {
 
     public static void main(String[] args) {
