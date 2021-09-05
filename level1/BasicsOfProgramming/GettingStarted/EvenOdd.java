@@ -1,4 +1,3 @@
-package level1.BasicsOfProgramming.GettingStarted;
 import java.util.Scanner;
 
 public class EvenOdd {
