@@ -1,6 +1,7 @@
 {
     "java.project.sourcePaths": [
         "level1/BasicsOfProgramming/GettingStarted",
-        "level1/BasicsOfProgramming/Patterns"
+        "level1/BasicsOfProgramming/Patterns",
+        "."
     ]
 }
