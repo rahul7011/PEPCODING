@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class Pattern18 {
+public class PPattern17 {
     public static void main(String[] args) {
         Scanner scn=new Scanner(System.in);
         int n=scn.nextInt();
@@ -11,12 +11,12 @@ public class Pattern18 {
         {
             for(int j=1;j<=nsp;j++)
             {
-                System.out.print("*");
+                System.out.print(" ");
             }
             int ival=val;
-            for(int j=1;j<nst;j++)
+            for(int j=1;j<=nst;j++)
             {
-                System.out.print(" ");
+                System.out.print(ival);
                 if(j<=nst/2)
                 {
                     ival--;
@@ -26,11 +26,6 @@ public class Pattern18 {
                     ival++;
                 }
             }
-            for(int j=1;j<=nsp;j++)
-            {
-                System.out.print("*");
-            }
-            System.out.println();
             if(i<n)
             {
                 nsp--;
@@ -43,17 +38,15 @@ public class Pattern18 {
                 nst-=2;
                 val--;
             }
+            System.out.println();
         }
         scn.close();
     }
 }
-    //   **********
-    //   ****  ****
-    //   ***    ***
-    //   **      **
-    //   *        *
-    //   *        *
-    //   **      **
-    //   ***    ***
-    //   ****  ****
-    //   **********
+    //      1 
+    //     212
+    //    32123
+    //   4321234
+    //    32123
+    //     212
+    //      1

@@ -5,5 +5,8 @@
         ".",
         "Practice/Patterns",
         "Test/Patterns"
-    ]
+    ],
+    "files.exclude": {
+        "**/*.class": true
+    }
 }

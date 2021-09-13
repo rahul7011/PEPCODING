@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class Pattern20 {
+public class PPattern20 {
     public static void main(String[] args) {
         Scanner scn = new Scanner(System.in);
         int n = scn.nextInt();
@@ -26,5 +26,6 @@ public class Pattern20 {
             }
             System.out.println();
         }
+        scn.close();
     }
 }
