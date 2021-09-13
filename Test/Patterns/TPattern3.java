@@ -4,35 +4,42 @@ public class TPattern3 {
     public static void main(String[] args) {
         Scanner scn = new Scanner(System.in);
         int n = scn.nextInt();
-        int val = 1;
+        int mul = 0;
+        boolean flag = false;
         for (int i = 1; i <= n; i++) {
-            int ival = val;
+            int ival = n * mul + 1;
             for (int j = 1; j <= n; j++) {
-                if (i == 1 || i == n || j == 1 || j == n)
+                if (i == 1 || i == n || j == 1 || j == n) {
                     System.out.print(ival + " ");
-                else
+                } else {
                     System.out.print("* ");
+                }
                 ival++;
             }
-            if (n % 2 == 0) {
-
-                if (i == n / 2) {
-                    val += n;
+            if (n % 2 != 0) {
+                // odd
+                if (i <= n / 2) {
+                    mul += 2;
                 } else {
-                    if (i < n / 2) {
-                        val += 2 * n;
+                    if (flag == false) {
+                        mul--;
+                        flag = true;
                     } else {
-                        val -= 2 * n;
+                        mul -= 2;
                     }
                 }
+
             } else {
-                if (i == n / 2 + 1) {
-                    val -= n;
+                // even
+                if (i < n / 2) {
+                    mul += 2;
                 } else {
-                    if (i <= n / 2)
-                        val += 2 * n;
-                    else
-                        val -= 2 * n;
+                    if (flag == false) {
+                        mul++;
+                        flag = true;
+                    } else {
+                        mul -= 2;
+                    }
                 }
             }
             System.out.println();
