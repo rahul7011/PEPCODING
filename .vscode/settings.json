@@ -3,6 +3,7 @@
         "level1/BasicsOfProgramming/GettingStarted",
         "level1/BasicsOfProgramming/Patterns",
         ".",
-        "Practice/Patterns"
+        "Practice/Patterns",
+        "Test/Patterns"
     ]
 }
