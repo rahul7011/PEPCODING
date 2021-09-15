@@ -4,7 +4,8 @@
         "level1/BasicsOfProgramming/Patterns",
         ".",
         "Practice/Patterns",
-        "Test/Patterns"
+        "Test/Patterns",
+        "level1/BasicsOfProgramming/Functions and Arrays"
     ],
     "files.exclude": {
         "**/*.class": true
