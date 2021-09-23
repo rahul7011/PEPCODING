@@ -16,4 +16,4 @@ Hello, I am a 3rd Year Student Currently enrolled in the Pepcoding FJP-1 batch. 
 * EveryCode will be in java
 * OpenSource-Suggestions are Welcome
 
-For DSA Content--><a href="https://github.com/rahul7011/PEPCODING_WEB/tree/master" target="_blank">Click Here!</a>
+For WEB Content--><a href="https://github.com/rahul7011/PEPCODING_WEB/tree/master" target="_blank">Click Here!</a>
