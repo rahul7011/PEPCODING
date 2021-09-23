@@ -15,3 +15,5 @@ Hello, I am a 3rd Year Student Currently enrolled in the Pepcoding FJP-1 batch. 
 * Since this course is a 12 months course so throughout 12 months this repository will be active and up to date
 * EveryCode will be in java
 * OpenSource-Suggestions are Welcome
+
+For DSA Content--><a href="https://github.com/rahul7011/PEPCODING_WEB/tree/master" target="_blank">Click Here!</a>
