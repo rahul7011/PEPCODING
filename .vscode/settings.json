@@ -6,7 +6,8 @@
         "Practice/Patterns",
         "Test/Patterns",
         "level1/BasicsOfProgramming/Functions and Arrays",
-        "level1/BasicsOfProgramming/2DArrays"
+        "level1/BasicsOfProgramming/2DArrays",
+        "level1/BasicsOfProgramming/StringAndArrayList"
     ],
     "files.exclude": {
         "**/*.class": true
