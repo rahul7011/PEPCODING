@@ -7,7 +7,8 @@
         "Test/Patterns",
         "level1/BasicsOfProgramming/Functions and Arrays",
         "level1/BasicsOfProgramming/2DArrays",
-        "level1/BasicsOfProgramming/StringAndArrayList"
+        "level1/BasicsOfProgramming/StringAndArrayList",
+        "level1/RecursionandBacktracking/IntroductiontoRecursion"
     ],
     "files.exclude": {
         "**/*.class": true
