@@ -9,7 +9,8 @@
         "level1/BasicsOfProgramming/2DArrays",
         "level1/BasicsOfProgramming/StringAndArrayList",
         "level1/RecursionandBacktracking/IntroductiontoRecursion",
-        "level1/RecursionandBacktracking/RecursioninArrays"
+        "level1/RecursionandBacktracking/RecursioninArrays",
+        "level1/RecursionandBacktracking/RecursionWithArraylists"
     ],
     "files.exclude": {
         "**/*.class": true
