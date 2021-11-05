@@ -10,7 +10,8 @@
         "level1/BasicsOfProgramming/StringAndArrayList",
         "level1/RecursionandBacktracking/IntroductiontoRecursion",
         "level1/RecursionandBacktracking/RecursioninArrays",
-        "level1/RecursionandBacktracking/RecursionWithArraylists"
+        "level1/RecursionandBacktracking/RecursionWithArraylists",
+        "level1/RecursionandBacktracking/Recursiononthewayup"
     ],
     "files.exclude": {
         "**/*.class": true
