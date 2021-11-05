@@ -11,7 +11,8 @@
         "level1/RecursionandBacktracking/IntroductiontoRecursion",
         "level1/RecursionandBacktracking/RecursioninArrays",
         "level1/RecursionandBacktracking/RecursionWithArraylists",
-        "level1/RecursionandBacktracking/Recursiononthewayup"
+        "level1/RecursionandBacktracking/Recursiononthewayup",
+        "level1/RecursionandBacktracking/RecursionBacktracking"
     ],
     "files.exclude": {
         "**/*.class": true
