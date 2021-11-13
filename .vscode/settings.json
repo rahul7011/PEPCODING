@@ -12,7 +12,8 @@
         "level1/RecursionandBacktracking/RecursioninArrays",
         "level1/RecursionandBacktracking/RecursionWithArraylists",
         "level1/RecursionandBacktracking/Recursiononthewayup",
-        "level1/RecursionandBacktracking/RecursionBacktracking"
+        "level1/RecursionandBacktracking/RecursionBacktracking",
+        "level1/DynamicProgramming/TimeandSpaceComplexity"
     ],
     "files.exclude": {
         "**/*.class": true
