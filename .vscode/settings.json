@@ -14,9 +14,12 @@
         "level1/RecursionandBacktracking/Recursiononthewayup",
         "level1/RecursionandBacktracking/RecursionBacktracking",
         "level1/DynamicProgramming/TimeandSpaceComplexity",
-        "Extras"
+        "Extras",
+        "level1/BasicDataStructures",
+        "level1/BasicDataStructures/LinkedLists"
     ],
     "files.exclude": {
         "**/*.class": true
-    }
+    },
+    "java.dependency.packagePresentation": "hierarchical"
 }
