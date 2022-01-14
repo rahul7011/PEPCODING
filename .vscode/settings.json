@@ -16,7 +16,8 @@
         "level1/DynamicProgramming/TimeandSpaceComplexity",
         "Extras",
         "level1/BasicDataStructures",
-        "level1/BasicDataStructures/LinkedLists"
+        "level1/BasicDataStructures/LinkedLists",
+        "level1/BasicDataStructures/GenericTree"
     ],
     "files.exclude": {
         "**/*.class": true
