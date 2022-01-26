@@ -17,7 +17,9 @@
         "Extras",
         "level1/BasicDataStructures",
         "level1/BasicDataStructures/LinkedLists",
-        "level1/BasicDataStructures/GenericTree"
+        "level1/BasicDataStructures/GenericTree",
+        "level1/BasicDataStructures/BinaryTree",
+        "level1/BasicDataStructures/BinarySearchTree"
     ],
     "files.exclude": {
         "**/*.class": true
