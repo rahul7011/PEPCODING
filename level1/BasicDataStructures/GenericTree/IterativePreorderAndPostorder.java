@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class PredecessorAndSuccessorOfAnElement {
+public class IterativePreorderAndPostorder {
     public static class Node {
         int data;
         ArrayList<Node> children = new ArrayList<>();
@@ -91,47 +91,45 @@ public class PredecessorAndSuccessorOfAnElement {
         }
         return localHeight + 1;
     }
-
-    // Static method and can also be done using mover class
-    static Node predecessor;
-    static Node successor;
-    static int state = 0;
-
-    public static void predecessorAndSuccessor(Node node, int data) {
-        if (state == 0) {
-            if (node.data == data) {
-                state++;
-            } else {
-                predecessor = node;
+    public static class Pair{
+        Node node;
+        int state;
+        Pair(Node node,int state)
+        {
+          this.node=node;
+          this.state=state;
+        }
+    }
+    public static void IterativePreandPostOrder(Node node) {
+        Stack<Pair> st = new Stack<>();
+        String pre = "";
+        String post = "";
+        // 0->++,pre,reverse child push
+        // 1->post,pop
+        st.push(new Pair(node, 0));
+        while (st.size() != 0) {
+            Pair top = st.peek();
+            if (top.state == 0) {
+                top.state++;
+                pre += top.node.data + " ";
+                // Reverse child Push
+                for (int i = top.node.children.size() - 1; i >= 0; i--) {
+                    st.push(new Pair(top.node.children.get(i), 0));
+                }
+            } else if (top.state == 1) {
+                post += top.node.data + " ";
+                st.pop();
             }
-        } else if (state == 1) {
-            successor = node;
-            state++;
         }
-        for (Node child : node.children) {
-            predecessorAndSuccessor(child, data);
-        }
-
+        System.out.println(pre);
+        System.out.println(post);
     }
 
     public static void main(String[] args) {
         int[] arr = { 10, 20, 50, -1, 60, -1, -1, 30, 70, -1, 80, 110, -1, 120, -1, -1, 90, -1, -1, 40, 100, -1, -1,
-                -1 };
+            -1 };
 
-        Node root = construct(arr);
-        predecessorAndSuccessor(root,10);
-        if(predecessor==null)
-        {
-            System.out.println("Predecessor:Null");
-            System.out.println("Successor:"+successor.data);
-        }else if(successor==null)
-        {
-            System.out.println("Predecessor:"+predecessor.data);
-            System.out.println("Successor:Null"); 
-        }else
-        {
-            System.out.println("Predecessor:"+predecessor.data);
-            System.out.println("Successor:"+successor.data);
-        }
+    Node root = construct(arr);
+    IterativePreandPostOrder(root);
     }
 }

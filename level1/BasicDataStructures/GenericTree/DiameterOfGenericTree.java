@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class PredecessorAndSuccessorOfAnElement {
+public class DiameterOfGenericTree {
     public static class Node {
         int data;
         ArrayList<Node> children = new ArrayList<>();
@@ -92,46 +92,43 @@ public class PredecessorAndSuccessorOfAnElement {
         return localHeight + 1;
     }
 
-    // Static method and can also be done using mover class
-    static Node predecessor;
-    static Node successor;
-    static int state = 0;
+    // Approach use PairClass O(n)
+    public static class diaPair {
+        int height = 0;
+        int dia = 0;
+    }
 
-    public static void predecessorAndSuccessor(Node node, int data) {
-        if (state == 0) {
-            if (node.data == data) {
-                state++;
-            } else {
-                predecessor = node;
-            }
-        } else if (state == 1) {
-            successor = node;
-            state++;
-        }
+    public static diaPair diameter(Node node) {
+        int currlargestHeight = -1;
+        int secondlargestHeight = -1;
+        int maxChildDiameter = 0;
         for (Node child : node.children) {
-            predecessorAndSuccessor(child, data);
+            diaPair dp = diameter(child);
+            if (dp.height > currlargestHeight) {
+                secondlargestHeight = currlargestHeight;
+                currlargestHeight = dp.height;
+            } else if (dp.height > secondlargestHeight) {
+                secondlargestHeight = dp.height;
+            }
+            maxChildDiameter = Math.max(maxChildDiameter, dp.dia);
         }
-
+        diaPair cp = new diaPair();
+        int newDiameter = currlargestHeight + secondlargestHeight + 2;
+        cp.height = currlargestHeight + 1;
+        if (maxChildDiameter < newDiameter) {
+            cp.dia = newDiameter;
+        } else {
+            cp.dia = maxChildDiameter;
+        }
+        return cp;
     }
 
     public static void main(String[] args) {
-        int[] arr = { 10, 20, 50, -1, 60, -1, -1, 30, 70, -1, 80, 110, -1, 120, -1, -1, 90, -1, -1, 40, 100, -1, -1,
-                -1 };
-
-        Node root = construct(arr);
-        predecessorAndSuccessor(root,10);
-        if(predecessor==null)
-        {
-            System.out.println("Predecessor:Null");
-            System.out.println("Successor:"+successor.data);
-        }else if(successor==null)
-        {
-            System.out.println("Predecessor:"+predecessor.data);
-            System.out.println("Successor:Null"); 
-        }else
-        {
-            System.out.println("Predecessor:"+predecessor.data);
-            System.out.println("Successor:"+successor.data);
-        }
+        //construct the tree from the given array
+        int[] arr={10,20,50,-1,60,-1,-1,30,70,-1,80,110,-1,120,-1,-1,90,-1,-1,40,100,-1,-1,-1};
+        
+        Node root=construct(arr);
+        diaPair dp=diameter(root);
+        System.out.println(dp.dia);
     }
 }
