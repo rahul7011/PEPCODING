@@ -49,6 +49,9 @@ public class JavaCollections {
         // list.clear();//Empty's the list
         // System.out.println(list);
 
+
+
+
         // //2. Queue Interface
         // //classes:arraylist,linkedlist and priorityqueue
         // Queue<Integer>queue=new LinkedList<>();
@@ -66,6 +69,8 @@ public class JavaCollections {
         // case of errors whereas poll returns false(doesn't crashes the application)
         // System.out.println(queue.poll());
         // System.out.println(queue);
+
+
 
         // 3.Priority Queue
         // PriorityQueue<Integer>pq=new PriorityQueue<>(); //Min-Heap
@@ -95,6 +100,8 @@ public class JavaCollections {
         // System.out.println(pq.poll());//Greatest element will be removed as it is a
         // max-heap
 
+
+
         // 4.Doubly ended queue
         // ArrayDeque<Integer>adq=new ArrayDeque<>();
 
@@ -121,6 +128,9 @@ public class JavaCollections {
         // System.out.println(adq.poll());//first
 
         // System.out.println(adq);
+
+
+
 
         // 5.Hash set O(1)
         // Set<Integer>set=new HashSet<>(); //Un-ordered set but unique
@@ -153,6 +163,8 @@ public class JavaCollections {
         // set.clear();
         // System.out.println(set);
 
+        //<<---------New Class but same Interface---------->
+
         // Ordered Set and also unique (element remains in their order in which they are
         // added)
         // Set<Integer>set=new LinkedHashSet<>();
@@ -183,6 +195,10 @@ public class JavaCollections {
         // //clear():clears set
         // set.clear();
         // System.out.println(set);
+
+
+        //<<---------New Class but same Interface---------->
+
 
         // Sorted Set and also unique (element will be stored in sorted order)
         // O(logN)
@@ -215,6 +231,11 @@ public class JavaCollections {
         // set.clear();
         // System.out.println(set);
 
+
+
+
+
+
         // 6.Map
         // unordered map O(1)
         // Map<String,Integer>numbers=new HashMap<>();
@@ -224,7 +245,7 @@ public class JavaCollections {
 
         // System.out.println(numbers);
 
-        // //Contains:returns true or false
+        // //ContainsKey:returns true or false
         // System.out.println(numbers.containsKey("four"));
         // System.out.println(numbers.containsValue(3));
 
@@ -254,6 +275,10 @@ public class JavaCollections {
         // //Remove:returns value or null
         // numbers.remove("one");
         // System.out.println(numbers);
+
+
+        //<<---------New Class but same Interface---------->
+
 
         // Ordered map O(logN)(sorted on the basis of keys)
         // Map<String, Integer> numbers = new TreeMap<>();
