@@ -19,7 +19,8 @@
         "level1/BasicDataStructures/LinkedLists",
         "level1/BasicDataStructures/GenericTree",
         "level1/BasicDataStructures/BinaryTree",
-        "level1/BasicDataStructures/BinarySearchTree"
+        "level1/BasicDataStructures/BinarySearchTree",
+        "Extras/LearnCollectionFramework"
     ],
     "files.exclude": {
         "**/*.class": true
