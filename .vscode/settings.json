@@ -20,7 +20,8 @@
         "level1/BasicDataStructures/GenericTree",
         "level1/BasicDataStructures/BinaryTree",
         "level1/BasicDataStructures/BinarySearchTree",
-        "Extras/LearnCollectionFramework"
+        "Extras/LearnCollectionFramework",
+        "level1/AdvancedDataStructure/HashMapAndHeap"
     ],
     "files.exclude": {
         "**/*.class": true
