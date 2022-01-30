@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.Queue;
 import java.util.Stack;
 
-public class Intro {
+public class IntroToGenericTree {
     public static class Node {
         int data;
         ArrayList<Node> children = new ArrayList<>();
