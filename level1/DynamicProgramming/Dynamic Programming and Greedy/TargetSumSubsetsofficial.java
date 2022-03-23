@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class TargetSumSubsets {
+public class TargetSumSubsetsofficial {
 
     public static boolean solve(int[] arr, int target) {
         boolean[][] dp = new boolean[arr.length + 1][target + 1];
