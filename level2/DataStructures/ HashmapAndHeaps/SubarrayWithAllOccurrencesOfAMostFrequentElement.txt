@@ -1,0 +1,50 @@
+//https://practice.geeksforgeeks.org/problems/smallest-subarray-with-all-occurrences-of-a-most-frequent-element2258/1/#
+class Solution{
+    
+    public static class Pair{
+        int freq;
+        int firstIdx;
+        int lastIdx;
+        Pair(int freq,int firstIdx,int lastIdx)
+        {
+            this.freq=freq;
+            this.firstIdx=firstIdx;
+            this.lastIdx=lastIdx;
+        }
+    }
+    
+    public static ArrayList<Integer> solve(int[] arr){
+        HashMap<Integer,Pair>hm=new HashMap<>();
+        int maxElement=arr[0];
+        int maxFreq=1;
+        int maxElementlen=1;
+        for(int i=0;i<arr.length;i++){
+            Pair p=hm.getOrDefault(arr[i],new Pair(0,i,i));
+            Pair np=new Pair(p.freq+1,p.firstIdx,i);
+            hm.put(arr[i],np);
+            if(maxFreq<np.freq){
+                maxFreq=np.freq;
+                maxElement=arr[i];
+                maxElementlen=np.lastIdx-np.firstIdx+1;
+            }else if(maxFreq==np.freq){
+                int currLen=np.lastIdx-np.firstIdx+1;
+                if(maxElementlen>currLen){
+                    maxFreq=np.freq;
+                    maxElement=arr[i];
+                    maxElementlen=np.lastIdx-np.firstIdx+1;
+                }
+            }
+        }
+        ArrayList<Integer>ans=new ArrayList<>();
+        for(int i=hm.get(maxElement).firstIdx;i<=hm.get(maxElement).lastIdx;i++)
+        {
+            ans.add(arr[i]);
+        }
+        return ans;
+    }
+  
+    ArrayList<Integer> smallestSubsegment(int a[], int n)
+    {
+        return solve(a);
+    }
+}

@@ -1,0 +1,26 @@
+class Solution
+{
+    //https://practice.geeksforgeeks.org/problems/non-repeating-character-1587115620/1/
+    //Function to find the first non-repeating character in a string.
+    
+    public static char solve(String s){
+        HashMap<Character,Integer>hm=new HashMap<>();
+        for(int i=0;i<s.length();i++){
+            int val=hm.getOrDefault(s.charAt(i),0);
+            hm.put(s.charAt(i),val+1);
+        }
+        for(int i=0;i<s.length();i++)
+        {
+            if(hm.get(s.charAt(i))==1)
+            {
+                return s.charAt(i);
+            }
+        }
+        return '$';
+    }
+    
+    static char nonrepeatingCharacter(String S)
+    {
+        return solve(S);
+    }
+}

@@ -1,0 +1,55 @@
+//https://practice.geeksforgeeks.org/problems/count-pairs-sum-in-matrices4332/1/#
+
+//Approach 1:two pointer
+class Solution {
+    int countPairs(int mat1[][], int mat2[][], int n, int x) {
+        int left=0;
+        int right=mat2[0].length*mat2[0].length-1;
+        int total=0;
+        while(left<(mat1[0].length*mat1[0].length)&&right>=0){
+            if(mat1[left/mat1.length][left%mat1[0].length]+mat2[right/mat2.length][right%mat2.length]==x)
+            {
+                // System.out.println(mat1[left/mat1.length][left%mat1[0].length]+" "+mat2[right/mat2.length][right%mat2.length]);
+                total+=1;
+                left++;
+                right--;
+            }else if(mat1[left/mat1.length][left%mat1[0].length]+mat2[right/mat2.length][right%mat2.length]<x)
+            {
+                // System.out.println("left "+mat1[left/mat1.length][left%mat1[0].length]+" "+mat2[right/mat2.length][right%mat2.length]);
+                left++;
+            }else
+            {
+                // System.out.println("right "+mat1[left/mat1.length][left%mat1[0].length]+" "+mat2[right/mat2.length][right%mat2.length]);
+                right--;
+            }
+        }
+        // System.out.println(left+" "+right);
+        return total;
+    }
+}
+
+
+//Approach 2: using hashMap
+class Solution {
+    int countPairs(int mat1[][], int mat2[][], int n, int x) {
+        HashSet<Integer>hs=new HashSet<>();
+        for(int i=0;i<mat2.length;i++)
+        {
+            for(int j=0;j<mat2[i].length;j++)
+            {
+                hs.add(mat2[i][j]);
+            }
+        }
+        int total=0;
+        for(int i=0;i<mat1.length;i++)
+        {
+            for(int j=0;j<mat1[i].length;j++)
+            {
+                if(hs.contains(x-mat1[i][j])==true){
+                    total++;
+                }
+            }
+        }
+        return total;
+    }
+}

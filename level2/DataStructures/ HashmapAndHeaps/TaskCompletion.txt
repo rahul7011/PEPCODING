@@ -1,0 +1,29 @@
+//https://practice.geeksforgeeks.org/problems/completing-tasks0454/1#
+
+class Solution {
+    Tasks findTasks(int[] arr, int m, int n) {
+   		HashSet<Integer>hs=new HashSet<>();
+		for(int i=0;i<m;i++)
+		{
+		   hs.add(arr[i]);
+		}
+		int flag=0;
+		Tasks task=new Tasks();
+		for(int i=1;i<=n;i++)
+		{
+		    if(hs.contains(i)==false)
+		    {
+		        if(flag==0)
+		        {
+		            task.tanya.add(i);
+		            flag=1;
+		        }else
+		        {
+		            task.manya.add(i);
+		            flag=0;
+		        }
+		    }
+		}
+        return task;
+    }
+}
