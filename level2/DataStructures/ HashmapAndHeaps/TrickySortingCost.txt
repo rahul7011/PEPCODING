@@ -1,0 +1,25 @@
+//Must do question
+//also know as morning assembly 
+//https://practice.geeksforgeeks.org/problems/morning-assembly3038/1#
+class Solution{
+    public static int solve(int[] arr,int n){
+        HashMap<Integer,Integer>hm=new HashMap<>();
+        int max=0;
+        for(int i=0;i<n;i++){
+            if(hm.containsKey(arr[i]-1)==true)
+            {
+                int val=hm.get(arr[i]-1);
+                val++;
+                max=Math.max(max,val);
+                hm.put(arr[i],val);
+            }else
+            {
+                hm.put(arr[i],1);
+            }
+        }
+        return n-max;
+    }
+    static int sortingCost(int N, int arr[]){
+        return solve(arr,N);
+    }
+}

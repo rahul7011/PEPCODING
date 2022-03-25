@@ -1,0 +1,30 @@
+//lecture of 22nd Mar 2022
+class Solution {
+    public static int solve(String s){
+        HashSet<Character>hs=new HashSet<>();
+        int max=0;
+        String res="";
+        for(int i=0;i<s.length();i++){
+            // System.out.println(i+": "+hs);
+            if(hs.contains(s.charAt(i))==true){
+                max=Math.max(max,res.length());
+                res+=s.charAt(i);
+                int idx=0;
+                while(res.charAt(idx)!=s.charAt(i)){
+                    hs.remove(res.charAt(idx));
+                    idx++;
+                }
+                res=res.substring(idx+1);
+            }else
+            {
+                res+=s.charAt(i);
+                hs.add(s.charAt(i));
+            }
+        }
+        max=Math.max(max,res.length());
+        return max;
+    }
+    public int lengthOfLongestSubstring(String s) {
+        return solve(s);
+    }
+}

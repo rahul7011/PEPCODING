@@ -25,7 +25,8 @@
         "level1/AdvancedDataStructure/Graphs",
         "level1/BasicDataStructures/StacksAndQueues",
         "level1/DynamicProgramming/Dynamic Programming and Greedy",
-        "Extras/LinkedListKK"
+        "Extras/LinkedListKK",
+        "level2/DataStructures/ HashmapAndHeaps"
     ],
     "files.exclude": {
         "**/*.class": true
