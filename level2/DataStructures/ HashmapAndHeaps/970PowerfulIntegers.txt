@@ -13,14 +13,14 @@ class Solution {
         if(y!=1){
             ybound=(int)(Math.log(bound)/Math.log(y));
         }
-        System.out.println(xbound+" "+ybound);
         List<Integer>ans=new ArrayList<>();
         HashSet<Integer>hs=new HashSet<>();
-        for(int i=0;i<=xbound;i++)
+        int xpow=1;
+        for(int i=xbound;i>=0;i--)
         {
-            int curr=0;
-            for(int j=0;j<=ybound;j++){
-                curr=(int)(Math.pow(x,i)+Math.pow(y,j));
+            int ypow=1;
+            for(int j=ybound;j>=0;j--){
+                int curr=xpow+ypow;
                 if(curr<=bound)
                 {
                     hs.add(curr);
@@ -28,7 +28,9 @@ class Solution {
                 {
                     break;
                 }
+                ypow*=y;
             }
+            xpow*=x;
         }
         for(Integer val:hs)
             ans.add(val);
