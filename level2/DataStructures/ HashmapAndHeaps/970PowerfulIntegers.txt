@@ -1,0 +1,37 @@
+class Solution {
+    public List<Integer> powerfulIntegers(int x, int y, int bound) {
+        if(bound==0)
+        {
+            return new ArrayList<Integer>();
+        }
+        int xbound=0;
+        if(x!=1)
+        {
+            xbound=(int)(Math.log(bound)/Math.log(x));
+        }
+        int ybound=0;
+        if(y!=1){
+            ybound=(int)(Math.log(bound)/Math.log(y));
+        }
+        System.out.println(xbound+" "+ybound);
+        List<Integer>ans=new ArrayList<>();
+        HashSet<Integer>hs=new HashSet<>();
+        for(int i=0;i<=xbound;i++)
+        {
+            int curr=0;
+            for(int j=0;j<=ybound;j++){
+                curr=(int)(Math.pow(x,i)+Math.pow(y,j));
+                if(curr<=bound)
+                {
+                    hs.add(curr);
+                }else
+                {
+                    break;
+                }
+            }
+        }
+        for(Integer val:hs)
+            ans.add(val);
+        return ans;
+    }
+}

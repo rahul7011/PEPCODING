@@ -1,0 +1,23 @@
+class Solution {
+    public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+        HashMap<Integer,Integer>hm=new HashMap<>();
+        for(int i=0;i<nums3.length;i++){
+            for(int j=0;j<nums4.length;j++){
+                int curr=(-1)*(nums3[i]+nums4[j]);
+                int val=hm.getOrDefault(curr,0);
+                val+=1;
+                hm.put(curr,val);
+            }
+        }
+        int total=0;
+        for(int i=0;i<nums1.length;i++){
+            for(int j=0;j<nums2.length;j++){
+                int curr=(nums1[i]+nums2[j]);
+                if(hm.containsKey(curr)==true){
+                    total+=hm.get(curr);
+                }
+            }
+        }
+        return total;
+    }
+}
