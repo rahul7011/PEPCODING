@@ -1,0 +1,40 @@
+class Solution {
+    public static String formKey(String s){
+        int[] check=new int[26];
+            for(int j=0;j<s.length();j++)
+            {
+                check[s.charAt(j)-'a']++;
+            }
+            String key="";
+            for(int val=0;val<26;val++)
+                if(check[val]!=0)
+                {
+                    key+=(char)(val+'a')+""+check[val];
+                }
+        return key;
+    }
+    public List<List<String>> groupAnagrams(String[] strs) {
+        HashMap<String,List<String>>hm=new HashMap<>();
+        for(int i=0;i<strs.length;i++)
+        {
+            String s=strs[i];
+            String key=formKey(s);
+            if(hm.containsKey(key)==true)
+            {
+                List<String>list=hm.get(key);
+                list.add(s);
+                hm.put(key,list);
+            }else
+            {
+                List<String>list=new ArrayList<>();
+                list.add(s);
+                hm.put(key,list);
+            }
+        }
+        List<List<String>>ans=new ArrayList<>();
+        for(String key:hm.keySet()){
+            ans.add(hm.get(key));
+        }
+        return ans;
+    }
+}

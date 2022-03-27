@@ -1,0 +1,36 @@
+//https://practice.geeksforgeeks.org/problems/count-number-of-substrings4528/1
+class Solution
+{
+    public static long solution(String str, int k) {
+        int[] hm=new int[26];
+        int j = -1;
+        long count = 0;
+        long ans = 0;
+        for (int i = 0; i < str.length(); i++) {
+            if (hm[str.charAt(i)-'a'] == 0) {
+                count++;
+            }
+            hm[str.charAt(i)-'a']++;
+            if (count > k) {
+                j += 1;
+                while (j <= i) {
+                    int val = hm[str.charAt(j)-'a'];
+                    val -= 1;
+                    hm[str.charAt(j)-'a']--;
+                    if (val == 0) {
+                        count--;
+                        break;
+                    }
+                    j++;
+                }
+                ans += (i - j);
+            } else {
+                ans += (i - j);
+            }
+        }
+        return ans;
+    }
+    long substrCount (String S, int K) {
+        return solution(S,K)-solution(S,K-1);
+    }
+}

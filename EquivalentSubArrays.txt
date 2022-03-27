@@ -1,0 +1,50 @@
+//https://practice.geeksforgeeks.org/problems/equivalent-sub-arrays3731/1# 
+class Solution
+{ 
+    public static int solution(int[] arr, int k) {
+        HashMap<Integer, Integer> hm = new HashMap<>();
+        int j = -1;
+        int count = 0;
+        int ans = 0;
+        for (int i = 0; i < arr.length; i++) {
+            if (hm.containsKey(arr[i]) == false) {
+                hm.put(arr[i], 1);
+                count++;
+            } else {
+                int freq = hm.get(arr[i]);
+                freq += 1;
+                hm.put(arr[i], freq);
+            }
+
+            if (count > k) {
+                j += 1;
+                while (j <= i) {
+                    int val = hm.get(arr[j]);
+                    val -= 1;
+                    hm.put(arr[j], val);
+                    if (val == 0) {
+                        hm.remove(arr[j]);
+                        count--;
+                        break;
+                    }
+                    j++;
+                }
+                ans += (i - j);
+            } else {
+                ans += (i - j);
+            }
+        }
+
+        return ans;
+    }
+    // Method to calculate distinct sub-array 
+    static int countDistinctSubarray(int arr[], int n) 
+    { 
+        HashSet<Integer>hs=new HashSet<>();
+        for(int i = 0 ; i  < n; i++){
+            hs.add(arr[i]);
+        }
+        int k=hs.size();
+        return (solution(arr,k)-solution(arr,k-1));
+    }
+}

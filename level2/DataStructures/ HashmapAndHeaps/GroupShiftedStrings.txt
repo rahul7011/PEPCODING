@@ -1,0 +1,38 @@
+   //https://pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/hashmap-and-heaps/group-shifted-string-official/ojquestion 
+    public static String formKey(String s){
+        //Two cases to handle
+        //case 1:abd and am ,can result in same differences of 12
+        //so we need to use * as an delimiter to show their actual differences like this:
+        //for abd-->1*2* and am-->12*   Now they can be differentiated
+        //case 2:if their diff is in -ve then add 26 to it for eg:yab
+        String key="";
+        for(int i=0;i<s.length()-1;i++){
+            int diff=s.charAt(i+1)-s.charAt(i);
+            if(diff<0)
+            {
+                diff+=26;
+            }
+            key+=diff+"*";
+        }
+        return key;
+    }
+    
+	public static ArrayList<ArrayList<String>> groupShiftedStrings(String[] strs) {
+		HashMap<String,ArrayList<String>>hm=new HashMap<>();
+		for(int i=0;i<strs.length;i++){
+		    String s=strs[i];
+		    String key=formKey(s);
+		   if(hm.containsKey(key)==true)
+		   {
+		       ArrayList<String>list=hm.get(key);
+		       list.add(s);
+		       hm.put(key,list);
+		   }else
+		   {
+		       ArrayList<String>list=new ArrayList<>();
+		       list.add(s);
+		       hm.put(key,list);
+		   }
+		}
+		return new ArrayList<>(hm.values());
+	}
