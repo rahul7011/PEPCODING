@@ -1,0 +1,10 @@
+lecture 1: 23/3/22
+    1.1: mazepath
+    1.2: mazepath with direction method(preferable)
+    1.3: mazepath with jumps
+    1.4: floodfill
+    1.5: floodfill with jumps
+    1.6: leetcode 62
+    1.7: leetcode 63
+    1.8: floodfillWithJumpShortestAndLongest
+    
