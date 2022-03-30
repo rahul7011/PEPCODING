@@ -196,6 +196,44 @@ public class l1 {
         return longest;
     }
 
+    //Better Approach using Pair class for avoid static variables
+    public static class Pair{
+        int len;
+        String path;
+        Pair(){
+            this.len=(int)1e9;  //Avoid Integer.MAX_VALUE to avoid overflow
+            this.path=null;
+        }
+        Pair(int len,String path){
+            this.len=len;
+            this.path=path;
+        }
+    }
+    //better approach
+    public static Pair floodfillWithJumpShortest2(int sr, int sc, int er, int ec, int[][] dir, String[] dirS, String psf,boolean[][] visited){
+        if(sr==er&&sc==ec)
+        {
+            return (new Pair(psf.length(),psf));
+        }
+        visited[sr][sc]=true;
+        Pair shortest=new Pair();
+        for (int d = 0; d < dir.length; d++) {
+            int r=sr+dir[d][0];
+            int c=sc+dir[d][1];
+            if(r>=0&&c>=0&&r<=er&&c<=ec&&visited[r][c]==false)
+            {
+                Pair candidate=floodfillWithJumpShortest2(r, c, er, ec, dir, dirS, psf+dirS[d], visited);
+                if(candidate.len<shortest.len)
+                {
+                    shortest.len=candidate.len;
+                    shortest.path=candidate.path;
+                }
+            }
+        }
+        visited[sr][sc]=false;
+        return shortest;
+    }
+
     public static void main(String[] args) {
         // System.out.println(mazePath(0, 0, 2, 2, ""));
         // int[][] dir = { { 0, 1 }, { 1, 0 }, { 1, 1 } };
@@ -209,6 +247,8 @@ public class l1 {
         
         String shortest=floodfillWithJumpShortest(0, 0, 2, 2, dir, dirS, "", visited);
         System.out.println("Shortest Path:"+shortest+" "+shortest.length());
+        Pair shortest2=floodfillWithJumpShortest2(0, 0, 2, 2, dir, dirS, "", visited);
+        System.out.println("Shortest Path:"+shortest2.path+" "+shortest2.len);
         String longest=floodfillWithJumpLongest(0, 0, 2, 2, dir, dirS, "", visited);
         System.out.println("Longest Path:"+longest+" "+longest.length());
     }
