@@ -7,4 +7,11 @@ lecture 1: 23/3/22
     1.6: leetcode 62
     1.7: leetcode 63
     1.8: floodfillWithJumpShortestAndLongest
+
+lecture 2:25/3/22
+    Topic: Recursion trees
+    2.1: Coin change permutation infinite(Most time consuming)
+    2.2: Coin change combination infinite(Less time consuming as compared to 2.1)
+    2.3: Coin change permutation single(Less time consuming as compared to 2.2)
+    2.4: Coin change combination single(Least time consuming out of all)
     
