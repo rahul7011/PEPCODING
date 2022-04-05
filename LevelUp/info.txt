@@ -54,3 +54,18 @@ lecture 7:1/4/22
     7.2: Word Break (leetcode 139)
     7.3: Word Break 2(leetcode 140)
     7.4: Cryparthmetic Problem (https://mindyourdecisions.com/blog/2018/09/06/send-more-money-a-great-puzzle/)
+
+lecture 8:4/4/22
+    Topic: Basic of bits
+    8.1 setTrue and setFalse
+    8.2 odd or even
+
+    Problems:
+    leetcode 231
+    leetcode 342
+
+    HomeWork:
+    leetcode 136
+    leetcode 268
+    leetcode 191
+    leetcode 338
