@@ -30,3 +30,27 @@ lecture 3:28/3/22
     leetcode 39
     leetcode 40
     leetcode 47
+
+lecture 4:30/3/22
+    Topic:NQueens
+    4.1: Queen combination 1D (variation to understand NQueens)
+    4.2: Queen permutation 1D (variation to understand NQueens)
+    4.3: Queen combination 2D (variation to understand NQueens)
+    4.4: Queen permutation 2D (variation to understand NQueens)
+        With the help of above four we will Finally solve NQueens
+    4.5: Finally -> NQueens combination + isItSafe()
+    4.6: Finally -> NQueens permutation + isItSafe()
+
+    HomeWork:
+    leetcode 51
+    leetcode 52
+
+lecture 6:31/3/22
+    Topic:Doubt class(skipped)
+
+lecture 7:1/4/22
+    Topic: Problems similar to NQueens
+    7.1: Sudoku Solver (leetcode 37)
+    7.2: Word Break (leetcode 139)
+    7.3: Word Break 2(leetcode 140)
+    7.4: Cryparthmetic Problem (https://mindyourdecisions.com/blog/2018/09/06/send-more-money-a-great-puzzle/)
