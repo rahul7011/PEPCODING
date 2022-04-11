@@ -221,6 +221,120 @@ public class l4_Queen {
             solveSudoku(board,validPositions,0);
         }
     }
+    //leetcode 37(Sudoku solver) Approach 2(Without isItSafe())
+    //better complexity (O(1) check to determine the position is safe or not)
+    public boolean[][] rows=new boolean[10][10];
+    public boolean[][] cols=new boolean[10][10];
+    public boolean[][][] mats=new boolean[3][3][10];
+    private boolean solveSudoku_02(char[][] board,ArrayList<Integer>validPositions,int idx){
+        if(idx==validPositions.size())
+        {
+            return true;
+        }
+        //decode indices
+        int r=validPositions.get(idx)/board.length;
+        int c=validPositions.get(idx)%board.length;
+        for(int num=1;num<=9;num++)
+        {
+            if(!rows[r][num]&&!cols[c][num]&&!mats[r/3][c/3][num])
+            {
+                board[r][c]=(char)(num+'0');
+                rows[r][num]=true;
+                cols[c][num]=true;
+                mats[r/3][c/3][num]=true;
+                if(solveSudoku_02(board,validPositions,idx+1)==true)
+                {
+                    return true;
+                }
+                board[r][c]='.';
+                rows[r][num]=false;
+                cols[c][num]=false;
+                mats[r/3][c/3][num]=false;
+            }
+        }
+        return false;
+    }
+    public void solveSudoku_02(char[][] board) {
+        ArrayList<Integer>validPositions=new ArrayList<>();
+        int n=board.length;
+        //capturing all the valid positions
+        for(int i=0;i<board.length;i++)
+        {
+            for(int j=0;j<board[0].length;j++)
+            {
+                if(board[i][j]=='.')
+                {
+                    //Encode row and col
+                    validPositions.add(i*n+j);
+                }else
+                {
+                    int num=board[i][j]-'0';
+                    rows[i][num]=true;
+                    cols[j][num]=true;
+                    mats[i/3][j/3][num]=true;
+                }
+            }
+        }
+        solveSudoku_02(board,validPositions,0);
+    }
+    //leetcode 37(Sudoku solver) Approach 3(Without isItSafe())
+    //better complexity (O(1) check to determine the position is safe or not using bits)
+    public int[] row=new int[10];
+    public int[] col=new int[10];
+    public int[][] mat=new int[3][3];
+    private boolean solveSudoku_03_bits(char[][] board,ArrayList<Integer>validPositions,int idx){
+        if(idx==validPositions.size())
+        {
+            return true;
+        }
+        //decode indices
+        int r=validPositions.get(idx)/board.length;
+        int c=validPositions.get(idx)%board.length;
+        for(int num=1;num<=9;num++)
+        {
+            int mask=(1<<num);
+            if((row[r]&mask)==0&&(col[c]&mask)==0&&(mat[r/3][c/3]&mask)==0)
+            {
+                board[r][c]=(char)(num+'0');
+                row[r] ^=mask;
+                col[c] ^=mask;
+                mat[r/3][c/3] ^=mask;
+                if(solveSudoku_03_bits(board,validPositions,idx+1)==true)
+                {
+                    return true;
+                }
+                board[r][c]='.';
+                row[r] ^=mask;
+                col[c] ^=mask;
+                mat[r/3][c/3] ^=mask;
+            }
+        }
+        return false;
+    }
+    public void solveSudoku_03_bits(char[][] board) {
+        ArrayList<Integer>validPositions=new ArrayList<>();
+        int n=board.length;
+        //capturing all the valid positions
+        for(int i=0;i<board.length;i++)
+        {
+            for(int j=0;j<board[0].length;j++)
+            {
+                if(board[i][j]=='.')
+                {
+                    //Encode row and col
+                    validPositions.add(i*n+j);
+                }else
+                {
+                    int num=board[i][j]-'0';
+                    int mask=(1<<num);
+                    row[i] ^=mask;
+                    col[j] ^=mask;
+                    mat[i/3][j/3] ^=mask;
+                }
+            }
+        }
+        solveSudoku_03_bits(board,validPositions,0);
+    }
 
     //leetcode 139(Word Break)
     class Solution1 {

@@ -69,3 +69,17 @@ lecture 8:4/4/22
     leetcode 268
     leetcode 191
     leetcode 338
+
+lecture 9:6/4/2022
+    Topic:Bits with their unique concepts
+    Problems:
+    leetcode 136 
+    leetcode 268
+    leetcode 191(Concept of hamming distance)
+    leetcode 338
+    leetcode 260
+    leetcode 137
+    leetcode 287(Pending will be taught after LinkedList)
+
+    Sudoku Solver (leetcode 37) but this time without using isItSafe() (optimised)
+    Sudoku Solver (leetcode 37) without using isItSafe() but with bits (Most optimised)
