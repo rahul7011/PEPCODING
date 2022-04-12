@@ -134,7 +134,7 @@ public class l1 {
     }
 
     // Unfold Of Linkedlist
-    //(https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/linked-list/unfold-of-linkedlist/ojquestion)
+    // (https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/linked-list/unfold-of-linkedlist/ojquestion)
     public void unfold(ListNode head) {
         ListNode h1 = head, h2 = head.next;
         ListNode c1 = h1, c2 = h2;
@@ -150,5 +150,101 @@ public class l1 {
         c1.next = null;
         ListNode nh2 = reverseList(h2);
         c1.next = nh2;
+    }
+
+    // HomeWork
+    // 19. Remove Nth Node From End of List
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode fast = head;
+        while (n != 0) {
+            fast = fast.next;
+            n--;
+        }
+        if (fast == null) {
+            // means we are deleting the first element of the list
+            // hence we are sending list from second element
+            head = head.next;
+            return head;
+        }
+        ListNode slow = head;
+        while (fast.next != null) {
+            fast = fast.next;
+            slow = slow.next;
+        }
+        slow.next = slow.next.next;
+        return head;
+    }
+
+    // 2. Add Two Numbers
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(-1);
+        ListNode curr = dummy;
+        ListNode c1 = l1, c2 = l2;
+        int carry = 0;
+        while (c1 != null || c2 != null || carry != 0) {
+            int sum = 0;
+            if (c1 != null) {
+                sum += c1.val;
+                c1 = c1.next;
+
+            }
+            if (c2 != null) {
+                sum += c2.val;
+                c2 = c2.next;
+            }
+            sum += carry;
+            int val = sum % 10;
+            carry = sum / 10;
+
+            ListNode temp = new ListNode(val);
+            curr.next = temp;
+            curr = curr.next;
+        }
+        return dummy.next;
+    }
+
+    // Subtract Two Numbers (https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/linked-list/subtract-two-linkedlist/ojquestion)    
+    public ListNode subtractTwoNumbers(ListNode l1, ListNode l2) {
+        l1 = reverseList(l1);
+        l2 = reverseList(l2);
+        ListNode dummy = new ListNode(-1);
+        ListNode curr = dummy;
+        ListNode c1 = l1, c2 = l2;
+        while (c1 != null && c2 != null) {
+            c1 = c1.next;
+            c2 = c2.next;
+        }
+        if (c1 == null && c2 != null) {
+            c1 = l2;
+            c2 = l1;
+        } else {
+            c1 = l1;
+            c2 = l2;
+        }
+        int borrow = 0;
+        while (c2 != null || borrow != 0) {
+            int sub = c1.val;
+            if (c2 != null) {
+                sub -= c2.val;
+                c2 = c2.next;
+            }
+            sub -= borrow;
+            if (sub < 0) {
+                sub += 10;
+                borrow = 1;
+            } else {
+                borrow = 0;
+            }
+            ListNode temp = new ListNode(sub);
+            curr.next = temp;
+            curr = curr.next;
+            c1 = c1.next;
+        }
+        curr.next = c1;
+        dummy = reverseList(dummy.next);
+        while (dummy.next != null && dummy.val == 0) {
+            dummy = dummy.next;
+        }
+        return dummy;
     }
 }
