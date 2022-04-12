@@ -27,7 +27,8 @@
         "level1/DynamicProgramming/Dynamic Programming and Greedy",
         "Extras/LinkedListKK",
         "level2/DataStructures/ HashmapAndHeaps",
-        "LevelUp"
+        "LevelUp",
+        "LevelUp/LinkedList"
     ],
     "files.exclude": {
         "**/*.class": true
