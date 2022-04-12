@@ -1,3 +1,4 @@
+package Recursion;
 public class l5_bits {
     public static int setTrue(int x,int idx){
         int mask=1<<idx;

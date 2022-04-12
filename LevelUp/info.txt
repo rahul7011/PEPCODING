@@ -83,3 +83,9 @@ lecture 9:6/4/2022
 
     Sudoku Solver (leetcode 37) but this time without using isItSafe() (optimised)
     Sudoku Solver (leetcode 37) without using isItSafe() but with bits (Most optimised)
+
+lecture 10:8/4/2022
+    Topic:Recursion questions using bitmask
+    10.1:NQueens using boolean array instead of isItSafe() (optimised)
+    10.1:NQueens using int(bits) instead of isItSafe() (better optimised) 
+    10.1:NQueens using floor-gate logic (Most optimised) 
