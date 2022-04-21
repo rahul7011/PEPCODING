@@ -105,3 +105,14 @@ lecture 11:11/4/2022
     leetcode 19
     leetcode 2
     Subtract Two Numbers (https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/linked-list/subtract-two-linkedlist/ojquestion)    
+
+lecture 12:15/4/22
+    Topic:LinkedList
+    Problems:
+    leetcode 19(Remove Nth Node From End of List)
+    leetcode 2(add two numbers)
+    (Must Solve)--> Subtract Two Numbers (https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/linked-list/subtract-two-linkedlist/ojquestion)    
+    Remove Duplicate From Sorted Linkedlist(https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/linked-list/remove-duplicate-from-sorted-linkedlist/ojquestion)
+    Remove All Duplicates From Sorted Linkedlist(https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/linked-list/remove-all-duplicates-from-sorted-linkedlist/ojquestion)
+    Segregate Even And Odd Nodes In A Linkedlist(https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/linked-list/segregate-even-and-odd-nodes-in-a-link-list/ojquestion)
+    leetcode 328(Odd Even Linked List)
