@@ -247,4 +247,55 @@ public class l3 {
         }
         return ans;
     }
+
+
+    // Teaches new Concept of prefixSum with HashMap
+    // leetcode 1171 (Remove Zero Sum Consecutive Nodes from Linked List)
+    public ListNode removeZeroSumSublists(ListNode head) {
+        ListNode dummy=new ListNode(0);
+        ListNode curr=dummy;
+        dummy.next=head;
+        HashMap<Integer,ListNode>hm=new HashMap<>();
+        int prefix=0;
+        while(curr!=null)
+        {
+            prefix+=curr.val;
+            hm.put(prefix,curr);
+            curr=curr.next;
+        }
+        prefix=0;
+        curr=dummy;
+        while(curr!=null)
+        {
+            prefix+=curr.val;
+            curr.next=hm.get(prefix).next;
+            curr=curr.next;
+        }
+        return dummy.next;
+    }
+    //leetcode 138 (Copy List with Random Pointer)
+        //Good Question
+    public Node copyRandomList(Node head) {
+        HashMap<Node,Node>hm=new HashMap<>();
+        Node temp=head;
+        Node dummy=new Node(-1);
+        Node curr=dummy;
+        while(temp!=null)
+        {
+            Node nNode=new Node(temp.val);
+            hm.put(temp,nNode);
+            curr.next=nNode;
+            curr=curr.next;
+            temp=temp.next;
+        }
+        temp=head;
+        curr=dummy.next;
+        while(temp!=null)
+        {
+            curr.random=hm.get(temp.random);
+            curr=curr.next;
+            temp=temp.next;
+        }
+        return dummy.next;
+    }
 }
