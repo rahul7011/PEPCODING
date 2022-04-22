@@ -116,3 +116,20 @@ lecture 12:15/4/22
     Remove All Duplicates From Sorted Linkedlist(https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/linked-list/remove-all-duplicates-from-sorted-linkedlist/ojquestion)
     Segregate Even And Odd Nodes In A Linkedlist(https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/linked-list/segregate-even-and-odd-nodes-in-a-link-list/ojquestion)
     leetcode 328(Odd Even Linked List)
+
+lecture 13:18/4/22
+    Topic:LinkedList
+    Problems:
+    leetcode 148 (Sort List)
+    leetcode 23 (Merge k Sorted Lists)
+
+    leetcode 25 (Reverse Nodes in k-Group)
+        Better alternative of reverse using this concept
+        New Concept (ActualHead and ActualTail  TempHead and TempTail Curr and frwd)
+    leetcode 92 (Reverse Linked List II)
+    leetcode 203 (Remove Linked List Elements)
+    leetcode 817 (Linked List Components)
+
+    HomeWork:
+    leetcode 1171
+    leetcode 138
