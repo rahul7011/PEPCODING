@@ -1,4 +1,3 @@
-package Recursion;
 public class l1 {
     public static int mazePath(int sr, int sc, int er, int ec, String psf) {
         if (sr == er && sc == ec) {

@@ -1,4 +1,3 @@
-package Recursion;
 public class l6_nQueen {
     static boolean[] rows, cols, diags, adiags;
 
