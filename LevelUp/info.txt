@@ -141,3 +141,9 @@ lecture 14:20/4/22
     leetcode 141 (Linked List Cycle)
     leetcode 142 (Linked List Cycle II)
     leetcode 160 (Intersection of Two Linked Lists)
+
+lecture 15:24/4/22
+    Topic:LinkedList
+    Problems:
+    leetcode 146 LRU Cache(Consider it as recent app drawer example)
+    leetcode 707 Design Linked List
