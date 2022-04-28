@@ -29,7 +29,7 @@ public class IntroToGraph {
             int nbr=scn.nextInt();
             int wt=scn.nextInt();
             graph[src].add(new Edge(src, nbr, wt));
-            graph[nbr].add(new Edge(src, nbr, wt));
+            graph[nbr].add(new Edge(nbr, src, wt));
         }
         System.out.println("graph:");
         for(ArrayList<Edge>Edges:graph)
