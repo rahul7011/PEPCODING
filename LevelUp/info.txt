@@ -147,3 +147,14 @@ lecture 15:24/4/22
     Problems:
     leetcode 146 LRU Cache(Consider it as recent app drawer example)
     leetcode 707 Design Linked List
+
+lecture 16:27/4/22
+    Topic:Dynamic Programming
+    16.1: Steps to approach a dp question from Recursion till optimised
+    Problems:
+    leetcode 1137 (N-th Tribonacci Number)
+    leetcode 746 (Min Cost Climbing Stairs)
+    leetcode 70 (Climbing Stairs)
+
+    HomeWork:
+    Friends Pairing Problem (https://practice.geeksforgeeks.org/problems/friends-pairing-problem5425/1)
