@@ -149,7 +149,7 @@ lecture 15:24/4/22
     leetcode 707 Design Linked List
 
 lecture 16:27/4/22
-    Topic:Dynamic Programming
+    Topic:Dynamic Programming(Two-Pointer)
     16.1: Steps to approach a dp question from Recursion till optimised
     Problems:
     leetcode 1137 (N-th Tribonacci Number)
@@ -158,3 +158,10 @@ lecture 16:27/4/22
 
     HomeWork:
     Friends Pairing Problem (https://practice.geeksforgeeks.org/problems/friends-pairing-problem5425/1)
+
+lecture 17:2/5/22
+    Topic:Dynamic Programming(Two-Pointer)
+    Problems:
+    leetcode 62(Unique Paths)
+    leetcode 63(Unique Paths II)
+    leetcode 396(Rotate Function)(Good Question but not actual dp)
