@@ -1,0 +1,134 @@
+
+public class Hm1 {
+    // https://practice.geeksforgeeks.org/problems/count-subarrays-with-equal-number-of-1s-and-0s-1587115620/1/#
+    class Solution {
+        // Function to count subarrays with 1s and 0s.
+        static int countSubarrWithEqualZeroAndOne(int arr[], int n) {
+            int count = 0;
+            HashMap<Integer, Integer> hm = new HashMap<>();
+            int sum = 0;
+            hm.put(sum, 1);
+            for (int i = 0; i < n; i++) {
+                sum += (arr[i] == 0 ? -1 : 1);
+                if (hm.containsKey(sum) == true) {
+                    count += hm.get(sum);
+                }
+                int val = hm.getOrDefault(sum, 0);
+                val += 1;
+                hm.put(sum, val);
+            }
+            return count;
+        }
+    }
+
+    //https://leetcode.com/problems/contiguous-array/
+    class Solution {
+        public int findMaxLength(int[] arr) {
+            int ans=0;
+            HashMap<Integer,Integer>hm=new HashMap<>();
+            int sum=0;
+            int n=arr.length;
+            hm.put(sum,-1);
+            for(int i=0;i<n;i++)
+            {
+                sum+=(arr[i]==0?-1:1);
+                if(hm.containsKey(sum)==true)
+                {
+                    int candidate=i-hm.get(sum);
+                    ans=Math.max(ans,candidate);
+                    continue;
+                }
+                hm.put(sum,i);
+            }
+            return ans;
+        }
+    }
+
+    //https://practice.geeksforgeeks.org/problems/equal-0-1-and-23208/1/#
+    class Solution 
+    { 
+        long getSubstringWithEqual012(String str) 
+        { 
+            HashMap<String,Integer>hm=new HashMap<>();
+            String key="0#0";
+            hm.put(key,1);
+            int zero=0,one=0,two=0;
+            int count=0;
+            for(int i=0;i<str.length();i++)
+            {
+                int ch=str.charAt(i)-'0';
+                if(ch==0)
+                {
+                    zero++;
+                }else if(ch==1)
+                {
+                    one++;
+                }else
+                {
+                    two++;
+                }
+                key=(one-zero)+"#"+(two-one);
+                if(hm.containsKey(key)==true)
+                {
+                    count+=hm.get(key);
+                }
+                int val=hm.getOrDefault(key,0);
+                val+=1;
+                hm.put(key,val);
+            }
+            return count;
+        }
+    }
+
+    //https://leetcode.com/problems/subarray-sum-equals-k/
+    class Solution {
+        public int subarraySum(int[] nums, int k) {
+            HashMap<Integer,Integer>hm=new HashMap<>();
+            int count=0;
+            int sum=0;
+            hm.put(sum,1);
+            for(int i=0;i<nums.length;i++)
+            {
+                sum+=nums[i];
+                if(hm.containsKey(sum-k)==true)
+                {
+                    count+=hm.get(sum-k);
+                }
+                int val=hm.getOrDefault(sum,0);
+                val+=1;
+                hm.put(sum,val);
+            }
+            return count;
+        }
+    }
+
+    //https://practice.geeksforgeeks.org/problems/sub-array-sum-divisible-by-k2617/1/#
+    class Solution
+    {
+        long subCount(long arr[] ,int n,int k)
+        {
+            HashMap<Long,Integer>hm=new HashMap<>();
+            long count=0,sum=0;
+            hm.put(sum,1);
+            for(int i=0;i<n;i++)
+            {
+                sum+=arr[i];
+                long key=sum%k;
+                if(key<0)
+                {
+                    key+=k;
+                }
+                if(hm.containsKey(key)==true)
+                {
+                    count+=hm.get(key);
+                }
+                int val=hm.getOrDefault(key,0);
+                val+=1;
+                hm.put(key,val);
+            }
+            return count;
+            
+        }
+    }
+
+}

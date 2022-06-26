@@ -1,7 +1,5 @@
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.concurrent.Flow.Subscriber;
-
 class l001Basic {
     public static void printOddEven(int a, int b) {
         if (a > b) {
