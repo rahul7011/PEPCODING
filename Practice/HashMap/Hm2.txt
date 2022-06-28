@@ -1,0 +1,162 @@
+//https://practice.geeksforgeeks.org/problems/count-pairs-in-array-divisible-by-k/1/
+class Solution
+{
+    public static long countKdivPairs(int arr[], int n, int k)
+    {
+        long ans=0;
+        HashMap<Integer,Integer>hm=new HashMap<>();
+        for(int i=0;i<arr.length;i++)
+        {
+            int rem=(arr[i]%k);
+            if(hm.containsKey(k-rem)==true)
+            {
+                ans+=hm.get(k-rem);
+            }
+            //edge case 0 
+            if(rem==0)
+            {
+                rem=k;
+            }
+            int val=hm.getOrDefault(rem,0);
+            val+=1;
+            hm.put(rem,val);
+        }
+        return ans;
+    }
+}
+
+//https://leetcode.com/problems/x-of-a-kind-in-a-deck-of-cards/
+class Solution {
+    public int getGcd(int a ,int b)
+    {
+        while(a%b!=0)
+        {
+            int rem=a%b;
+            a=b;
+            b=rem;
+        }
+        return b;
+    }
+    public boolean hasGroupsSizeX(int[] deck) {
+        HashMap<Integer,Integer>hm=new HashMap<>();
+        for(int i=0;i<deck.length;i++)
+        {
+            int val=hm.getOrDefault(deck[i],0);
+            val+=1;
+            hm.put(deck[i],val);
+        }
+        int gcd=hm.get(deck[0]);
+        for(int key:hm.keySet())
+        {
+           gcd=getGcd(gcd,hm.get(key));
+        }
+        return gcd==1?false:true;
+    }
+}
+
+//https://practice.geeksforgeeks.org/problems/check-arithmetic-progression1842/1/
+class Solution
+{
+    boolean checkIsAP(int arr[] ,int n)
+    {
+        HashSet<Integer>hs=new HashSet<>();
+        int commonDiffer=0;
+        int min=Integer.MAX_VALUE,smin=Integer.MAX_VALUE;
+        for(int i=0;i<n;i++)
+        {
+            if(min>arr[i])
+            {
+                smin=min;
+                min=arr[i];
+            }else if(smin>arr[i])
+            {
+                smin=arr[i];
+            }
+            hs.add(arr[i]);
+        }
+        commonDiffer=smin-min;
+        int a=min;
+        for(int i=1;i<=arr.length;i++)
+        {
+           int term=a+(i-1)*commonDiffer;
+           if(hs.contains(term)==false)
+           {
+               return false;
+           }
+        }
+        return true;
+    
+    }
+}
+
+//https://leetcode.com/problems/array-of-doubled-pairs/
+class Solution {
+    public boolean canReorderDoubled(int[] arr) {
+        HashMap<Integer,Integer>hm=new HashMap<>();
+        for(int i=0;i<arr.length;i++)
+        {
+            int val=hm.getOrDefault(arr[i],0);
+            val+=1;
+            hm.put(arr[i],val);
+        }
+        Arrays.sort(arr);
+        for(int i=0;i<arr.length;i++)
+        {
+            if(arr[i]==0)
+            {
+                continue;
+            }
+            
+            if(hm.containsKey(arr[i])==true&&hm.containsKey(arr[i]*2)==true)
+            {
+                if(hm.get(arr[i])>1)
+                {
+                    hm.put(arr[i],hm.get(arr[i])-1);
+                }else
+                {
+                    hm.remove(arr[i]);
+                }
+                if(hm.get(arr[i]*2)>1)
+                {
+                    hm.put(arr[i]*2,hm.get(arr[i]*2)-1);
+                }else
+                {
+                    hm.remove(arr[i]*2);
+                }
+            }
+        }
+        if(hm.size()==0)
+        {
+            return true;
+        }else if(hm.size()==1&&hm.containsKey(0)==true)
+        {
+            return true;
+        }else
+        {
+            return false;
+        }
+    }
+}
+
+//https://leetcode.com/problems/rabbits-in-forest/
+class Solution {
+    public int numRabbits(int[] answers) {
+        HashMap<Integer,Integer>hm=new HashMap<>();
+        for(int i=0;i<answers.length;i++)
+        {
+            int val=hm.getOrDefault(answers[i],0);
+            val+=1;
+            hm.put(answers[i],val);
+        }
+        int count=0;
+        for(int key:hm.keySet())
+        {
+            count+=(hm.get(key)/(key+1))*(key+1);
+            if(hm.get(key)%(key+1)!=0)
+            {
+                count+=(key+1);
+            }
+        }
+        return count;
+    }
+}
