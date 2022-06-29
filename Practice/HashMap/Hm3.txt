@@ -1,0 +1,130 @@
+==========================Acquire and Release Strategy===========================
+//https://practice.geeksforgeeks.org/problems/count-distinct-elements-in-every-window/1/#
+class Solution
+{
+    ArrayList<Integer> countDistinct(int A[], int n, int k)
+    {
+        HashMap<Integer,Integer>hm=new HashMap<>();
+        int prev=-1;
+        ArrayList<Integer>ans=new ArrayList<>();
+        for(int i=0;i<k;i++)
+        {
+            hm.put(A[i],hm.getOrDefault(A[i],0)+1);
+        }
+        ans.add(hm.size());
+        for(int i=k;i<A.length;i++)
+        {
+            //acquire
+            hm.put(A[i],hm.getOrDefault(A[i],0)+1);
+            //release
+            prev+=1;
+            hm.put(A[prev],hm.get(A[prev])-1);
+            if(hm.get(A[prev])==0)
+            {
+                hm.remove(A[prev]);
+            }
+            ans.add(hm.size());   
+        }
+        return ans;
+    }
+}
+
+
+
+//https://pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/hashmap-and-heaps/number-of-employees-under-every-manager-official/ojquestion
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+  public static void main(String[] args) {
+    Scanner scn = new Scanner(System.in);
+    int n = scn.nextInt();
+    HashMap<Character, ArrayList<Character>>hm = new HashMap<>();
+    char root = '#';
+    for (int i = 0; i < n; i++)
+    {
+      char e = scn.next().charAt(0);
+      char c = scn.next().charAt(0);
+      if (c == e)
+      {
+        root = c;
+        continue;
+      }
+      ArrayList<Character>val = hm.getOrDefault(c, new ArrayList<>());
+      val.add(e);
+      hm.put(c, val);
+    }
+    HashMap<Character, Integer>ans = new HashMap<>();
+    findSize(root, hm, ans);
+    // System.out.println(hm+" "+ans);
+    for(char x:ans.keySet())
+    System.out.println(x+" "+ans.get(x));
+  }
+  public static int findSize(char root, HashMap <Character, ArrayList<Character>> hm, HashMap<Character, Integer>ans) {
+    if (hm.containsKey(root)==false)
+    {
+        ans.put(root,0);
+        return 1;     
+    }
+    int count=0;
+    ArrayList<Character>current=hm.get(root);
+    for(int i=0;i<current.size();i++)
+    {
+        count+=findSize(current.get(i),hm,ans);
+    }
+    ans.put(root,count);
+    return count+1;
+  }
+}
+
+//https://leetcode.com/problems/max-consecutive-ones/
+class Solution {
+    public int findMaxConsecutiveOnes(int[] nums) {
+        int ans=0;
+        int prev=-1;
+        for(int i=0;i<nums.length;i++)
+        {
+            if(nums[i]==0)
+            {
+                prev=i;
+                continue;
+            }
+            ans=Math.max(ans,(i-prev));
+        }
+        return ans;
+    }
+}
+
+//https://leetcode.com/problems/check-if-array-pairs-are-divisible-by-k/
+class Solution {
+    //always remember two cases -ve and when input contains k
+    public boolean canArrange(int[] arr, int k) {
+        HashMap<Integer,Integer>hm=new HashMap<>();
+        for(int i=0;i<arr.length;i++)
+        {
+            int key=arr[i]%k;
+            if(key<0)
+            {
+                key+=k;
+            }
+            if(hm.containsKey(k-key)==true)
+            {
+                hm.put(k-key,hm.get(k-key)-1);
+                if(hm.get(k-key)==0)
+                {
+                    hm.remove(k-key);
+                }
+            }else
+            {
+                if(key==0)
+                {
+                    key=k;
+                }
+                hm.put(key,hm.getOrDefault(key,0)+1);
+            }
+        }
+        // System.out.println(hm);
+        return hm.size()==0?true:false;
+    }
+}
