@@ -1,0 +1,215 @@
+//https://leetcode.com/problems/find-all-anagrams-in-a-string/
+class Solution {
+    public List<Integer> findAnagrams(String s, String p) {
+        if(s.length()<p.length())
+        {
+            return new ArrayList<>();
+        }
+        
+        List<Integer>ans=new ArrayList<>();
+        HashMap<Character,Integer>hm=new HashMap<>();
+        HashMap<Character,Integer>checker=new HashMap<>();
+        //forming hm of the checking string
+        for(int i=0;i<p.length();i++)
+        {
+            checker.put(p.charAt(i),checker.getOrDefault(p.charAt(i),0)+1);
+        }
+        
+        //finding ans for the first p elements
+        for(int i=0;i<p.length();i++)
+        {
+            hm.put(s.charAt(i),hm.getOrDefault(s.charAt(i),0)+1);
+        }
+        int prev=-1;
+        if(checker.equals(hm)==true)
+        {
+            ans.add(0);
+        }
+        //now we are generalising the program
+        for(int i=p.length();i<s.length();i++)
+        {
+            //Acquire and Release strategy
+            
+            //release
+            prev++;
+            hm.put(s.charAt(prev),hm.get(s.charAt(prev))-1);
+            if(hm.get(s.charAt(prev))<=0)
+            {
+                hm.remove(s.charAt(prev));
+            }
+            
+            //acquire
+            hm.put(s.charAt(i),hm.getOrDefault(s.charAt(i),0)+1);
+            if(checker.equals(hm)==true)
+            {
+                // we are doing comparison in constant time(26) as there are only 26 characters so it's
+                //doing it in constant time
+                ans.add(prev+1);
+            }
+        }
+        return ans;
+    }
+}
+
+//https://www.geeksforgeeks.org/check-two-strings-k-anagrams-not/
+class Solution {
+    boolean areKAnagrams(String s1, String s2, int k) {
+        if(s1.length()!=s2.length())
+        {
+            return false;
+        }
+        HashMap<Character,Integer>hm=new HashMap<>();
+        for(int i=0;i<s1.length();i++)
+        {
+            hm.put(s1.charAt(i),hm.getOrDefault(s1.charAt(i),0)+1);
+        }
+        int count=0;
+        for(int i=0;i<s2.length();i++)
+        {
+            if(hm.containsKey(s2.charAt(i))==true&&hm.get(s2.charAt(i))>0)
+            {
+                hm.put(s2.charAt(i),hm.get(s2.charAt(i))-1);
+            }else
+            {
+                count++;
+            }
+        }
+        return count<=k?true:false;
+    }
+}
+
+    //Not optimal(Next one is optimal)
+//https://leetcode.com/problems/minimum-window-substring/
+class Solution {
+    public boolean validOrNot(HashMap<Character,Integer>hm,HashMap<Character,Integer>check)
+    {
+        for(char key:hm.keySet())
+        {
+            if(check.containsKey(key)==true)
+            {
+                if(hm.get(key)>check.get(key))
+                {
+                    return false;
+                }
+            }else
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+    public String minWindow(String s, String t) {
+        HashMap<Character,Integer>hm=new HashMap<>();
+        for(int i=0;i<t.length();i++)
+        {
+            hm.put(t.charAt(i),hm.getOrDefault(t.charAt(i),0)+1);
+        }
+        String ans="";
+        int prev=-1;
+        HashMap<Character,Integer>check=new HashMap<>();
+        for(int i=0;i<s.length();i++)
+        {
+            check.put(s.charAt(i),check.getOrDefault(s.charAt(i),0)+1);
+            if(validOrNot(hm,check)==true)
+            {
+                String temp=s.substring(prev+1,i+1);
+                if(ans.length()==0)
+                {
+                    ans=new String(temp);
+                }else
+                {
+                    if(ans.length()>temp.length())
+                    {
+                        ans=new String(temp);
+                    }
+                }
+                // System.out.println("before:"+ans+" "+temp);
+                //now making the string invalid
+                while(validOrNot(hm,check)==true)
+                {
+                    prev+=1;
+                    check.put(s.charAt(prev),check.getOrDefault(s.charAt(prev),0)-1);
+                    if(check.get(s.charAt(prev))<=0)
+                    {
+                        check.remove(s.charAt(prev));
+                    }
+                }
+                temp=s.substring(prev,i+1);
+                // System.out.println("after"+temp);
+                if(ans.length()>temp.length())
+                {
+                    ans=new String(temp);
+                }
+            }
+        }
+        return ans;
+    }
+}
+
+//optimal approach without validOrNot()
+class Solution {
+	public String minWindow(String s, String t) {
+		HashMap<Character, Integer> hm = new HashMap<>();
+		for (int i = 0; i<t.length(); i++) {
+			hm.put(t.charAt(i), hm.getOrDefault(t.charAt(i), 0) + 1);
+		}
+		int count = t.length();
+		int prev = -1;
+		String ans = "";
+		HashMap<Character, Integer> check = new HashMap<>();
+		for (int i = 0; i<s.length(); i++) {
+			check.put(s.charAt(i), check.getOrDefault(s.charAt(i), 0) + 1);
+			if (hm.containsKey(s.charAt(i)) == true && hm.get(s.charAt(i)) >= check.get(s.charAt(i))) {
+				count--;
+			}
+			if (count == 0) {
+				while (count == 0) {
+					prev += 1;
+					check.put(s.charAt(prev), check.getOrDefault(s.charAt(prev), 0) - 1);
+					if (hm.containsKey(s.charAt(prev)) == true && check.get(s.charAt(prev))<hm.get(s.charAt(prev))) {
+						count++;
+					}
+					if (check.get(s.charAt(prev))<= 0) {
+						check.remove(s.charAt(prev));
+					}
+				}
+				String temp = s.substring(prev, i + 1);
+				if (ans.length() == 0) {
+					ans = new String(temp);
+				} else {
+					if (ans.length() > temp.length()) {
+						ans = new String(temp);
+					}
+				}
+			}
+
+		}
+		return ans;
+	}
+}
+
+//https://www.lintcode.com/problem/813/description
+public class Solution {
+    /**
+     * @param a: lists A
+     * @param b: lists B
+     * @return: the index mapping
+     */
+    public int[] anagramMappings(int[] a, int[] b) {
+        HashMap<Integer,ArrayList<Integer>>hm=new HashMap<>();
+        for(int i=b.length-1;i>=0;i--)
+        {
+            ArrayList<Integer>list=hm.getOrDefault(b[i], new ArrayList<>());
+            list.add(i);
+            hm.put(b[i],list);
+        }
+        int[] ans=new int[a.length];
+        for(int i=0;i<a.length;i++)
+        {
+            ArrayList<Integer>list=hm.get(a[i]);
+            ans[i]=list.get(list.size()-1);
+            list.remove(list.size()-1);
+        }
+        return ans;
+    }
+}
