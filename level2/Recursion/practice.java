@@ -177,7 +177,11 @@ public class practice {
         return count;
     }
 
+<<<<<<< HEAD
     private static int queenComb2D(boolean[][] board, int cb, int tnq, int cq, String psf) {
+=======
+    private static int queenComb2D(int[][] board, int cb, int tnq, int cq, String psf) {
+>>>>>>> 62fbd9f1844613fd5177c6e90b935faee5bb7c64
         if (cq == tnq) {
             System.out.println(psf);
             return 1;
@@ -193,7 +197,11 @@ public class practice {
 
     // Note:Since we are using bits for checking therefore it is limited upto5*6
     // matrix(32 bit limit on bits)
+<<<<<<< HEAD
     private static int queenPerm2D(boolean[][] board, int cb, int tnq, String psf, int vis) {
+=======
+    private static int queenPerm2D(int[][] board, int cb, int tnq, String psf, int vis) {
+>>>>>>> 62fbd9f1844613fd5177c6e90b935faee5bb7c64
         if (tnq == 0) {
             System.out.println(psf);
             return 1;
@@ -201,10 +209,17 @@ public class practice {
         int count = 0, n = board.length, m = board[0].length;
         for (int i = cb; i < n * m; i++) {
             int mask = (1 << i);
+<<<<<<< HEAD
             int r = i / m;
             int c = i % m;
             if ((vis & mask) == 0) {
                 vis ^= mask;
+=======
+            if ((vis & mask) == 0) {
+                vis ^= mask;
+                int r = i / mask;
+                int c = i % mask;
+>>>>>>> 62fbd9f1844613fd5177c6e90b935faee5bb7c64
                 count += queenPerm2D(board, 0, tnq - 1, psf + "(" + r + "," + c + ") ", vis);
                 vis ^= mask;
             }
@@ -212,6 +227,7 @@ public class practice {
         return count;
     }
 
+<<<<<<< HEAD
     // Now we will be implementing isSafe function()
     private static boolean isSafedir4(boolean[][] board, int r, int c) {
         int[][] dir = { { 0, -1 }, { -1, -1 }, { -1, 0 }, { -1, 1 } };
@@ -293,6 +309,14 @@ public class practice {
 
         // System.out.println(queenComb(board, 0, 4, 0, ""));
         System.out.println(queenPerm(board, 0, 4, "", 0));
+=======
+    private static void queensCall() {
+        // System.out.println(queenComb(5, 0, 3, 0, ""));
+        // System.out.println(queenPerm(5, 0, 3, 0, "", 0));
+        int[][] board = new int[5][5];
+        // System.out.println(queenComb2D(board, 0, 4, 0, ""));
+        System.out.println(queenPerm2D(board, 0, 4, "", 0));
+>>>>>>> 62fbd9f1844613fd5177c6e90b935faee5bb7c64
     }
 
     public static void main(String[] args) {
