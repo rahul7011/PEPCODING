@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class practice {
     private static int perInfi(int[] coins, int tar, String psf) {
         if (tar == 0) {
@@ -284,6 +286,65 @@ public class practice {
         return count;
     }
 
+    // Using shadow technique to reduce the time and Space of checking the safe
+    // place
+    private static boolean[] row;
+    private static boolean[] col;
+    private static boolean[] diag;
+    private static boolean[] adiag;
+
+    private static int queenComb_shadow(int n, int m, int cb, int tnq, int cq, String psf) {
+        if (cq == tnq) {
+            System.out.println(psf);
+            return 1;
+        }
+        int count = 0;
+        for (int i = cb; i < n * m; i++) {
+            int r = i / m;
+            int c = i % m;
+            if (row[r] == false && col[c] == false && diag[r + c] == false && adiag[r - c + m - 1] == false) {
+                row[r] = true;
+                col[c] = true;
+                diag[r + c] = true;
+                adiag[r - c + m - 1] = true;
+                count += queenComb_shadow(n, m, i + 1, tnq, cq + 1, psf + "(" + r + "," + c + ") ");
+                row[r] = false;
+                col[c] = false;
+                diag[r + c] = false;
+                adiag[r - c + m - 1] = false;
+            }
+        }
+        return count;
+    }
+
+    private static int queenPerm_shadow(int n, int m, int cb, int tnq, String psf, int vis) {
+        if (tnq == 0) {
+            System.out.println(psf);
+            return 1;
+        }
+        int count = 0;
+        for (int i = cb; i < n * m; i++) {
+            int mask = (1 << i);
+            int r = i / m;
+            int c = i % m;
+            if ((vis & mask) == 0
+                    && (row[r] == false && col[c] == false && diag[r + c] == false && adiag[r - c + m - 1] == false)) {
+                vis ^= mask;
+                row[r] = true;
+                col[c] = true;
+                diag[r + c] = true;
+                adiag[r - c + m - 1] = true;
+                count += queenPerm_shadow(n, m, 0, tnq - 1, psf + "(" + r + "," + c + ") ", vis);
+                row[r] = false;
+                col[c] = false;
+                diag[r + c] = false;
+                adiag[r - c + m - 1] = false;
+                vis ^= mask;
+            }
+        }
+        return count;
+    }
+
     private static void queensCall() {
         // System.out.println(queenComb(5, 0, 3, 0, ""));
         // System.out.println(queenPerm(5, 0, 3, 0, "", 0));
@@ -292,7 +353,15 @@ public class practice {
         // System.out.println(queenPerm2D(board, 0, 4, "", 0));
 
         // System.out.println(queenComb(board, 0, 4, 0, ""));
-        System.out.println(queenPerm(board, 0, 4, "", 0));
+        // System.out.println(queenPerm(board, 0, 4, "", 0));
+
+        int n = board.length, m = board[0].length;
+        row = new boolean[n];
+        col = new boolean[m];
+        diag = new boolean[n + m - 1];
+        adiag = new boolean[n + m - 1];
+        // System.out.println(queenComb_shadow(n, m, 0, 4, 0, ""));
+        System.out.println(queenPerm_shadow(n, m, 0, 4, "", 0));
     }
 
     public static void main(String[] args) {
