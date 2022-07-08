@@ -345,6 +345,58 @@ public class practice {
         return count;
     }
 
+    // now we are optimising nqueens ,only placing a single queen at a single row
+    // Terminologies:Floors and rooms and isme hum floors(cols(only m--> mC1)) pe
+    // call lga rhe hai whereas phle wale mein hum rooms((n*m)C1) pe call rhe the
+    private static int queenComb_optimised(int n, int m, int floor, String psf) {
+        if (floor == m) {
+            System.out.println(psf);
+            return 1;
+        }
+        int count = 0;
+        for (int room = 0; room < m; room++) {
+            int r = floor, c = room;
+            if (row[r] == false && col[c] == false && diag[r + c] == false && adiag[r - c + m - 1] == false) {
+                row[r] = true;
+                col[c] = true;
+                diag[r + c] = true;
+                adiag[r - c + m - 1] = true;
+                count += queenComb_optimised(n, m, r + 1, psf + "(" + r + "," + c + ") ");
+                row[r] = false;
+                col[c] = false;
+                diag[r + c] = false;
+                adiag[r - c + m - 1] = false;
+            }
+        }
+        return count;
+    }
+
+    private static int queenPerm_optimised(int n, int m, int tnq, int floor, String psf) {
+        if (floor == m || tnq == 0) {
+            if (tnq == 0)
+                System.out.println(psf);
+            return tnq == 0 ? 1 : 0;
+        }
+        int count = 0;
+        for (int room = 0; room < m; room++) {
+            int r = floor, c = room;
+            if (row[r] == false && col[c] == false && diag[r + c] == false && adiag[r - c + m - 1] == false) {
+                row[r] = true;
+                col[c] = true;
+                diag[r + c] = true;
+                adiag[r - c + m - 1] = true;
+                count += queenPerm_optimised(n, m, tnq - 1, 0, psf + "(" + r + "," + c + ") ");
+                row[r] = false;
+                col[c] = false;
+                diag[r + c] = false;
+                adiag[r - c + m - 1] = false;
+            }
+        }
+        int r = floor;
+        count += queenPerm_optimised(n, m, tnq, r + 1, psf);
+        return count;
+    }
+
     private static void queensCall() {
         // System.out.println(queenComb(5, 0, 3, 0, ""));
         // System.out.println(queenPerm(5, 0, 3, 0, "", 0));
@@ -361,7 +413,10 @@ public class practice {
         diag = new boolean[n + m - 1];
         adiag = new boolean[n + m - 1];
         // System.out.println(queenComb_shadow(n, m, 0, 4, 0, ""));
-        System.out.println(queenPerm_shadow(n, m, 0, 4, "", 0));
+        // System.out.println(queenPerm_shadow(n, m, 0, 4, "", 0));
+
+        // System.out.println(queenComb_optimised(n, m, 0, ""));
+        System.out.println(queenPerm_optimised(n, m, m, 0, ""));
     }
 
     public static void main(String[] args) {
