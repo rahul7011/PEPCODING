@@ -415,10 +415,105 @@ public class practice {
         // System.out.println(queenComb_shadow(n, m, 0, 4, 0, ""));
         // System.out.println(queenPerm_shadow(n, m, 0, 4, "", 0));
 
-        // System.out.println(queenComb_optimised(n, m, 0, ""));
-        System.out.println(queenPerm_optimised(n, m, m, 0, ""));
+        System.out.println(queenComb_optimised(n, m, 0, ""));
+        // System.out.println(queenPerm_optimised(n, m, m, 0, ""));
     }
 
+    //https://leetcode.com/problems/n-queens-ii/
+    class Solution {
+        private static boolean[] row;
+        private static boolean[] col;
+        private static boolean[] diag;
+        private static boolean[] adiag;
+
+        private static int queenComb_optimised(int n, int m, int floor, String psf) {
+            if (floor == m) {
+                // System.out.println(psf);
+                return 1;
+            }
+            int count = 0;
+            for (int room = 0; room < m; room++) {
+                int r = floor, c = room;
+                if (row[r] == false && col[c] == false && diag[r + c] == false && adiag[r - c + m - 1] == false) {
+                    row[r] = true;
+                    col[c] = true;
+                    diag[r + c] = true;
+                    adiag[r - c + m - 1] = true;
+                    count += queenComb_optimised(n, m, r + 1, psf + "(" + r + "," + c + ") ");
+                    row[r] = false;
+                    col[c] = false;
+                    diag[r + c] = false;
+                    adiag[r - c + m - 1] = false;
+                }
+            }
+            return count;
+        }
+
+        public int totalNQueens(int n) {
+            int m = n;
+            row = new boolean[n];
+            col = new boolean[m];
+            diag = new boolean[n + m - 1];
+            adiag = new boolean[n + m - 1];
+            return queenComb_optimised(n, m, 0, "");
+        }
+    }
+
+    //https://leetcode.com/problems/n-queens/
+    class Solution1 {
+        private static boolean[] row;
+        private static boolean[] col;
+        private static boolean[] diag;
+        private static boolean[] adiag;
+        private static int queenComb_optimised(int n, int m, int floor,List<List<String>>ans,List<String>smallAns) {
+            if (floor == m) {
+                // System.out.println(psf);
+                ans.add(new ArrayList<>(smallAns));
+                return 1;
+            }
+            int count = 0;
+            StringBuilder psf=new StringBuilder();
+            for (int room = 0; room < m; room++) {
+                int r = floor, c = room;
+                if (row[r] == false && col[c] == false && diag[r + c] == false && adiag[r - c + m - 1] == false) {
+                    row[r] = true;
+                    col[c] = true;
+                    diag[r + c] = true;
+                    adiag[r - c + m - 1] = true;
+                    String qsf="";
+                    for(int place=0;place<m;place++)
+                    {
+                        if(place!=(c))
+                        {
+                            qsf+='.';
+                        }else
+                        {
+                            qsf+='Q';
+                        }
+                    }
+                    smallAns.add(qsf);
+                    count += queenComb_optimised(n, m, r + 1, ans,smallAns);
+                    row[r] = false;
+                    col[c] = false;
+                    diag[r + c] = false;
+                    adiag[r - c + m - 1] = false;
+                    smallAns.remove(smallAns.size()-1);
+                }
+            }
+            return count;
+        }
+        public List<List<String>> solveNQueens(int n) {
+            List<List<String>>ans=new ArrayList<>();
+            List<String>smallAns=new ArrayList<>();
+            int m=n;
+            row = new boolean[n];
+            col = new boolean[m];
+            diag = new boolean[n + m - 1];
+            adiag = new boolean[n + m - 1];
+            System.out.println(queenComb_optimised(n,m,0,ans,smallAns));
+            return ans;
+        }
+    }
     public static void main(String[] args) {
 
         // permAndComb();
