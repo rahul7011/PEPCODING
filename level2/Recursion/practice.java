@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class practice {
     private static int perInfi(int[] coins, int tar, String psf) {
@@ -415,11 +416,17 @@ public class practice {
         // System.out.println(queenComb_shadow(n, m, 0, 4, 0, ""));
         // System.out.println(queenPerm_shadow(n, m, 0, 4, "", 0));
 
-        System.out.println(queenComb_optimised(n, m, 0, ""));
+        // System.out.println(queenComb_optimised(n, m, 0, ""));
         // System.out.println(queenPerm_optimised(n, m, m, 0, ""));
+
+        row_bits = 0;
+        col_bits = 0;
+        diag_bits = 0;
+        adiag_bits = 0;
+        System.out.println(queenComb_optimised_bit(n, m, 0, ""));
     }
 
-    //https://leetcode.com/problems/n-queens-ii/
+    // https://leetcode.com/problems/n-queens-ii/
     class Solution {
         private static boolean[] row;
         private static boolean[] col;
@@ -459,20 +466,21 @@ public class practice {
         }
     }
 
-    //https://leetcode.com/problems/n-queens/
+    // https://leetcode.com/problems/n-queens/
     class Solution1 {
         private static boolean[] row;
         private static boolean[] col;
         private static boolean[] diag;
         private static boolean[] adiag;
-        private static int queenComb_optimised(int n, int m, int floor,List<List<String>>ans,List<String>smallAns) {
+
+        private static int queenComb_optimised(int n, int m, int floor, List<List<String>> ans, List<String> smallAns) {
             if (floor == m) {
                 // System.out.println(psf);
                 ans.add(new ArrayList<>(smallAns));
                 return 1;
             }
             int count = 0;
-            StringBuilder psf=new StringBuilder();
+            StringBuilder psf = new StringBuilder();
             for (int room = 0; room < m; room++) {
                 int r = floor, c = room;
                 if (row[r] == false && col[c] == false && diag[r + c] == false && adiag[r - c + m - 1] == false) {
@@ -480,45 +488,333 @@ public class practice {
                     col[c] = true;
                     diag[r + c] = true;
                     adiag[r - c + m - 1] = true;
-                    String qsf="";
-                    for(int place=0;place<m;place++)
-                    {
-                        if(place!=(c))
-                        {
-                            qsf+='.';
-                        }else
-                        {
-                            qsf+='Q';
+                    String qsf = "";
+                    for (int place = 0; place < m; place++) {
+                        if (place != (c)) {
+                            qsf += '.';
+                        } else {
+                            qsf += 'Q';
                         }
                     }
                     smallAns.add(qsf);
-                    count += queenComb_optimised(n, m, r + 1, ans,smallAns);
+                    count += queenComb_optimised(n, m, r + 1, ans, smallAns);
                     row[r] = false;
                     col[c] = false;
                     diag[r + c] = false;
                     adiag[r - c + m - 1] = false;
-                    smallAns.remove(smallAns.size()-1);
+                    smallAns.remove(smallAns.size() - 1);
                 }
             }
             return count;
         }
+
         public List<List<String>> solveNQueens(int n) {
-            List<List<String>>ans=new ArrayList<>();
-            List<String>smallAns=new ArrayList<>();
-            int m=n;
+            List<List<String>> ans = new ArrayList<>();
+            List<String> smallAns = new ArrayList<>();
+            int m = n;
             row = new boolean[n];
             col = new boolean[m];
             diag = new boolean[n + m - 1];
             adiag = new boolean[n + m - 1];
-            System.out.println(queenComb_optimised(n,m,0,ans,smallAns));
+            System.out.println(queenComb_optimised(n, m, 0, ans, smallAns));
             return ans;
         }
     }
+
+    // Now we are optimising with the bits(Maximum optimisation that is possible)
+    private static int row_bits;
+    private static int col_bits;
+    private static int diag_bits;
+    private static int adiag_bits;
+
+    private static int queenComb_optimised_bit(int n, int m, int floor, String psf) {
+        if (floor == m) {
+            System.out.println(psf);
+            return 1;
+        }
+        int count = 0;
+        for (int room = 0; room < m; room++) {
+            int r = floor, c = room;
+            if ((row_bits & (1 << r)) == 0 && (col_bits & (1 << c)) == 0 && (diag_bits & (1 << (r + c))) == 0
+                    && (adiag_bits & (1 << (r - c + m - 1))) == 0) {
+                row_bits ^= (1 << r);
+                col_bits ^= (1 << c);
+                diag_bits ^= (1 << (r + c));
+                adiag_bits ^= (1 << (r - c + m - 1));
+
+                count += queenComb_optimised_bit(n, m, r + 1, psf + "(" + r + "," + c + ") ");
+                row_bits ^= (1 << r);
+                col_bits ^= (1 << c);
+                diag_bits ^= (1 << (r + c));
+                adiag_bits ^= (1 << (r - c + m - 1));
+            }
+        }
+        return count;
+    }
+
+    // https://leetcode.com/problems/n-queens-ii/
+    class Solution2 {
+        private static int row;
+        private static int col;
+        private static int diag;
+        private static int adiag;
+
+        private static int queenComb_optimised(int n, int m, int floor, String psf) {
+            if (floor == m) {
+                // System.out.println(psf);
+                return 1;
+            }
+            int count = 0;
+            for (int room = 0; room < m; room++) {
+                int r = floor, c = room;
+                if ((row & (1 << r)) == 0 && (col & (1 << c)) == 0 && (diag & (1 << (r + c))) == 0
+                        && (adiag & (1 << (r - c + m - 1))) == 0) {
+                    row ^= (1 << r);
+                    col ^= (1 << c);
+                    diag ^= (1 << (r + c));
+                    adiag ^= (1 << (r - c + m - 1));
+                    count += queenComb_optimised(n, m, r + 1, psf + "(" + r + "," + c + ") ");
+                    row ^= (1 << r);
+                    col ^= (1 << c);
+                    diag ^= (1 << (r + c));
+                    adiag ^= (1 << (r - c + m - 1));
+                }
+            }
+            return count;
+        }
+
+        public int totalNQueens(int n) {
+            int m = n;
+            row = 0;
+            col = 0;
+            diag = 0;
+            adiag = 0;
+            return queenComb_optimised(n, m, 0, "");
+        }
+    }
+
+    // https://leetcode.com/problems/n-queens/
+    class Solution3 {
+        private static int row;
+        private static int col;
+        private static int diag;
+        private static int adiag;
+
+        private static int queenComb_optimised(int n, int m, int floor, List<List<String>> ans, List<String> smallAns) {
+            if (floor == m) {
+                // System.out.println(psf);
+                ans.add(new ArrayList<>(smallAns));
+                return 1;
+            }
+            int count = 0;
+            StringBuilder psf = new StringBuilder();
+            for (int room = 0; room < m; room++) {
+                int r = floor, c = room;
+                if ((row & (1 << r)) == 0 && (col & (1 << c)) == 0 && (diag & (1 << (r + c))) == 0
+                        && (adiag & (1 << (r - c + m - 1))) == 0) {
+                    row ^= (1 << r);
+                    col ^= (1 << c);
+                    diag ^= (1 << (r + c));
+                    adiag ^= (1 << (r - c + m - 1));
+                    String qsf = "";
+                    for (int place = 0; place < m; place++) {
+                        if (place != (c)) {
+                            qsf += '.';
+                        } else {
+                            qsf += 'Q';
+                        }
+                    }
+                    smallAns.add(qsf);
+                    count += queenComb_optimised(n, m, r + 1, ans, smallAns);
+                    row ^= (1 << r);
+                    col ^= (1 << c);
+                    diag ^= (1 << (r + c));
+                    adiag ^= (1 << (r - c + m - 1));
+                    smallAns.remove(smallAns.size() - 1);
+                }
+            }
+            return count;
+        }
+
+        public List<List<String>> solveNQueens(int n) {
+            List<List<String>> ans = new ArrayList<>();
+            List<String> smallAns = new ArrayList<>();
+            int m = n;
+            row = 0;
+            col = 0;
+            diag = 0;
+            adiag = 0;
+            System.out.println(queenComb_optimised(n, m, 0, ans, smallAns));
+            return ans;
+        }
+    }
+
+    // ========Backtracking==========
+    private static boolean isSafeToPlaceNumber(char[][] board, int r, int c, int num) {
+        // row and col
+        for (int i = 0; i < board.length; i++) {
+            if (board[r][i] == (char) (num + '0') || board[i][c] == (char) (num + '0')) {
+                return false;
+            }
+        }
+        // for it's own 3*3 block
+        r = (r / 3) * 3;
+        c = (c / 3) * 3;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (board[r + i][c + j] == (char) (num + '0')) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private static boolean solveSudoku(char[][] board, ArrayList<Integer> emptyidx, int idx) {
+        if (idx == emptyidx.size()) {
+            return true;
+        }
+        int cell = emptyidx.get(idx);
+        int r = cell / 9;
+        int c = cell % 9;
+        for (int num = 1; num <= 9; num++) {
+            if (isSafeToPlaceNumber(board, r, c, num) == true) {
+                board[r][c] = (char) (num + '0');
+                if (solveSudoku(board, emptyidx, idx + 1) == true) {
+                    return true;
+                }
+                board[r][c] = '.';
+            }
+        }
+        return false;
+    }
+
+    private static int[] row_sudoku = new int[9];
+    private static int[] col_sudoku = new int[9];
+    private static int[][] mat_sudoku = new int[3][3];
+
+    private static boolean solveSudoku_optimised(char[][] board, ArrayList<Integer> emptyidx, int idx) {
+        if (idx == emptyidx.size()) {
+            return true;
+        }
+        int cell = emptyidx.get(idx);
+        int r = cell / 9;
+        int c = cell % 9;
+        for (int num = 1; num <= 9; num++) {
+            int mask = (1 << num);
+            if ((row_sudoku[r] & mask) == 0 && (col_sudoku[c] & mask) == 0 && (mat_sudoku[r / 3][c / 3] & mask) == 0) {
+                board[r][c] = (char) (num + '0');
+                row_sudoku[r] ^= mask;
+                col_sudoku[c] ^= mask;
+                mat_sudoku[r / 3][c / 3] ^= mask;
+                if (solveSudoku_optimised(board, emptyidx, idx + 1) == true) {
+                    return true;
+                }
+                row_sudoku[r] ^= mask;
+                col_sudoku[c] ^= mask;
+                mat_sudoku[r / 3][c / 3] ^= mask;
+                board[r][c] = '.';
+            }
+        }
+        return false;
+    }
+
+    private static int friendsPairing_string(String s, String psf, boolean[] visited) {
+        int idx = 0;
+        while (idx < s.length()) {
+            if (visited[idx] == false) {
+                break;
+            }
+            idx++;
+        }
+        if (idx == s.length()) {
+            System.out.println(psf);
+            return 1;
+        }
+        int count = 0;
+        visited[idx] = true;
+        count += friendsPairing_string(s, psf + "(" + s.charAt(idx) + ") ", visited);
+        for (int i = idx + 1; i < s.length(); i++) {
+            if (visited[i] == false) {
+                visited[i] = true;
+                count += friendsPairing_string(s, psf + "(" + s.charAt(idx) + "" + s.charAt(i) + ") ", visited);
+                visited[i] = false;
+            }
+        }
+        visited[idx] = false;
+        return count;
+    }
+
+    private static int friendsPairing_number(int n, String psf, boolean[] visited) {
+        int idx = 1;
+        while (idx <= n) {
+            if (visited[idx] == false) {
+                break;
+            }
+            idx++;
+        }
+        if (idx == n+1) {
+            System.out.println(psf);
+            return 1;
+        }
+        int count = 0;
+        visited[idx] = true;
+        count += friendsPairing_number(n, psf + "(" + idx + ") ", visited);
+        for (int i = idx + 1; i <= n; i++) {
+            if (visited[i] == false) {
+                visited[i] = true;
+                count += friendsPairing_number(n, psf + "(" + idx + "" + i + ") ", visited);
+                visited[i] = false;
+            }
+        }
+        visited[idx] = false;
+        return count;
+    }
+
+    private static void backtracking() {
+        // ArrayList<Integer> emptyidx = new ArrayList<>();
+        // char[][] board = { { '5', '3', '.', '.', '7', '.', '.', '.', '.' },
+        // { '6', '.', '.', '1', '9', '5', '.', '.', '.' }, { '.', '9', '8', '.', '.',
+        // '.', '.', '6', '.' },
+        // { '8', '.', '.', '.', '6', '.', '.', '.', '3' }, { '4', '.', '.', '8', '.',
+        // '3', '.', '.', '1' },
+        // { '7', '.', '.', '.', '2', '.', '.', '.', '6' }, { '.', '6', '.', '.', '.',
+        // '.', '2', '8', '.' },
+        // { '.', '.', '.', '4', '1', '9', '.', '.', '5' }, { '.', '.', '.', '.', '8',
+        // '.', '.', '7', '9' } };
+
+        // for (int i = 0; i < 9; i++) {
+        // for (int j = 0; j < 9; j++) {
+        // if (board[i][j] == '.') {
+        // emptyidx.add(i * 9 + j);
+        // } else {
+        // int mask = (1 << (board[i][j] - '0'));
+        // row_sudoku[i] ^= mask;
+        // col_sudoku[j] ^= mask;
+        // mat_sudoku[i / 3][j / 3] ^= mask;
+        // }
+        // }
+        // }
+        // // System.out.println(solveSudoku(board, emptyidx, 0));
+        // System.out.println(solveSudoku_optimised(board, emptyidx, 0));
+        // for (int i = 0; i < board.length; i++) {
+        // for (int j = 0; j < board.length; j++) {
+        // System.out.print(board[i][j] + " ");
+        // }
+        // System.out.println();
+        // }
+        // boolean[] visited = new boolean["ABCD".length()]; 
+        // System.out.println(friendsPairing_string("ABCD", "", visited));
+        boolean[] visited = new boolean[4+1];//1-based indexing
+        System.out.println(friendsPairing_number(4, "", visited));
+    }
+
     public static void main(String[] args) {
 
         // permAndComb();
         // permAndCombSubseq();
-        queensCall();
+        // queensCall();
+        backtracking();
 
     }
 }
