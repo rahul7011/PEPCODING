@@ -753,7 +753,7 @@ public class practice {
             }
             idx++;
         }
-        if (idx == n+1) {
+        if (idx == n + 1) {
             System.out.println(psf);
             return 1;
         }
@@ -803,10 +803,53 @@ public class practice {
         // }
         // System.out.println();
         // }
-        // boolean[] visited = new boolean["ABCD".length()]; 
+        // boolean[] visited = new boolean["ABCD".length()];
         // System.out.println(friendsPairing_string("ABCD", "", visited));
-        boolean[] visited = new boolean[4+1];//1-based indexing
+        boolean[] visited = new boolean[4 + 1];// 1-based indexing
         System.out.println(friendsPairing_number(4, "", visited));
+    }
+
+    // Questions given in class of backtracking
+    // https://practice.geeksforgeeks.org/problems/largest-number-in-k-swaps-1587115620/1/#
+    class Solution4 {
+        private static String swap(String str, int i, int j) {
+            char ith = str.charAt(i);
+            char jth = str.charAt(j);
+
+            String left = str.substring(0, i);
+            String middle = str.substring(i + 1, j);
+            String right = str.substring(j + 1);
+
+            return left + jth + middle + ith + right;
+        }
+
+        private static String findMaxNum(String s, int k) {
+            if (k == 0) {
+                // System.out.println(s);
+                return new String(s);
+            }
+            String ans = s;
+            for (int i = 0; i < s.length() - 1; i++) {
+                for (int j = i + 1; j < s.length(); j++) {
+                    if (s.charAt(j) > s.charAt(i)) {
+                        s = swap(s, i, j);
+                        String check = findMaxNum(s, k - 1);
+                        if (ans.compareTo(check) < 0) {
+                            ans = new String(check);
+                        }
+                        s = swap(s, i, j);
+                    }
+
+                }
+            }
+            // return ans.compareTo(s)<0?new String(ans):ans;
+            return ans;
+        }
+
+        // Function to find the largest number after k swaps.
+        public static String findMaximumNum(String str, int k) {
+            return findMaxNum(str, k);
+        }
     }
 
     public static void main(String[] args) {
