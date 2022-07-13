@@ -957,7 +957,7 @@ public class practice {
                 if (board[i][j] == '-' || board[i][j] == word.charAt(0)) {
                     if (isPossibleToPlace_H(board, word, i, j) == true) {
                         int loc = place_H(board, word, i, j);
-                        count += crossWord(board, words, idx +1);
+                        count += crossWord(board, words, idx + 1);
                         unplace_H(board, word, i, j, loc);
                     }
                     if (isPossibleToPlace_V(board, word, i, j) == true) {
@@ -971,11 +971,10 @@ public class practice {
         return count;
     }
 
-    private static void print(char[][] board)
-    {
+    private static void print(char[][] board) {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[0].length; j++) {
-                System.out.print(board[i][j]+" ");
+                System.out.print(board[i][j] + " ");
             }
             System.out.println();
         }
@@ -996,6 +995,157 @@ public class practice {
         };
         String[] words = { "agra", "norway", "england", "gwalior" };
         System.out.println(crossWord(board, words, 0));
+    }
+
+
+    //HackerRank Crossword puzzle
+    // https://www.hackerrank.com/challenges/crossword-puzzle/problem
+
+    class Result {
+
+        /*
+         * Complete the 'crosswordPuzzle' function below.
+         *
+         * The function is expected to return a STRING_ARRAY.
+         * The function accepts following parameters:
+         * 1. STRING_ARRAY crossword
+         * 2. STRING words
+         */
+
+        private static List<String> ans = new ArrayList<>();
+
+        private static boolean isPossibleToPlace_H(List<String> board, String word, int r, int c) {
+            int l = word.length(), m = 10;
+            if (c + l > m) {
+                return false;
+            }
+
+            if (c == 0 && c + l < m && board.get(r).charAt(c + l) != '+') {
+                return false;
+            }
+            if (c != 0 && c + l == m && board.get(r).charAt(c - 1) != '+') {
+                return false;
+            }
+
+            if (c != 0 && c + l < m && board.get(r).charAt(c - 1) != '+' && board.get(r).charAt(c + l) != '+') {
+                return false;
+            }
+
+            for (int i = 0; i < word.length(); i++) {
+                if (board.get(r).charAt(c + i) != '-' && board.get(r).charAt(c + i) != word.charAt(i)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private static int place_H(List<String> board, String word, int r, int c) {
+            int loc = 0; // location in bits
+            for (int i = 0; i < word.length(); i++) {
+                if (board.get(r).charAt(c + i) == '-') {
+                    int mask = (1 << i);
+                    loc ^= mask;
+                    StringBuilder s = new StringBuilder(board.get(r));
+                    s.setCharAt(c + i, word.charAt(i));
+                    board.set(r, new String(s));
+                }
+            }
+            return loc;
+        }
+
+        private static void unplace_H(List<String> board, String word, int r, int c, int loc) {
+            for (int i = 0; i < word.length(); i++) {
+                int mask = (1 << i);
+                if ((loc & mask) != 0) {
+                    StringBuilder s = new StringBuilder(board.get(r));
+                    s.setCharAt(c + i, '-');
+                    board.set(r, new String(s));
+                }
+            }
+        }
+
+        private static boolean isPossibleToPlace_V(List<String> board, String word, int r, int c) {
+            int l = word.length(), n = 10;
+            if (r + l > n) {
+                return false;
+            }
+
+            if (r == 0 && r + l < n && board.get(r + l).charAt(c) != '+') {
+                return false;
+            }
+            if (r != 0 && r + l == n && board.get(r - 1).charAt(c) != '+') {
+                return false;
+            }
+
+            if (r != 0 && r + l < n && board.get(r - 1).charAt(c) != '+' && board.get(r + l).charAt(c) != '+') {
+                return false;
+            }
+
+            for (int i = 0; i < word.length(); i++) {
+                if (board.get(r + i).charAt(c) != '-' && board.get(r + i).charAt(c) != word.charAt(i)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private static int place_V(List<String> board, String word, int r, int c) {
+            int loc = 0; // location in bits
+            for (int i = 0; i < word.length(); i++) {
+                if (board.get(r + i).charAt(c) == '-') {
+                    int mask = (1 << i);
+                    loc ^= mask;
+                    StringBuilder s = new StringBuilder(board.get(r + i));
+                    s.setCharAt(c, word.charAt(i));
+                    board.set(r + i, new String(s));
+                }
+            }
+            return loc;
+        }
+
+        private static void unplace_V(List<String> board, String word, int r, int c, int loc) {
+            for (int i = 0; i < word.length(); i++) {
+                int mask = (1 << i);
+                if ((loc & mask) != 0) {
+                    StringBuilder s = new StringBuilder(board.get(r + i));
+                    s.setCharAt(c, '-');
+                    board.set(r + i, new String(s));
+                }
+            }
+        }
+
+        private static int crossWord(List<String> board, String[] words, int idx) {
+            if (idx == words.length) {
+                ans = new ArrayList<>(board);
+                return 1;
+            }
+            String word = words[idx];
+            int count = 0;
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 10; j++) {
+                    if (board.get(i).charAt(j) == '-' || board.get(i).charAt(j) == word.charAt(0)) {
+                        if (isPossibleToPlace_H(board, word, i, j) == true) {
+                            int loc = place_H(board, word, i, j);
+                            count += crossWord(board, words, idx + 1);
+                            unplace_H(board, word, i, j, loc);
+                        }
+                        if (isPossibleToPlace_V(board, word, i, j) == true) {
+                            int loc = place_V(board, word, i, j);
+                            count += crossWord(board, words, idx + 1);
+                            unplace_V(board, word, i, j, loc);
+                        }
+                    }
+                }
+            }
+            return count;
+        }
+
+        public static List<String> crosswordPuzzle(List<String> crossword, String str) {
+            String[] words = str.split(";");
+            crossWord(crossword, words, 0);
+            return ans;
+        }
+
     }
 
     public static void main(String[] args) {
