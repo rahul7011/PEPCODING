@@ -852,12 +852,159 @@ public class practice {
         }
     }
 
+    // Cross word
+    private static boolean isPossibleToPlace_H(char[][] board, String word, int r, int c) {
+        int l = word.length(), m = board[0].length;
+        if (c + l > m) {
+            return false;
+        }
+
+        if (c == 0 && c + l < m && board[r][c + l] != '+') {
+            return false;
+        }
+        if (c != 0 && c + l == m && board[r][c - 1] != '+') {
+            return false;
+        }
+
+        if (c != 0 && c + l < m && board[r][c - 1] != '+' && board[r][c + l] != '+') {
+            return false;
+        }
+
+        for (int i = 0; i < word.length(); i++) {
+            if (board[r][c + i] != '-' && board[r][c + i] != word.charAt(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static int place_H(char[][] board, String word, int r, int c) {
+        int loc = 0; // location in bits
+        for (int i = 0; i < word.length(); i++) {
+            if (board[r][c + i] == '-') {
+                int mask = (1 << i);
+                loc ^= mask;
+                board[r][c + i] = word.charAt(i);
+            }
+        }
+        return loc;
+    }
+
+    private static void unplace_H(char[][] board, String word, int r, int c, int loc) {
+        for (int i = 0; i < word.length(); i++) {
+            int mask = (1 << i);
+            if ((loc & mask) != 0) {
+                board[r][c + i] = '-';
+            }
+        }
+    }
+
+    private static boolean isPossibleToPlace_V(char[][] board, String word, int r, int c) {
+        int l = word.length(), n = board.length;
+        if (r + l > n) {
+            return false;
+        }
+
+        if (r == 0 && r + l < n && board[r + l][c] != '+') {
+            return false;
+        }
+        if (r != 0 && r + l == n && board[r - 1][c] != '+') {
+            return false;
+        }
+
+        if (r != 0 && r + l < n && board[r - 1][c] != '+' && board[r + l][c] != '+') {
+            return false;
+        }
+
+        for (int i = 0; i < word.length(); i++) {
+            if (board[r + i][c] != '-' && board[r + i][c] != word.charAt(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static int place_V(char[][] board, String word, int r, int c) {
+        int loc = 0; // location in bits
+        for (int i = 0; i < word.length(); i++) {
+            if (board[r + i][c] == '-') {
+                int mask = (1 << i);
+                loc ^= mask;
+                board[r + i][c] = word.charAt(i);
+            }
+        }
+        return loc;
+    }
+
+    private static void unplace_V(char[][] board, String word, int r, int c, int loc) {
+        for (int i = 0; i < word.length(); i++) {
+            int mask = (1 << i);
+            if ((loc & mask) != 0) {
+                board[r + i][c] = '-';
+            }
+        }
+    }
+
+    private static int crossWord(char[][] board, String[] words, int idx) {
+        if (idx == words.length) {
+            print(board);
+            return 1;
+        }
+        String word = words[idx];
+        int count = 0;
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] == '-' || board[i][j] == word.charAt(0)) {
+                    if (isPossibleToPlace_H(board, word, i, j) == true) {
+                        int loc = place_H(board, word, i, j);
+                        count += crossWord(board, words, idx +1);
+                        unplace_H(board, word, i, j, loc);
+                    }
+                    if (isPossibleToPlace_V(board, word, i, j) == true) {
+                        int loc = place_V(board, word, i, j);
+                        count += crossWord(board, words, idx + 1);
+                        unplace_V(board, word, i, j, loc);
+                    }
+                }
+            }
+        }
+        return count;
+    }
+
+    private static void print(char[][] board)
+    {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                System.out.print(board[i][j]+" ");
+            }
+            System.out.println();
+        }
+    }
+
+    private static void crossWordCall() {
+        char[][] board = {
+                { '+', '-', '+', '+', '+', '+', '+', '+', '+', '+' },
+                { '+', '-', '+', '+', '+', '+', '+', '+', '+', '+' },
+                { '+', '-', '-', '-', '-', '-', '-', '-', '+', '+' },
+                { '+', '-', '+', '+', '+', '+', '+', '+', '+', '+' },
+                { '+', '-', '+', '+', '+', '+', '+', '+', '+', '+' },
+                { '+', '-', '-', '-', '-', '-', '-', '+', '+', '+' },
+                { '+', '-', '+', '+', '+', '-', '+', '+', '+', '+' },
+                { '+', '+', '+', '+', '+', '-', '+', '+', '+', '+' },
+                { '+', '+', '+', '+', '+', '-', '+', '+', '+', '+' },
+                { '+', '+', '+', '+', '+', '+', '+', '+', '+', '+' }
+        };
+        String[] words = { "agra", "norway", "england", "gwalior" };
+        System.out.println(crossWord(board, words, 0));
+    }
+
     public static void main(String[] args) {
 
         // permAndComb();
         // permAndCombSubseq();
         // queensCall();
-        backtracking();
+        // backtracking();
+        crossWordCall();
 
     }
 }
