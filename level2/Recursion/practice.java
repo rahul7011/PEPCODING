@@ -997,8 +997,7 @@ public class practice {
         System.out.println(crossWord(board, words, 0));
     }
 
-
-    //HackerRank Crossword puzzle
+    // HackerRank Crossword puzzle
     // https://www.hackerrank.com/challenges/crossword-puzzle/problem
 
     class Result {
@@ -1148,13 +1147,80 @@ public class practice {
 
     }
 
+    // https://practice.geeksforgeeks.org/problems/gold-mine-problem2608/1/#
+
+    class Solution5 {
+        private static int maxGold(int[][] arr, int r, int c, int[][] dir) {
+            int ans = 0;
+            for (int d = 0; d < dir.length; d++) {
+                int x = r + dir[d][0];
+                int y = c + dir[d][1];
+                if (x >= 0 && y >= 0 && x < arr.length && y < arr[0].length) {
+                    ans = Math.max(ans, maxGold(arr, x, y, dir));
+                }
+            }
+            return ans + arr[r][c];
+        }
+
+        static int maxGold(int n, int m, int arr[][]) {
+            int[][] dir = { { -1, 1 }, { 0, 1 }, { 1, 1 } };
+            int ans = 0;
+            for (int i = 0; i < n; i++) {
+                ans = Math.max(ans, maxGold(arr, i, 0, dir));
+            }
+            return ans;
+        }
+    }
+
+    private static int kSubsetSum(int[] arr, int idx, int[] setSum, ArrayList<ArrayList<Integer>> ans) {
+        if (idx == arr.length) {
+            for (int i = 1; i < setSum.length; i++) {
+                if (setSum[i - 1] != setSum[i]) {
+                    return 0;
+                }
+            }
+            for (ArrayList<Integer> list : ans) {
+                System.out.print(list);
+            }
+            System.out.println();
+            return 1;
+        }
+        int count = 0, k = setSum.length;
+        for (int i = 0; i < k; i++) {
+            setSum[i] += arr[idx];
+            ans.get(i).add(arr[idx]);
+
+            count += kSubsetSum(arr, idx + 1, setSum, ans);
+
+            setSum[i] -= arr[idx];
+            ans.get(i).remove(ans.get(i).size() - 1);
+
+            if(ans.get(i).size()==0)
+            {
+                break;
+            }
+        }
+        return count;
+    }
+
+    private static void subSetCall() {
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+        int k = 3;
+        int[] setSum = new int[k];
+        for (int i = 0; i < k; i++) {
+            ans.add(new ArrayList<>());
+        }
+        int[] arr = { 1, 2, 3, 4, 5, 6 };
+        kSubsetSum(arr, 0, setSum, ans);
+    }
+
     public static void main(String[] args) {
 
         // permAndComb();
         // permAndCombSubseq();
         // queensCall();
         // backtracking();
-        crossWordCall();
-
+        // crossWordCall();
+        subSetCall();
     }
 }
