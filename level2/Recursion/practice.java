@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class practice {
@@ -1193,25 +1194,127 @@ public class practice {
             count += kSubsetSum(arr, idx + 1, setSum, ans);
 
             setSum[i] -= arr[idx];
+            // leader and non-leader concept
+            // if it is a leader then break else make call for other subsets
             ans.get(i).remove(ans.get(i).size() - 1);
 
-            if(ans.get(i).size()==0)
-            {
+            if (ans.get(i).size() == 0) {
                 break;
             }
         }
         return count;
     }
 
-    private static void subSetCall() {
-        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
-        int k = 3;
-        int[] setSum = new int[k];
-        for (int i = 0; i < k; i++) {
-            ans.add(new ArrayList<>());
+    private static int kPartition(int n, int idx, ArrayList<ArrayList<Integer>> ans) {
+        if (idx > n) {
+            for (ArrayList<Integer> list : ans) {
+                if (list.size() == 0) {
+                    return 0;
+                }
+            }
+            for (ArrayList<Integer> list : ans) {
+                System.out.print(list);
+            }
+            System.out.println();
+            return 1;
         }
-        int[] arr = { 1, 2, 3, 4, 5, 6 };
-        kSubsetSum(arr, 0, setSum, ans);
+        int count = 0, k = ans.size();
+        for (int i = 0; i < k; i++) {
+            ans.get(i).add(idx);
+
+            count += kPartition(n, idx + 1, ans);
+
+            ans.get(i).remove(ans.get(i).size() - 1);
+            // leader and non-leader concept
+            // if it is a leader then break else move on!
+            if (ans.get(i).size() == 0) {
+                break;
+            }
+        }
+        return count;
+    }
+
+    // CryptArithmetic
+    static int[] map = new int[26];
+    static boolean[] isUsed = new boolean[10];
+
+    private static int StringToInteger(String s) {
+        int res = 0;
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            res = res * 10 + (map[ch - 'a']);
+        }
+        return res;
+    }
+
+    private static int crypto(String unique, int idx, String s1, String s2, String s3) {
+        if (idx == unique.length()) {
+            int a = StringToInteger(s1);
+            int b = StringToInteger(s2);
+            int c = StringToInteger(s3);
+            if (a + b == c) {
+                System.out.println(a + "\n+" + b + "\n-----\n" + c);
+                System.out.println();
+                return 1;
+            }
+            return 0;
+        }
+        // choices
+        int count = 0;
+        char ch = unique.charAt(idx);
+        for (int num = 0; num < 10; num++) {
+            if ((ch == s1.charAt(0) || ch == s2.charAt(0) || ch == s3.charAt(0)) && (num == 0)) {
+                continue;
+            }
+            if (isUsed[num] == false) {
+                isUsed[num] = true;
+                map[ch - 'a'] = num;
+                count += crypto(unique, idx + 1, s1, s2, s3);
+                map[ch - 'a'] = -1;
+                isUsed[num] = false;
+            }
+        }
+        return count;
+    }
+
+    private static void crypto(String s1, String s2, String s3) {
+        // forming string of only unique characters
+        String s = s1 + s2 + s3;
+        boolean[] freq = new boolean[26];
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            freq[ch - 'a'] = true;
+        }
+        s = "";
+        for (int i = 0; i < freq.length; i++) {
+            if (freq[i] == true) {
+                char ch = (char) (i + 'a');
+                s += ch;
+            }
+        }
+        Arrays.fill(map, -1);
+        System.out.println(crypto(s, 0, s1, s2, s3));
+    }
+
+    private static void subSetCall() {
+        // ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+        // int k = 2;
+        // int[] setSum = new int[k];
+        // for (int i = 0; i < k; i++) {
+        // ans.add(new ArrayList<>());
+        // }
+        // int[] arr = { 1, 2, 3, 4, 5, 6 };
+        // kSubsetSum(arr, 0, setSum, ans);
+
+        // for (int i = 0; i < k; i++) {
+        // ans.add(new ArrayList<>());
+        // }
+        // kPartition(3, 1, ans);
+
+        crypto("send", "more", "money");
+        // crypto("base", "ball", "games");
+        // crypto("your", "you", "heart");
+
     }
 
     public static void main(String[] args) {
