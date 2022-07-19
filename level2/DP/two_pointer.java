@@ -836,6 +836,78 @@ public class two_pointer {
         }
     }
 
+    // Friends Pairing Problem
+    // Time Limit Exceeded
+    // Note:DP[] can't be used here because backtracking is used here
+    class Solution8 {
+        // this solution also generates Paths
+        private static int friendsPairing(int n, String psf, boolean[] visited) {
+            int idx = 1;
+            while (idx <= n) {
+                if (visited[idx] == false) {
+                    break;
+                }
+                idx++;
+            }
+            int count = 0;
+            // single call
+            visited[idx] = true;
+            count += friendsPairing(n, psf + idx + " ", visited);
+            for (int i = idx + 1; i <= n; i++) {
+                if (visited[i] == false) {
+                    visited[i] = true;
+                    count += friendsPairing(n, psf + idx + "" + i + " ", visited);
+                    visited[i] = false;
+                }
+            }
+            visited[idx] = false;
+            return count;
+        }
+
+        public long countFriendsPairings(int n) {
+            boolean[] visited = new boolean[n + 1];
+            return friendsPairing(n, "", visited);
+        }
+    }
+
+    class Solution9 {
+        static int mod = (int) 1e9 + 7;
+
+        private static long friendsPairing_number(int n, long[] dp) {
+            if (n == 0) {
+                return dp[n] = 1;
+            }
+            if (n < 0) {
+                return 0;
+            }
+            if (dp[n] != 0) {
+                return dp[n];
+            }
+            long count = 0;
+            // single call
+            count = (count + friendsPairing_number(n - 1, dp)) % mod;
+            // pairing call
+            count = (count + ((n - 1) * (friendsPairing_number(n - 2, dp)) % mod)) % mod;
+            return dp[n] = count;
+        }
+
+        private static long friendsPairing_opti(int n) {
+            long a = 1, b = 0;
+            for (int i = 1; i <= n; i++) {
+                long sum = (a + (b * (i - 1)) % mod) % mod;
+                b = a;
+                a = sum;
+            }
+            return a;
+        }
+
+        public long countFriendsPairings(int n) {
+            // long[] dp=new long[n+1];
+            // return friendsPairing_number(n,dp);
+            return friendsPairing_opti(n);
+        }
+    }
+
     public static void main(String[] args) {
         // fibCall();
         // mazeCall();
