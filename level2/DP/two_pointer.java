@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class two_pointer {
     private static void display(int[] dp) {
         for (int x : dp) {
@@ -500,9 +502,343 @@ public class two_pointer {
         System.out.println(boardDice_tabu(n, dp));
     }
 
+    // 91. Decode Ways
+    class Solution4 {
+        private int numDecodings_rec(String s, int idx) {
+            if (idx == s.length()) {
+                return 1;
+            }
+            int count = 0;
+            if (s.charAt(idx) != '0') {
+                // single letter call
+                count += numDecodings_rec(s, idx + 1);
+                // double letter call
+                if (idx + 1 < s.length()) {
+                    int check = Integer.parseInt(s.charAt(idx) + "" + s.charAt(idx + 1));
+                    if (check <= 26) {
+                        count += numDecodings_rec(s, idx + 2);
+                    }
+                }
+            }
+            return count;
+        }
+
+        private int numDecodings_memo(String s, int idx, int[] dp) {
+            if (idx == s.length()) {
+                return dp[idx] = 1;
+            }
+            if (dp[idx] != -1) {
+                return dp[idx];
+            }
+            int count = 0;
+            if (s.charAt(idx) != '0') {
+                // single letter call
+                count += numDecodings_memo(s, idx + 1, dp);
+                // double letter call
+                if (idx + 1 < s.length()) {
+                    int check = Integer.parseInt(s.charAt(idx) + "" + s.charAt(idx + 1));
+                    if (check <= 26) {
+                        count += numDecodings_memo(s, idx + 2, dp);
+                    }
+                }
+            }
+            return dp[idx] = count;
+        }
+
+        private int numDecodings_tabu(String s, int IDX, int[] dp) {
+            for (int idx = s.length(); idx >= 0; idx--) {
+                if (idx == s.length()) {
+                    dp[idx] = 1;
+                    continue;
+                }
+                int count = 0;
+                if (s.charAt(idx) != '0') {
+                    // single letter call
+                    count += dp[idx + 1]; // numDecodings_memo(s,idx+1,dp);
+                    // double letter call
+                    if (idx + 1 < s.length()) {
+                        int check = Integer.parseInt(s.charAt(idx) + "" + s.charAt(idx + 1));
+                        if (check <= 26) {
+                            count += dp[idx + 2]; // numDecodings_memo(s,idx+2,dp);
+                        }
+                    }
+                }
+                dp[idx] = count;
+            }
+            return dp[IDX];
+        }
+
+        private int numDecodings_opti(String s) {
+            int a = 1, b = 0, sum = 0;
+            for (int idx = s.length() - 1; idx >= 0; idx--) {
+                sum = 0;
+                if (s.charAt(idx) != '0') {
+                    // single letter call
+                    sum += a;
+                    // double letter call
+                    if (idx + 1 < s.length()) {
+                        int check = Integer.parseInt(s.charAt(idx) + "" + s.charAt(idx + 1));
+                        if (check <= 26) {
+                            sum += b;
+                        }
+                    }
+                }
+                b = a;
+                a = sum;
+            }
+            return a;
+        }
+
+        public int numDecodings(String s) {
+            // return numDecodings_rec(s,0);
+            // int[] dp=new int[s.length()+1];
+            // Arrays.fill(dp,-1);
+            // return numDecodings_memo(s,0,dp);
+            // return numDecodings_tabu(s,0,dp);
+            return numDecodings_opti(s);
+        }
+    }
+
+    // 639. Decode Ways II
+    class Solution5 {
+        // we need to consider four cases
+        // 1. character character
+        // 2. character *
+        // 3. * character
+        // 4. * *
+
+        int mod = (int) 1e9 + 7;
+
+        private long numDecodings_memo(String s, int idx, long[] dp) {
+            int n = s.length();
+            if (idx == s.length()) {
+                return dp[idx] = 1;
+            }
+            if (dp[idx] != -1) {
+                return dp[idx];
+            }
+            char ch = s.charAt(idx);
+            if (ch == '0') {
+                return dp[idx] = 0;
+            }
+            long count = 0;
+            if (ch == '*') {
+                // single call
+                count = (count + 9 * numDecodings_memo(s, idx + 1, dp)) % mod;
+                // double call
+                if (idx < n - 1) {
+                    char ch1 = s.charAt(idx + 1);
+                    if (ch1 >= '0' && ch1 <= '6') {
+                        count = (count + 2 * numDecodings_memo(s, idx + 2, dp)) % mod;
+                    } else if (ch1 >= '7' && ch1 <= '9') {
+                        count = (count + 1 * numDecodings_memo(s, idx + 2, dp)) % mod;
+                    } else {
+                        // it means it's a *
+                        count = (count + 15 * numDecodings_memo(s, idx + 2, dp)) % mod;
+                    }
+                }
+            } else {
+                // single call
+                count = (count + 1 * numDecodings_memo(s, idx + 1, dp)) % mod;
+                // double call
+                if (idx < n - 1) {
+                    char ch1 = s.charAt(idx + 1);
+                    if (ch1 == '*' && ch == '1') {
+                        count = (count + 9 * numDecodings_memo(s, idx + 2, dp)) % mod;
+                    } else if (ch1 == '*' && ch == '2') {
+                        count = (count + 6 * numDecodings_memo(s, idx + 2, dp)) % mod;
+                    } else if (ch1 != '*') {
+                        int num = (ch - '0') * 10 + (ch1 - '0');
+                        if (num <= 26) {
+                            count = (count + 1 * numDecodings_memo(s, idx + 2, dp)) % mod;
+                        }
+                    }
+                }
+            }
+            return dp[idx] = count;
+        }
+
+        private long numDecodings_tabu(String s, int IDX, long[] dp) {
+            for (int idx = s.length(); idx >= 0; idx--) {
+                int n = s.length();
+                if (idx == s.length()) {
+                    dp[idx] = 1;
+                    continue;
+                }
+                char ch = s.charAt(idx);
+                if (ch == '0') {
+                    dp[idx] = 0;
+                    continue;
+                }
+                long count = 0;
+                if (ch == '*') {
+                    // single call
+                    count = (count + 9 * numDecodings_memo(s, idx + 1, dp)) % mod;
+                    // double call
+                    if (idx < n - 1) {
+                        char ch1 = s.charAt(idx + 1);
+                        if (ch1 >= '0' && ch1 <= '6') {
+                            count = (count + 2 * numDecodings_memo(s, idx + 2, dp)) % mod;
+                        } else if (ch1 >= '7' && ch1 <= '9') {
+                            count = (count + 1 * numDecodings_memo(s, idx + 2, dp)) % mod;
+                        } else {
+                            // it means it's a *
+                            count = (count + 15 * numDecodings_memo(s, idx + 2, dp)) % mod;
+                        }
+                    }
+                } else {
+                    // single call
+                    count = (count + 1 * numDecodings_memo(s, idx + 1, dp)) % mod;
+                    // double call
+                    if (idx < n - 1) {
+                        char ch1 = s.charAt(idx + 1);
+                        if (ch1 == '*' && ch == '1') {
+                            count = (count + 9 * numDecodings_memo(s, idx + 2, dp)) % mod;
+                        } else if (ch1 == '*' && ch == '2') {
+                            count = (count + 6 * numDecodings_memo(s, idx + 2, dp)) % mod;
+                        } else if (ch1 != '*') {
+                            int num = (ch - '0') * 10 + (ch1 - '0');
+                            if (num <= 26) {
+                                count = (count + 1 * numDecodings_memo(s, idx + 2, dp)) % mod;
+                            }
+                        }
+                    }
+                }
+                dp[idx] = count;
+            }
+            return dp[IDX];
+        }
+
+        private long numDecodings_opti(String s) {
+            long a = 1, b = 0, sum = 0;
+            for (int idx = s.length() - 1; idx >= 0; idx--) {
+                int n = s.length();
+                sum = 0;
+                char ch = s.charAt(idx);
+                if (ch != '0') {
+                    // sum+=a;
+                    if (ch == '*') {
+                        // single call
+                        sum = (sum + 9 * a) % mod;
+                        // double call
+                        if (idx < n - 1) {
+                            char ch1 = s.charAt(idx + 1);
+                            if (ch1 >= '0' && ch1 <= '6') {
+                                sum = (sum + 2 * b) % mod;
+                            } else if (ch1 >= '7' && ch1 <= '9') {
+                                sum = (sum + 1 * b) % mod;
+                            } else {
+                                // it means it's a *
+                                sum = (sum + 15 * b) % mod;
+                            }
+                        }
+                    } else {
+                        // single call
+                        sum = (sum + 1 * a) % mod;
+                        // double call
+                        if (idx < n - 1) {
+                            char ch1 = s.charAt(idx + 1);
+                            if (ch1 == '*' && ch == '1') {
+                                sum = (sum + 9 * b) % mod;
+                            } else if (ch1 == '*' && ch == '2') {
+                                sum = (sum + 6 * b) % mod;
+                            } else if (ch1 != '*') {
+                                int num = (ch - '0') * 10 + (ch1 - '0');
+                                if (num <= 26) {
+                                    sum = (sum + 1 * b) % mod;
+                                }
+                            }
+                        }
+                    }
+                }
+                b = a;
+                a = sum;
+            }
+            return a;
+        }
+
+        public int numDecodings(String s) {
+            // long[] dp = new long[s.length() + 1];
+            // Arrays.fill(dp, -1);
+            // return (int)numDecodings_memo(s, 0, dp) % mod;
+            // return (int)numDecodings_tabu(s, 0, dp) % mod;
+            return (int) numDecodings_opti(s) % mod;
+        }
+    }
+
+    // Gold Mine Problem
+    class Solution6 {
+        private static int maxGold(int[][] gold, int sr, int sc, int[][] dir, int[][] dp) {
+            int n = gold.length, m = gold[0].length;
+            if (sc == m - 1) {
+                return gold[sr][sc];
+            }
+            if (dp[sr][sc] != 0) {
+                return dp[sr][sc];
+            }
+            int max = 0;
+            for (int d = 0; d < dir.length; d++) {
+                int x = sr + dir[d][0];
+                int y = sc + dir[d][1];
+                if (x >= 0 && y >= 0 && x < n && y < m) {
+                    int recAns = maxGold(gold, x, y, dir, dp);
+                    if (recAns != 0) {
+                        max = Math.max(max, recAns);
+                    }
+                }
+            }
+            return dp[sr][sc] = max + gold[sr][sc];
+        }
+
+        static int maxGold(int n, int m, int M[][]) {
+            int[][] dir = { { -1, 1 }, { 0, 1 }, { 1, 1 } };
+            int[][] dp = new int[n][m];
+            int max = 0;
+            for (int i = 0; i < n; i++) {
+                max = Math.max(max, maxGold(M, i, 0, dir, dp));
+            }
+            return max;
+        }
+    }
+
+    // Maximum path sum in matrix
+    class Solution7 {
+        private static int maximumPath(int[][] mat, int sr, int sc, int[][] dir, int[][] dp) {
+            int n = mat.length, m = mat[0].length;
+            if (sr == n - 1) {
+                return mat[sr][sc];
+            }
+            if (dp[sr][sc] != 0) {
+                return dp[sr][sc];
+            }
+            int max = 0;
+            for (int d = 0; d < dir.length; d++) {
+                int x = sr + dir[d][0];
+                int y = sc + dir[d][1];
+                if (x >= 0 && y >= 0 && x < n && y < m) {
+                    int recAns = maximumPath(mat, x, y, dir, dp);
+                    if (recAns != 0) {
+                        max = Math.max(max, recAns);
+                    }
+                }
+            }
+            return dp[sr][sc] = max + mat[sr][sc];
+        }
+
+        static int maximumPath(int N, int Matrix[][]) {
+            int[][] dir = { { 1, 0 }, { 1, -1 }, { 1, 1 } };
+            int[][] dp = new int[Matrix.length][Matrix[0].length];
+            int max = 0;
+            for (int i = 0; i < Matrix[0].length; i++) {
+                max = Math.max(max, maximumPath(Matrix, 0, i, dir, dp));
+            }
+            return max;
+        }
+    }
+
     public static void main(String[] args) {
         // fibCall();
         // mazeCall();
-        boardCall();
+        // boardCall();
     }
 }
