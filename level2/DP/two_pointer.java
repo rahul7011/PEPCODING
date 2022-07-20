@@ -908,9 +908,49 @@ public class two_pointer {
         }
     }
 
+    // https://www.geeksforgeeks.org/count-number-of-ways-to-partition-a-set-into-k-subsets/
+    private static int divideNInKGroups(int n, int k, int[][] dp) {
+        if (n == k || k == 1) {
+            return dp[n][k] = 1;
+        }
+        if (dp[n][k] != 0) {
+            return dp[n][k];
+        }
+        int selfGroup = divideNInKGroups(n - 1, k - 1, dp);
+        int partOfGroup = divideNInKGroups(n - 1, k, dp) * k;
+        return dp[n][k] = selfGroup + partOfGroup;
+    }
+
+    private static int divideNInKGroups_tabu(int N, int K, int[][] dp) {
+        for (int n = 1; n <= N; n++) {
+            for (int k = 1; k <= K; k++) {
+                if (n == k || k == 1) {
+                    dp[n][k] = 1;
+                    continue;
+                }
+                int selfGroup = dp[n - 1][k - 1]; // divideNInKGroups(n - 1, k - 1, dp);
+                int partOfGroup = dp[n - 1][k] * k; // divideNInKGroups(n - 1, k, dp) * k;
+                dp[n][k] = selfGroup + partOfGroup;
+            }
+        }
+        return dp[N][K];
+    }
+
+    private static void divideNInKGroupsCall() {
+        int n = 5;
+        int k = 3;
+        int[][] dp = new int[n + 1][k + 1];
+        System.out.println(divideNInKGroups(n, k, dp));
+        display2D(dp);
+        dp = new int[n + 1][k + 1];
+        System.out.println(divideNInKGroups_tabu(n, k, dp));
+        display2D(dp);
+    }
+
     public static void main(String[] args) {
         // fibCall();
         // mazeCall();
         // boardCall();
+        // divideNInKGroupsCall();
     }
 }
