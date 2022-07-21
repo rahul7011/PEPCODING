@@ -123,8 +123,287 @@ public class string_set {
         System.out.println(longestCommonSubsequence_tabu(s1, s2, n, m, dp));
     }
 
+    // 115. Distinct Subsequences(My approach)
+    class Solution {
+        private static int numDistinct_rec(String s1, String s2, int i, int j) {
+            if (i == 0 || j == 0) {
+                return j == 0 ? 1 : 0;
+            }
+            while (i != 0 && s2.charAt(j - 1) != s1.charAt(i - 1)) {
+                i--;
+            }
+            if (i == 0) {
+                return 0;
+            }
+            int notInclude = numDistinct_rec(s1, s2, i - 1, j);
+            int include = numDistinct_rec(s1, s2, i - 1, j - 1);
+            return notInclude + include;
+        }
+
+        private static int numDistinct_memo(String s1, String s2, int i, int j, int[][] dp) {
+            if (i == 0 || j == 0) {
+                return dp[i][j] = (j == 0 ? 1 : 0);
+            }
+            while (i != 0 && s2.charAt(j - 1) != s1.charAt(i - 1)) {
+                i--;
+            }
+            if (i == 0) {
+                return dp[i][j] = 0;
+            }
+            if (dp[i][j] != -1) {
+                return dp[i][j];
+            }
+            int notInclude = numDistinct_memo(s1, s2, i - 1, j, dp);
+            int include = numDistinct_memo(s1, s2, i - 1, j - 1, dp);
+            return dp[i][j] = notInclude + include;
+        }
+
+        public int numDistinct(String s, String t) {
+            // return numDistinct_rec(s,t,s.length(),t.length());
+            int[][] dp = new int[s.length() + 1][t.length() + 1];
+            for (int[] d : dp) {
+                Arrays.fill(d, -1);
+            }
+            return numDistinct_memo(s, t, s.length(), t.length(), dp);
+        }
+    }
+
+    // 115. Sir Approach
+
+    public int numDistinct(String s, String t, int n, int m, int[][] dp) {
+        if (m == 0) {
+            return dp[n][m] = 1;
+        }
+
+        if (n < m) {
+            return dp[n][m] = 0;
+        }
+
+        if (dp[n][m] != -1)
+            return dp[n][m];
+
+        int a = numDistinct(s, t, n - 1, m - 1, dp);
+        int b = numDistinct(s, t, n - 1, m, dp);
+
+        if (s.charAt(n - 1) == t.charAt(m - 1))
+            return dp[n][m] = a + b;
+        else
+            return dp[n][m] = b;
+    }
+
+    public int numDistinct_DP(String s, String t, int N, int M, int[][] dp) {
+        for (int n = 0; n <= N; n++) {
+            for (int m = 0; m <= M; m++) {
+                if (m == 0) {
+                    dp[n][m] = 1;
+                    continue;
+                }
+
+                if (n < m) {
+                    dp[n][m] = 0;
+                    continue;
+                }
+
+                int a = dp[n - 1][m - 1];// numDistinct(s, t, n - 1, m - 1, dp);
+                int b = dp[n - 1][m];// numDistinct(s, t, n - 1, m, dp);
+
+                if (s.charAt(n - 1) == t.charAt(m - 1))
+                    dp[n][m] = a + b;
+                else
+                    dp[n][m] = b;
+            }
+        }
+
+        return dp[N][M];
+    }
+
+    public int numDistinct(String s, String t) {
+        int n = s.length(), m = t.length();
+        int[][] dp = new int[n + 1][m + 1];
+        for (int[] d : dp)
+            Arrays.fill(d, -1);
+
+        int ans = numDistinct(s, t, n, m, dp);
+
+        return ans;
+    }
+
+    // 72. Edit Distance
+    class Solution1 {
+        private static int minDistance_rec(String s1, String s2, int n, int m) {
+            if (n == 0 || m == 0) {
+                return (n == 0 ? m : n);
+            }
+            int insert = minDistance_rec(s1, s2, n, m - 1);
+            int delete = minDistance_rec(s1, s2, n - 1, m);
+            int update = minDistance_rec(s1, s2, n - 1, m - 1);
+            if (s1.charAt(n - 1) == s2.charAt(m - 1)) {
+                return update;
+            } else {
+                return Math.min(insert, Math.min(delete, update)) + 1;
+            }
+        }
+
+        private static int minDistance_memo(String s1, String s2, int n, int m, int[][] dp) {
+            if (n == 0 || m == 0) {
+                return dp[n][m] = (n == 0 ? m : n);
+            }
+            if (dp[n][m] != -1) {
+                return dp[n][m];
+            }
+            int insert = minDistance_memo(s1, s2, n, m - 1, dp);
+            int delete = minDistance_memo(s1, s2, n - 1, m, dp);
+            int update = minDistance_memo(s1, s2, n - 1, m - 1, dp);
+            if (s1.charAt(n - 1) == s2.charAt(m - 1)) {
+                return dp[n][m] = update;
+            } else {
+                return dp[n][m] = Math.min(insert, Math.min(delete, update)) + 1;
+            }
+        }
+
+        private static int minDistance_tabu(String s1, String s2, int N, int M, int[][] dp) {
+            for (int n = 0; n <= N; n++) {
+                for (int m = 0; m <= M; m++) {
+                    if (n == 0 || m == 0) {
+                        dp[n][m] = (n == 0 ? m : n);
+                        continue;
+                    }
+                    int insert = minDistance_memo(s1, s2, n, m - 1, dp);
+                    int delete = minDistance_memo(s1, s2, n - 1, m, dp);
+                    int update = minDistance_memo(s1, s2, n - 1, m - 1, dp);
+                    if (s1.charAt(n - 1) == s2.charAt(m - 1)) {
+                        dp[n][m] = update;
+                        continue;
+                    } else {
+                        dp[n][m] = Math.min(insert, Math.min(delete, update)) + 1;
+                        continue;
+                    }
+                }
+            }
+            return dp[N][M];
+        }
+
+        public int minDistance(String word1, String word2) {
+            // return minDistance_rec(word1,word2,word1.length(),word2.length());
+            int[][] dp = new int[word1.length() + 1][word2.length() + 1];
+            for (int[] d : dp)
+                Arrays.fill(d, -1);
+            // return minDistance_memo(word1,word2,word1.length(),word2.length(),dp);
+            return minDistance_tabu(word1, word2, word1.length(), word2.length(), dp);
+        }
+    }
+
+    // variance of 72. Edit Distance with cost of insertion,replacement and deletion
+    // cost : {insert = a, replace = b, delete = c}
+    public int minDistance_02(String word1, String word2, int n, int m, int[] cost, int[][] dp) {
+        if (n == 0 || m == 0) {
+            return dp[n][m] = (n == 0 ? m * cost[0] : n * cost[2]);
+        }
+
+        if (dp[n][m] != -1)
+            return dp[n][m];
+
+        int insert = minDistance_02(word1, word2, n, m - 1, cost, dp);
+        int delete = minDistance_02(word1, word2, n - 1, m, cost, dp);
+        int replace = minDistance_02(word1, word2, n - 1, m - 1, cost, dp);
+
+        if (word1.charAt(n - 1) == word2.charAt(m - 1))
+            return dp[n][m] = replace;
+        else
+            return dp[n][m] = Math.min(Math.min(insert + cost[0], delete + cost[2]), replace + cost[1]);
+    }
+
+    private static boolean wildCardMatching_rec(String s1, String s2, int n, int m) {
+        if (m == 0) {
+            if (n == 0) {
+                return true;
+            }
+            return false;
+        }
+        if (n < 0) {
+            return false;
+        }
+        boolean check1 = false, check2 = false;
+        if (n != 0 && ((s1.charAt(n - 1) == s2.charAt(m - 1)) || s2.charAt(m - 1) == '?')) {
+            check1 = wildCardMatching_rec(s1, s2, n - 1, m - 1);
+        } else {
+            if (s2.charAt(m - 1) == '*') {
+                check2 = wildCardMatching_rec(s1, s2, n, m - 1) || wildCardMatching_rec(s1, s2, n - 1, m);
+            }
+        }
+        return check1 || check2;
+    }
+
+    private static boolean wildCardMatching_memo(String s1, String s2, int n, int m, Boolean[][] dp) {
+        if (m == 0) {
+            if (n == 0) {
+                return dp[n][m] = true;
+            }
+            return dp[n][m] = false;
+        }
+        if (n < 0) {
+            return false;
+        }
+        if (dp[n][m] != null) {
+            return dp[n][m];
+        }
+        boolean check1 = false, check2 = false;
+        if (n != 0 && ((s1.charAt(n - 1) == s2.charAt(m - 1)) || s2.charAt(m - 1) == '?')) {
+            check1 = wildCardMatching_memo(s1, s2, n - 1, m - 1, dp);
+        } else {
+            if (s2.charAt(m - 1) == '*') {
+                check2 = wildCardMatching_memo(s1, s2, n, m - 1, dp) || wildCardMatching_memo(s1, s2, n - 1, m, dp);
+            }
+        }
+        // System.out.println(check1+" "+check2);
+        return dp[n][m] = (check1 || check2);
+    }
+
+    private static boolean wildCardMatching_tabu(String s1, String s2, int N, int M, Boolean[][] dp) {
+        for (int n = 0; n <= N; n++) {
+            for (int m = 0; m <= M; m++) {
+                if (m == 0) {
+                    if (n == 0) {
+                        dp[n][m] = true;
+                        continue;
+                    }
+                    dp[n][m] = false;
+                    continue;
+                }
+                boolean check1 = false, check2 = false;
+                if (n != 0 && ((s1.charAt(n - 1) == s2.charAt(m - 1)) || s2.charAt(m - 1) == '?')) {
+                    check1 = dp[n - 1][m - 1]; // wildCardMatching_memo(s1, s2, n - 1, m - 1, dp);
+                } else {
+                    if (s2.charAt(m - 1) == '*') {
+                        // check2 = wildCardMatching_memo(s1, s2, n, m - 1, dp)
+                        // || wildCardMatching_memo(s1, s2, n - 1, m, dp);
+                        check2 = dp[n][m - 1];
+                        if (n != 0) {
+                            check2 = check2 || dp[n - 1][m];
+                        }
+                    }
+                }
+                // System.out.println(check1+" "+check2);
+                dp[n][m] = (check1 || check2);
+            }
+        }
+        return dp[N][M];
+    }
+
+    private static void wildCardMatchingCall() {
+        String s1 = "dsfdfas";
+        String s2 = "*f?s";
+        System.out.println(wildCardMatching_rec(s1, s2, s1.length(), s2.length()));
+        Boolean[][] dp = new Boolean[s1.length() + 1][s2.length() + 1];
+        // System.out.println(wildCardMatching_memo(s1, s2, s1.length(), s2.length(),
+        // dp));
+        System.out.println(wildCardMatching_tabu(s1, s2, s1.length(), s2.length(), dp));
+    }
+
     public static void main(String[] args) {
         // palindromicSubseqCall();
-        commonSubseqCall();
+        // commonSubseqCall();
+        // wildCardMatchingCall();
+        
     }
 }
