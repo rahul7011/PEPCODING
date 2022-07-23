@@ -472,10 +472,310 @@ public class string_set {
         }
     }
 
+    // 1035. Uncrossed Lines(exactly same as longestCommonSubsequence)
+    class Solution3 {
+        private static int longestCommonSubsequence(int[] nums1, int[] nums2, int n, int m, int[][] dp) {
+            if (n == 0 || m == 0) {
+                return dp[n][m] = 0;
+            }
+            if (dp[n][m] != -1) {
+                return dp[n][m];
+            }
+            if (nums1[n - 1] == nums2[m - 1]) {
+                dp[n][m] = longestCommonSubsequence(nums1, nums2, n - 1, m - 1, dp) + 1;
+            } else {
+                dp[n][m] = Math.max(longestCommonSubsequence(nums1, nums2, n - 1, m, dp),
+                        longestCommonSubsequence(nums1, nums2, n, m - 1, dp));
+            }
+            return dp[n][m];
+        }
+
+        private static int longestCommonSubsequence_tabu(int[] nums1, int[] nums2, int N, int M, int[][] dp) {
+            for (int n = 0; n <= N; n++) {
+                for (int m = 0; m <= M; m++) {
+                    if (n == 0 || m == 0) {
+                        dp[n][m] = 0;
+                        continue;
+                    }
+                    if (nums1[n - 1] == nums2[m - 1]) {
+                        dp[n][m] = dp[n - 1][m - 1] + 1; // longestCommonSubsequence(s1, s2, n - 1, m - 1, dp) + 1;
+                    } else {
+                        // dp[n][m] = Math.max(longestCommonSubsequence(s1, s2, n - 1, m, dp),
+                        // longestCommonSubsequence(s1, s2, n, m - 1, dp));
+                        dp[n][m] = Math.max(dp[n - 1][m],
+                                dp[n][m - 1]);
+                    }
+                }
+            }
+            return dp[N][M];
+        }
+
+        public int maxUncrossedLines(int[] nums1, int[] nums2) {
+            int n = nums1.length;
+            int m = nums2.length;
+            int[][] dp = new int[n + 1][m + 1];
+            // for (int[] a : dp) {
+            // Arrays.fill(a, -1);
+            // }
+            // return longestCommonSubsequence(nums1, nums2, n, m, dp);
+            return longestCommonSubsequence_tabu(nums1, nums2, n, m, dp);
+        }
+    }
+
+    // 1458. Max Dot Product of Two Subsequences
+    private static int maxDotProduct(int[] nums1, int[] nums2, int n, int m) {
+        if (n == 0 || m == 0) {
+            return (int) -1e9;
+        }
+        int leftExclude = maxDotProduct(nums1, nums2, n - 1, m);
+        int rightExclude = maxDotProduct(nums1, nums2, n, m - 1);
+        int bothInclude = maxDotProduct(nums1, nums2, n - 1, m - 1);
+        if (bothInclude == (int) -1e9) {
+            bothInclude = nums1[n - 1] * nums2[m - 1];
+        } else {
+            bothInclude += nums1[n - 1] * nums2[m - 1];
+        }
+        return Math.max(Math.max(leftExclude, Math.max(rightExclude, bothInclude)), nums1[n - 1] * nums2[m - 1]);
+    }
+
+    private static int maxDotProduct_memo(int[] nums1, int[] nums2, int n, int m, int[][] dp) {
+        if (n == 0 || m == 0) {
+            return (int) -1e9;
+        }
+        if (dp[n][m] != (int) -1e9 + 7) {
+            return dp[n][m];
+        }
+        int leftExclude = maxDotProduct_memo(nums1, nums2, n - 1, m, dp);
+        int rightExclude = maxDotProduct_memo(nums1, nums2, n, m - 1, dp);
+        int bothInclude = maxDotProduct_memo(nums1, nums2, n - 1, m - 1, dp);
+        if (bothInclude == (int) -1e9) {
+            bothInclude = nums1[n - 1] * nums2[m - 1];
+        } else {
+            bothInclude += nums1[n - 1] * nums2[m - 1];
+        }
+        return dp[n][m] = Math.max(Math.max(leftExclude, Math.max(rightExclude, bothInclude)),
+                nums1[n - 1] * nums2[m - 1]);
+    }
+
+    private static int maxDotProduct_tabu(int[] nums1, int[] nums2, int N, int M, int[][] dp) {
+        for (int n = 0; n <= N; n++) {
+            for (int m = 0; m <= M; m++) {
+                if (n == 0 || m == 0) {
+                    dp[n][m] = (int) -1e9;
+                    continue;
+                }
+                int leftExclude = dp[n - 1][m]; // maxDotProduct_memo(nums1, nums2, n - 1, m, dp);
+                int rightExclude = dp[n][m - 1]; // maxDotProduct_memo(nums1, nums2, n, m - 1, dp);
+                int bothInclude = dp[n - 1][m - 1]; // maxDotProduct_memo(nums1, nums2, n - 1, m - 1, dp);
+                if (bothInclude == (int) -1e9) {
+                    bothInclude = nums1[n - 1] * nums2[m - 1];
+                } else {
+                    bothInclude += nums1[n - 1] * nums2[m - 1];
+                }
+                dp[n][m] = Math.max(Math.max(leftExclude, Math.max(rightExclude, bothInclude)),
+                        nums1[n - 1] * nums2[m - 1]);
+            }
+        }
+        return dp[N][M];
+    }
+
+    private static void maxDotProductCall() {
+        int[] nums1 = { 2, 1, -2, 5 };
+        int[] nums2 = { 3, 0, -6 };
+        // System.out.println(maxDotProduct(nums1, nums2, nums1.length, nums2.length));
+        int[][] dp = new int[nums1.length + 1][nums2.length + 1];
+        // for (int[] d : dp) {
+        // Arrays.fill(d, (int) -1e9 + 7);
+        // }
+        // System.out.println(maxDotProduct_memo(nums1, nums2, nums1.length,
+        // nums2.length, dp));
+        System.out.println(maxDotProduct_tabu(nums1, nums2, nums1.length, nums2.length, dp));
+    }
+
+    // 5. Longest Palindromic Substring
+    class Solution4 {
+        // note:this type of question should be done using tabulation
+        public String longestPalindrome(String s) {
+            int n = s.length();
+            boolean[][] dp = new boolean[n][n];
+            // si=starting index
+            int si = 0;
+            int totalPalindrome = 0;
+            int maxLength = 0;
+            String longestPalindrome = "";
+            for (int gap = 0; gap < n; gap++) {
+                for (int i = 0, j = gap; j < n; j++, i++) {
+                    if (gap == 0) {
+                        dp[i][j] = true;
+                    } else if (gap == 1) {
+                        dp[i][j] = (s.charAt(i) == s.charAt(j) ? true : false);
+                    } else {
+                        dp[i][j] = s.charAt(i) == s.charAt(j) && dp[i + 1][j - 1];
+                    }
+                    if (dp[i][j] == true) {
+                        totalPalindrome++;
+                        if (maxLength < (j - i + 1)) {
+                            maxLength = j - i + 1;
+                            si = i;
+                        }
+                    }
+                }
+            }
+            longestPalindrome = s.substring(si, si + maxLength);
+            // System.out.println(totalPalindrome+" "+maxLength+" "+longestPalindrome);
+            return longestPalindrome;
+        }
+    }
+
+    // Longest Common Substring
+    // https://practice.geeksforgeeks.org/problems/longest-common-substring1452/1
+    class Solution5 {
+        private static int longestCommonSubstring_tabu(String s1, String s2, int N, int M, int[][] dp) {
+            // ei- ending index
+            int maxLen = 0, ei = 0;
+            for (int n = 0; n <= N; n++) {
+                for (int m = 0; m <= M; m++) {
+                    if (n == 0 || m == 0) {
+                        dp[n][m] = 0;
+                        continue;
+                    }
+                    if (s1.charAt(n - 1) == s2.charAt(m - 1)) {
+                        dp[n][m] = dp[n - 1][m - 1] + 1; // longestCommonSubsequence(s1, s2, n - 1, m - 1, dp) + 1;
+                        if (maxLen < dp[n][m]) {
+                            maxLen = dp[n][m];
+                            ei = n;
+                        }
+                    }
+                }
+            }
+            String longestSubstring = s1.substring(ei - maxLen, ei);
+            // System.out.println(longestSubstring);
+            return maxLen;
+        }
+
+        int longestCommonSubstr(String S1, String S2, int n, int m) {
+            int[][] dp = new int[n + 1][m + 1];
+            return longestCommonSubstring_tabu(S1, S2, n, m, dp);
+        }
+    }
+
+    // 583. Delete Operation for Two Strings
+    class Solution6 {
+        // logic: find longestCommonSubseq and subtract twice of it from the sum of
+        // s1+s2 lengths
+        private static int longestCommonSubsequence(String s1, String s2, int n, int m, int[][] dp) {
+            if (n == 0 || m == 0) {
+                return dp[n][m] = 0;
+            }
+            if (dp[n][m] != -1) {
+                return dp[n][m];
+            }
+            if (s1.charAt(n - 1) == s2.charAt(m - 1)) {
+                dp[n][m] = longestCommonSubsequence(s1, s2, n - 1, m - 1, dp) + 1;
+            } else {
+                dp[n][m] = Math.max(longestCommonSubsequence(s1, s2, n - 1, m, dp),
+                        longestCommonSubsequence(s1, s2, n, m - 1, dp));
+            }
+            return dp[n][m];
+        }
+
+        public int minDistance(String word1, String word2) {
+            int[][] dp = new int[word1.length() + 1][word2.length() + 1];
+            for (int[] a : dp) {
+                Arrays.fill(a, -1);
+            }
+            return (word1.length() + word2.length()
+                    - 2 * longestCommonSubsequence(word1, word2, word1.length(), word2.length(), dp));
+        }
+    }
+
+    // 132. Palindrome Partitioning II
+    class Solution7 {
+        public void longestPalindrome(String s, boolean[][] dp) {
+            int si = 0;
+            int n = s.length();
+            for (int gap = 0; gap < n; gap++) {
+                for (int i = 0, j = gap; j < n; j++, i++) {
+                    if (gap == 0) {
+                        dp[i][j] = true;
+                    } else if (gap == 1) {
+                        dp[i][j] = (s.charAt(i) == s.charAt(j) ? true : false);
+                    } else {
+                        dp[i][j] = s.charAt(i) == s.charAt(j) && dp[i + 1][j - 1];
+                    }
+                }
+            }
+        }
+
+        private static int minCut(String s, int si, int ei, int[] dp, boolean[][] palindromeDp) {
+            if (palindromeDp[si][ei] == true) {
+                // already a palindrome,means no need for cut
+                return 0;
+            }
+            if (dp[si] != -1) {
+                return dp[si];
+            }
+            int minAns = (int) 1e8;
+            for (int cut = si; cut <= ei; cut++) {
+                if (palindromeDp[si][cut] == true) {
+                    minAns = Math.min(minAns, minCut(s, cut + 1, ei, dp, palindromeDp) + 1);
+                }
+            }
+            return dp[si] = minAns;
+        }
+
+        public int minCut(String s) {
+            int n = s.length();
+            boolean[][] palindromeDp = new boolean[n][n];
+            // pre-processing part for the O(1) checking of palindrome
+            longestPalindrome(s, palindromeDp);
+            int[] dp = new int[s.length() + 1];
+            Arrays.fill(dp, -1);
+            return minCut(s, 0, s.length() - 1, dp, palindromeDp);
+
+        }
+    }
+
+    // Count subsequences of type a^i, b^j, c^k
+    // https://practice.geeksforgeeks.org/problems/count-subsequences-of-type-ai-bj-ck4425/1
+    class Solution8 {
+        public int fun(String s) {
+            long emptyCount = 1, aCount = 0, bCount = 0, cCount = 0, mod = (int) 1e9 + 7;
+            for (int i = 0; i < s.length(); i++) {
+                char ch = s.charAt(i);
+                if (ch == 'a') {
+                    aCount = aCount + (emptyCount + aCount) % mod;
+                } else if (ch == 'b') {
+                    bCount = bCount + (aCount + bCount) % mod;
+                } else {
+                    // it is 'c'
+                    cCount = cCount + (bCount + cCount) % mod;
+                }
+            }
+            return (int) (cCount % mod);
+        }
+    }
+
+    // follow Up Question: ai-bj-ck-dl-em-fn
+    public static long countSubsequences_variance(String s) {
+        // type : ai-bj-ck-dl-em-fn
+        long[] iCount = new long[6];
+        long emptyCount = 1;
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            int pos = ch - 'a';
+            iCount[pos] = iCount[pos] + ((pos != 0 ? iCount[pos - 1] : emptyCount) + iCount[pos]);
+        }
+
+        return iCount[iCount.length - 1];
+    }
+
     public static void main(String[] args) {
         // palindromicSubseqCall();
         // commonSubseqCall();
         // wildCardMatchingCall();
+        // maxDotProductCall();
+        // System.out.println(countSubsequences_variance("abcdef"));
 
     }
 }

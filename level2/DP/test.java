@@ -107,39 +107,38 @@ public class test {
         return check1 || check2;
     }
 
-    private static boolean regularExpressionMatching_memo(String s1, String s2, int n, int m,Boolean[][] dp) {
+    private static boolean regularExpressionMatching_memo(String s1, String s2, int n, int m, Boolean[][] dp) {
         // System.out.println(n+" "+m);
         if (m <= 0) {
             if (n == 0 && m == 0) {
-                return dp[n][m]=true;
+                return dp[n][m] = true;
             }
             return false;
         }
         if (n < 0) {
             return false;
         }
-        if(dp[n][m]!=null)
-        {
+        if (dp[n][m] != null) {
             return dp[n][m];
         }
         // System.out.println(n + " " + m);
         boolean check1 = false, check2 = false;
         if (n != 0 && ((s1.charAt(n - 1) == s2.charAt(m - 1)) || s2.charAt(m - 1) == '.')) {
-            check1 = regularExpressionMatching_memo(s1, s2, n - 1, m - 1,dp);
+            check1 = regularExpressionMatching_memo(s1, s2, n - 1, m - 1, dp);
         } else {
             if (s2.charAt(m - 1) == '*' && (s2.charAt(m - 2) == '.')) {
-                check2 = regularExpressionMatching_memo(s1, s2, n, m - 2,dp)
-                        || regularExpressionMatching_memo(s1, s2, n - 1, m,dp);
+                check2 = regularExpressionMatching_memo(s1, s2, n, m - 2, dp)
+                        || regularExpressionMatching_memo(s1, s2, n - 1, m, dp);
             } else if (n != 0 && (s2.charAt(m - 1) == '*' && (s2.charAt(m - 2) == s1.charAt(n - 1)))) {
-                check2 = regularExpressionMatching_memo(s1, s2, n, m - 2,dp)
-                        || regularExpressionMatching_memo(s1, s2, n - 1, m,dp);
+                check2 = regularExpressionMatching_memo(s1, s2, n, m - 2, dp)
+                        || regularExpressionMatching_memo(s1, s2, n - 1, m, dp);
             } else {
                 if (s2.charAt(m - 1) == '*')
-                    check2 = regularExpressionMatching_memo(s1, s2, n, m - 2,dp);
+                    check2 = regularExpressionMatching_memo(s1, s2, n, m - 2, dp);
             }
         }
         // System.out.println(n + " " + m + " " + check1 + " " + check2);
-        return dp[n][m]=(check1 || check2);
+        return dp[n][m] = (check1 || check2);
     }
 
     private static void regularExpMatchCall() {
@@ -148,13 +147,13 @@ public class test {
         // String s1 = "mississippi";
         // String s2 = "mis*is*p*.";
         System.out.println(regularExpressionMatching_rec(s1, s2, s1.length(), s2.length()));
-        Boolean[][] dp=new Boolean[s1.length()+1][s2.length()+1];
-        System.out.println(regularExpressionMatching_memo(s1, s2, s1.length(), s2.length(),dp));
+        Boolean[][] dp = new Boolean[s1.length() + 1][s2.length() + 1];
+        System.out.println(regularExpressionMatching_memo(s1, s2, s1.length(), s2.length(), dp));
     }
 
     public static void main(String[] args) {
         // friendsCall();
         // distinceSubseqCall();
-        regularExpMatchCall();
+        // regularExpMatchCall();
     }
 }
