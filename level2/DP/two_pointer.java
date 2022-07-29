@@ -771,7 +771,7 @@ public class two_pointer {
         private static int maxGold(int[][] gold, int sr, int sc, int[][] dir, int[][] dp) {
             int n = gold.length, m = gold[0].length;
             if (sc == m - 1) {
-                return gold[sr][sc];
+                return dp[sr][sc] = gold[sr][sc];
             }
             if (dp[sr][sc] != 0) {
                 return dp[sr][sc];
@@ -947,10 +947,56 @@ public class two_pointer {
         display2D(dp);
     }
 
+    private static String goldMine_BackEngine(int sr, int sc, int[][] dir, int[][] dp) {
+        int n = dp.length;
+        int m = dp[0].length;
+        if (sc == m - 1) {
+            return "->{" + sr + "," + sc+"}";
+        }
+        int mx = -1, my = -1, max = 0;
+        for (int d = 0; d < dir.length; d++) {
+            int x = sr + dir[d][0];
+            int y = sc + dir[d][1];
+            if (x >= 0 && x < n && y >= 0 && y < m) {
+                if (max < dp[x][y]) {
+                    max = dp[x][y];
+                    mx = x;
+                    my = y;
+                }
+            }
+        }
+        return (sc==0?"{"+sr + "," + sc+"}":"->{" + sr + "," + sc +"}")+ goldMine_BackEngine(mx, my, dir, dp);
+    }
+
+    private static void backEngineCall() {
+        // int[][] M = { { 1, 3, 3 }, { 2, 1, 4 }, { 0, 6, 4 } };
+        int[][] M = {{1, 3, 1, 5},{2, 2, 4, 1},{5, 0, 2, 3},{0, 6, 1, 2}};
+        int n = M.length, m = M[0].length;
+        int[][] dir = { { -1, 1 }, { 0, 1 }, { 1, 1 } };
+        int[][] dp = new int[n][m];
+        int max = 0;
+        for (int i = 0; i < n; i++) {
+            max = Math.max(max, Solution6.maxGold(M, i, 0, dir, dp));
+        }
+        display2D(dp);
+        int mx = -1, my = -1;
+        max = 0;
+        for (int i = 0; i < n; i++) {
+            if (max < dp[i][0]) {
+                max = dp[i][0];
+                mx = i;
+                my = 0;
+            }
+        }
+        System.out.println(goldMine_BackEngine(mx, my, dir, dp));
+    }
+
     public static void main(String[] args) {
         // fibCall();
         // mazeCall();
         // boardCall();
         // divideNInKGroupsCall();
+
+        backEngineCall();
     }
 }

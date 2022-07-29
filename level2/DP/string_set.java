@@ -1,4 +1,7 @@
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 
 public class string_set {
     // 516. Longest Palindromic Subsequence
@@ -770,12 +773,116 @@ public class string_set {
         return iCount[iCount.length - 1];
     }
 
+    // leetcode 139
+    class Solution9 {
+        public boolean wordBreak(String s, List<String> wordDict) {
+            HashSet<String> hs = new HashSet<>();
+            int n = s.length();
+            int max = 0;
+            for (String x : wordDict) {
+                max = Math.max(max, x.length());
+                hs.add(x);
+            }
+            // start forming dp
+            boolean[] dp = new boolean[n + 1];
+            dp[0] = true;
+            for (int i = 0; i <= n; i++) {
+                if (dp[i] == false) {
+                    continue;
+                }
+                for (int l = 1; l <= max && (i + l) <= n; l++) {
+                    String x = s.substring(i, i + l);
+                    // System.out.println(i+" "+x);
+                    if (hs.contains(x) == true) {
+                        dp[i + l] = true;
+                    }
+                }
+            }
+            return dp[n];
+        }
+    }
+
+    private static String longestPalindromicSubseq_BackEngine(String s, int si, int ei, int[][] dp) {
+        if (si >= ei) {
+            return si == ei ? s.charAt(si) + "" : "";
+        }
+        if (s.charAt(si) == s.charAt(ei)) {
+            return s.charAt(si) + longestPalindromicSubseq_BackEngine(s, si + 1, ei - 1, dp) + s.charAt(si);
+        } else if (dp[si + 1][ei] > dp[si][ei - 1]) {
+            return longestPalindromicSubseq_BackEngine(s, si + 1, ei, dp);
+        } else {
+            return longestPalindromicSubseq_BackEngine(s, si, ei - 1, dp);
+        }
+    }
+
+    // 140. Word Break II
+    public static List<String> wordBreak(String s, List<String> wordDict) {
+        HashSet<String> hs = new HashSet<>();
+        int n = s.length();
+        int max = 0;
+        for (String x : wordDict) {
+            max = Math.max(max, x.length());
+            hs.add(x);
+        }
+        // start forming dp
+        boolean[] dp = new boolean[n + 1];
+        dp[0] = true;
+        for (int i = 0; i <= n; i++) {
+            if (dp[i] == false) {
+                continue;
+            }
+            for (int l = 1; l <= max && (i + l) <= n; l++) {
+                String x = s.substring(i, i + l);
+                // System.out.println(i+" "+x);
+                if (hs.contains(x) == true) {
+                    dp[i + l] = true;
+                }
+            }
+        }
+        if (dp[n] == true) {
+            List<String> ans = new ArrayList<>();
+            wordBreak_backEngine(s, 0, s.length(), max, dp, "", ans, hs);
+            return ans;
+        } else
+            return new ArrayList<>();
+    }
+
+    private static void wordBreak_backEngine(String s, int si, int ei, int maxLen, boolean[] dp, String psf,
+            List<String> ans, HashSet<String> hs) {
+        if (si >= ei) {
+            // we need to trim the psf,as it includes an extra space in the end
+            ans.add(psf.substring(0, psf.length() - 1));
+            return;
+        }
+        for (int l = 1; l <= maxLen && (si + l) <= s.length(); l++) {
+            if (dp[l + si] == true) {
+                String subStr = s.substring(si, si + l);
+                if (hs.contains(subStr) == true) {
+                    wordBreak_backEngine(s, si + l, ei, maxLen, dp, psf + subStr + " ", ans, hs);
+                }
+            }
+        }
+    }
+
+    private static void backEngineCall() {
+        // String s = "ABCBBAD";
+        // int[][] dp = new int[s.length()][s.length()];
+        // longestPalindromeSubseq_tabu(s, 0, s.length() - 1, dp);
+        // System.out.println(longestPalindromicSubseq_BackEngine(s, 0, s.length() - 1, dp));
+
+        String s="catsanddog";
+        List<String>words=new ArrayList<>(Arrays.asList("cat","cats","and","sand","dog"));
+        System.out.println(wordBreak(s,words));
+    }
+
     public static void main(String[] args) {
         // palindromicSubseqCall();
         // commonSubseqCall();
         // wildCardMatchingCall();
         // maxDotProductCall();
         // System.out.println(countSubsequences_variance("abcdef"));
+
+        backEngineCall();
 
     }
 }
