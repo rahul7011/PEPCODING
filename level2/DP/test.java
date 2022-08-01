@@ -155,5 +155,6 @@ public class test {
         // friendsCall();
         // distinceSubseqCall();
         // regularExpMatchCall();
+        System.out.println(Math.floor(Math.sqrt(10)));
     }
 }
