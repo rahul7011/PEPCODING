@@ -1,7 +1,9 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
-public class l001 {
+public class findSet {
     public static class TreeNode {
         int val = 0;
         TreeNode left = null;
@@ -236,7 +238,159 @@ public class l001 {
         }
     }
 
-    public static void main(String[] args) {
+    // Burning Trees with description(which node will burn at which time)
+    // https://www.geeksforgeeks.org/burn-the-binary-tree-starting-from-the-target-node/
+    private static void burnTrees(TreeNode root,TreeNode blocked,int k,HashMap<Integer,HashSet<Integer>>hm)
+    {
+        if(root==null||root==blocked)
+        {
+            return ;
+        }
+        HashSet<Integer>hs=hm.getOrDefault(k, new HashSet<>());
+        hs.add(root.val);
+        hm.put(k, hs);
+        burnTrees(root.left,blocked,k+1,hm);
+        burnTrees(root.right,blocked,k+1,hm);
+    }
+    private static void burnTrees() {
+        /*  12
+           /  \
+          13  10
+              / \
+             14 15
+            / \ / \
+          21 24 22 23
+ 
+        Let us create Binary Tree as shown
+        above */
+        TreeNode root = new TreeNode(12);
+        root.left = new TreeNode(13);
+        root.right = new TreeNode(10);
+        root.right.left = new TreeNode(14);
+        root.right.right = new TreeNode(15);
+        TreeNode left = root.right.left;
+        TreeNode right = root.right.right;
+        left.left = new TreeNode(21);
+        left.right = new TreeNode(24);
+        right.left = new TreeNode(22);
+        right.right = new TreeNode(23);
+        ArrayList<TreeNode> ans = new ArrayList<>();
+        int data = 14;
+        nodeToRootPath(root, data, ans);
+        HashMap<Integer,HashSet<Integer>>hm=new HashMap<>();
+        TreeNode blocked=null;
+        for(int i=0;i<ans.size();i++)
+        {
+            TreeNode node=ans.get(i);
+            burnTrees(node,blocked,i,hm);
+            blocked=node;
+        }
+        for(int key:hm.keySet())
+        {
+            System.out.println(key+"-> "+hm.get(key));
+        }
+    }
 
+    // https://practice.geeksforgeeks.org/problems/burning-tree/1
+    class Solution2
+    {
+        /*class Node {
+            int data;
+            Node left;
+            Node right;
+        
+            Node(int data) {
+                this.data = data;
+                left = null;
+                right = null;
+            }
+        }*/
+       public static boolean nodeToRootPath(Node root, int data, ArrayList<Node> ans) {
+            if (root == null) {
+                return false;
+            }
+            if (root.data == data) {
+                ans.add(root);
+                return true;
+            }
+            boolean res = nodeToRootPath(root.left, data, ans) || nodeToRootPath(root.right, data, ans);
+            if (res == true) {
+                ans.add(root);
+            }
+            return res;
+        }
+    
+        private static void burnTrees(Node root,Node blocked,int k,HashMap<Integer,HashSet<Integer>>hm)
+        {
+            if(root==null||root==blocked)
+            {
+                return ;
+            }
+            HashSet<Integer>hs=hm.getOrDefault(k, new HashSet<>());
+            hs.add(root.data);
+            hm.put(k, hs);
+            burnTrees(root.left,blocked,k+1,hm);
+            burnTrees(root.right,blocked,k+1,hm);
+        }
+        public static int minTime(Node root, int data) 
+        {
+            ArrayList<Node> ans = new ArrayList<>();
+            nodeToRootPath(root, data, ans);
+            HashMap<Integer,HashSet<Integer>>hm=new HashMap<>();
+            Node blocked=null;
+            for(int i=0;i<ans.size();i++)
+            {
+                Node node=ans.get(i);
+                burnTrees(node,blocked,i,hm);
+                blocked=node;
+            }
+            // for(int key:hm.keySet())
+            // {
+            //     System.out.println(key+"-> "+hm.get(key));
+            // }
+            return hm.size()-1;
+        }
+    }
+    //Burning Tree optimised
+    public static void burningTreeNode(TreeNode root, int time, TreeNode blockNode, ArrayList<ArrayList<Integer>> ans) {
+        if (root == null || root == blockNode)
+            return;
+        if (time == ans.size())    // if(time == ans.size()) ans.push_back({});
+            ans.add(new ArrayList<>());
+        ans.get(time).add(root.val);
+
+        burningTreeNode(root.left, time + 1, blockNode, ans);
+        burningTreeNode(root.right, time + 1, blockNode, ans);
+
+    }
+
+    public static int burningTree(TreeNode root, int fireNode, ArrayList<ArrayList<Integer>> ans) {
+        if (root == null)
+            return -1;
+        if (root.val == fireNode) {
+            burningTreeNode(root, 0, null, ans);
+            return 1;
+        }
+
+        int lt = burningTree(root.left, fireNode, ans);
+        if (lt != -1) {
+            burningTreeNode(root, lt, root.left, ans);
+            return lt + 1;
+        }
+
+        int rt = burningTree(root.right, fireNode, ans);
+        if (rt != -1) {
+            burningTreeNode(root, lt, root.right, ans);
+            return rt + 1;
+        }
+
+        return -1;
+    }
+    public static void burningTree(TreeNode root, int data) {
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+        burningTree(root, data, ans);
+    }
+    public static void main(String[] args) {
+        burnTrees();
     }
 }
