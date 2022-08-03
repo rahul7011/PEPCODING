@@ -338,9 +338,219 @@ public class target {
         System.out.println(targetSum_path(arr, N, dp, tar, ""));
     }
 
+    // Find number of solutions of a linear equation of n variables(Easy
+    // Question,just remember the basics--->(Coin change combination infinite))
+    // https://www.geeksforgeeks.org/find-number-of-solutions-of-a-linear-equation-of-n-variables/
+
+    // 416. Partition Equal Subset Sum
+    class Solution5 {
+
+        private boolean canPartition(int[] nums, int idx, int tar, Boolean[][] dp) {
+            if (idx == nums.length || tar == 0) {
+                if (tar == 0) {
+                    return dp[idx][tar] = true;
+                }
+                return dp[idx][tar] = false;
+            }
+            if (dp[idx][tar] != null) {
+                return dp[idx][tar];
+            }
+            if (tar - nums[idx] >= 0) {
+                boolean check = canPartition(nums, idx + 1, tar - nums[idx], dp);
+                if (check == true) {
+                    return dp[idx][tar] = true;
+                }
+            }
+            return dp[idx][tar] = canPartition(nums, idx + 1, tar, dp);
+        }
+
+        public boolean canPartition(int[] nums) {
+            int sum = 0;
+            for (int x : nums) {
+                sum += x;
+            }
+            if (sum % 2 != 0) {
+                return false;
+            } else {
+                Boolean[][] dp = new Boolean[nums.length + 1][sum / 2 + 1];
+                return canPartition(nums, 0, sum / 2, dp);
+            }
+        }
+    }
+
+    // 494. Target Sum
+    // Good Question:Teaches how to handle negative targets(by shifting logic)
+    class Solution6 {
+        private int findTargetSumWays(int[] nums, int n, int tar) {
+            if (n == 0) {
+                if (tar == 0) {
+                    return 1;
+                }
+                return 0;
+            }
+            int count = 0;
+            // taking as a positive number
+            count += findTargetSumWays(nums, n - 1, tar - nums[n - 1]);
+            // taking as a negative number
+            count += findTargetSumWays(nums, n - 1, tar - (-nums[n - 1]));
+            return count;
+        }
+
+        private int findTargetSumWays_memo(int[] nums, int n, int sum, int tar, int[][] dp) {
+            if (n == 0) {
+                if (tar == sum) {
+                    return dp[n][sum] = 1;
+                }
+                return dp[n][sum] = 0;
+            }
+            if (dp[n][sum] != -1) {
+                return dp[n][sum];
+            }
+            int count = 0;
+            // taking as a positive number
+            count += findTargetSumWays_memo(nums, n - 1, sum + nums[n - 1], tar, dp);
+            // taking as a negative number
+            count += findTargetSumWays_memo(nums, n - 1, sum - nums[n - 1], tar, dp);
+            return dp[n][sum] = count;
+        }
+
+        public int findTargetSumWays(int[] nums, int target) {
+            int sum = 0;
+            for (int x : nums) {
+                sum += x;
+            }
+            if (target > sum || target < -sum) {
+                return 0;
+            }
+            int[][] dp = new int[nums.length + 1][2 * sum + 1];
+            // return findTargetSumWays(nums,nums.length,target);
+            for (int[] d : dp)
+                Arrays.fill(d, -1);
+            return findTargetSumWays_memo(nums, nums.length, sum, target + sum, dp);
+        }
+    }
+
+    // https://leetcode.com/problems/partition-to-k-equal-sum-subsets/submissions/
+    // 698. Partition to K Equal Sum Subsets
+    class Solution7 {
+        // TLE
+        // private boolean canPartitionKSubsets(int[] nums,int idx,int sum,int[] set)
+        // {
+        // if(idx==nums.length)
+        // {
+        // for(int i=1;i<set.length;i++)
+        // {
+        // if(set[i-1]!=set[i])
+        // {
+        // return false;
+        // }
+        // }
+        // return true;
+        // }
+        // boolean check=false;
+        // for(int choice=0;choice<set.length;choice++)
+        // {
+        // if((set[choice]+nums[idx])<=(sum / set.length))
+        // {
+        // set[choice]+=nums[idx];
+        // check=canPartitionKSubsets(nums,idx+1,sum,set);
+        // if(check==true)
+        // {
+        // return true;
+        // }
+        // set[choice]-=nums[idx];
+        // }
+
+        // }
+        // return check;
+        // }
+        private boolean canPartitionKSubsets(int[] nums, int idx, int k, int sumSF, int tar, boolean[] visited) {
+            if (k == 0) {
+                return true;
+            }
+            if (sumSF > tar)
+                return false;
+            if (sumSF == tar) {
+                // only k-1 more sets to go
+                return canPartitionKSubsets(nums, 0, k - 1, 0, tar, visited);
+            }
+            boolean check = false;
+            for (int i = idx; i < nums.length; i++) {
+                if (visited[i] == false) {
+                    visited[i] = true;
+                    check = check || canPartitionKSubsets(nums, i + 1, k, sumSF + nums[i], tar, visited);
+                    visited[i] = false;
+                }
+            }
+            return check;
+        }
+
+        public boolean canPartitionKSubsets(int[] nums, int k) {
+            // int[] set=new int[k];
+            int sum = 0;
+            int max = Integer.MIN_VALUE;
+            for (int x : nums) {
+                sum += x;
+                max = Math.max(max, x);
+            }
+            if (sum % k != 0 || max > sum / k) {
+                return false;
+            }
+            // return canPartitionKSubsets(nums,0,sum,set);
+            boolean[] visited = new boolean[nums.length];
+            return canPartitionKSubsets(nums, 0, k, 0, sum / k, visited);
+
+        }
+    }
+
+    // 688. Knight Probability in Chessboard
+    class Solution8 {
+        int dx[] = { 2, 1, -1, -2, -2, -1, 1, 2 };
+        int dy[] = { 1, 2, 2, 1, -1, -2, -2, -1 };
+
+        private double knightProb(int n, int k, int r, int c) {
+            if (k == 0) {
+                return 1.0;
+            }
+            double count = 0.0;
+            for (int d = 0; d < 8; d++) {
+                int x = r + dx[d];
+                int y = c + dy[d];
+                if (x >= 0 && y >= 0 && x < n && y < n) {
+                    count += knightProb(n, k - 1, x, y);
+                }
+            }
+            return count / 8.0;
+        }
+
+        private double knightProb_memo(int n, int k, int r, int c, double[][][] dp) {
+            if (k == 0) {
+                return dp[k][r][c] = 1.0;
+            }
+            if (dp[k][r][c] != 0.0) {
+                return dp[k][r][c];
+            }
+            double count = 0.0;
+            for (int d = 0; d < 8; d++) {
+                int x = r + dx[d];
+                int y = c + dy[d];
+                if (x >= 0 && y >= 0 && x < n && y < n) {
+                    count += knightProb_memo(n, k - 1, x, y, dp);
+                }
+            }
+            return dp[k][r][c] = count / 8.0;   //divide by 8 bcoz we have 8 choices to select to
+        }
+
+        public double knightProbability(int n, int k, int row, int column) {
+            // return knightProb(n,k,row,column);
+            double[][][] dp = new double[k + 1][n + 1][n + 1];
+            return knightProb_memo(n, k, row, column, dp);
+        }
+    }
+
     public static void main(String[] args) {
         // permutationCall();
         // combinationCall();
-        targetSum_backEngg();
+        // targetSum_backEngg();
     }
 }
