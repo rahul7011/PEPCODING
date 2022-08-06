@@ -538,13 +538,49 @@ public class target {
                     count += knightProb_memo(n, k - 1, x, y, dp);
                 }
             }
-            return dp[k][r][c] = count / 8.0;   //divide by 8 bcoz we have 8 choices to select to
+            return dp[k][r][c] = count / 8.0; // divide by 8 bcoz we have 8 choices to select to
         }
 
         public double knightProbability(int n, int k, int row, int column) {
             // return knightProb(n,k,row,column);
             double[][][] dp = new double[k + 1][n + 1][n + 1];
             return knightProb_memo(n, k, row, column, dp);
+        }
+    }
+
+    // 576. Out of Boundary Paths
+    class Solution9 {
+        private int mod = (int) 1e9 + 7;
+
+        private int findPaths(int m, int n, int maxMove, int r, int c, int[][] dir, int[][][] dp) {
+            if (maxMove == 0) {
+                return dp[r][c][maxMove] = 0;
+            }
+            int count = 0;
+            if (dp[r][c][maxMove] != -1) {
+                return dp[r][c][maxMove];
+            }
+            for (int d = 0; d < dir.length; d++) {
+                int x = dir[d][0] + r;
+                int y = dir[d][1] + c;
+                if (x >= 0 && y >= 0 && x < m && y < n) {
+                    count = ((count % mod) + findPaths(m, n, maxMove - 1, x, y, dir, dp) % mod) % mod;
+                    continue;
+                }
+                count++;
+            }
+            return dp[r][c][maxMove] = (count % mod);
+        }
+
+        public int findPaths(int m, int n, int maxMove, int startRow, int startColumn) {
+            int[][] dir = { { 0, -1 }, { -1, 0 }, { 0, 1 }, { 1, 0 } };
+            int[][][] dp = new int[m][n][maxMove + 1];
+            for (int[][] d1 : dp) {
+                for (int[] d : d1) {
+                    Arrays.fill(d, -1);
+                }
+            }
+            return findPaths(m, n, maxMove, startRow, startColumn, dir, dp);
         }
     }
 
