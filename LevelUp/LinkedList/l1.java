@@ -19,6 +19,7 @@ public class l1 {
     // 876. Middle of the Linked List
     // Second Mid
     public ListNode middleNode(ListNode head) {
+        //Note:no matter what we will be checking these conditions
         if (head == null | head.next == null) {
             return head;
         }

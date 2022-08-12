@@ -31,6 +31,8 @@ public class l3 {
         }
     }
 
+    // 21. Merge Two Sorted Lists
+    // https://leetcode.com/problems/merge-two-sorted-lists/
     public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
         ListNode c1 = list1, c2 = list2;
         ListNode nHead = new ListNode(-1);
@@ -287,5 +289,41 @@ public class l3 {
             temp = temp.next;
         }
         return dummy.next;
+    }
+
+    // Without extra space
+    public Node copyRandomList_(Node head) {
+        if (head == null) {
+            return null;
+        }
+        Node curr = head;
+        // form deep copy and the creation of deep copy linkedlist
+        while (curr != null) {
+            Node frwd = curr.next;
+            curr.next = new Node(curr.val);
+            curr.next.next = frwd;
+            curr = frwd;
+        }
+        // Random pointer ko update kro
+
+        curr = head;
+        while (curr != null) {
+            curr.next.random = curr.random == null ? null : curr.random.next;
+            curr = curr.next.next;
+        }
+        // separation of nodes from the original
+        curr = head;
+        Node ans = curr.next;
+        Node temp = ans;
+        while (temp.next != null) {
+            Node frwd = temp.next;
+            curr.next = frwd;
+            temp.next = frwd.next;
+            // pointers update
+            curr = frwd;
+            temp = temp.next;
+        }
+        curr.next = null;
+        return ans;
     }
 }
