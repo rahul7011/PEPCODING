@@ -486,8 +486,116 @@ public class construction {
         return root;
     }
 
+    // 449. Serialize and Deserialize BST
+    public class Codec {
+
+        // Encodes a tree to a single string.
+        private void serialize(TreeNode root, StringBuilder sb) {
+            if (root == null) {
+                return;
+            }
+            sb.append(root.val + " ");
+            serialize(root.left, sb);
+            serialize(root.right, sb);
+        }
+
+        public String serialize(TreeNode root) {
+            StringBuilder sb = new StringBuilder();
+            serialize(root, sb);
+            return sb.toString();
+        }
+
+        // Decodes your encoded data to tree.
+        private TreeNode deserialize(String[] data, int lr, int rr, ArrayList<Integer> idx) {
+            int i = idx.get(0);
+            if (i >= data.length) {
+                return null;
+            }
+            int ele = Integer.parseInt(data[i]);
+            if (lr > ele || rr < ele) {
+                return null;
+            }
+            idx.set(0, idx.get(0) + 1);
+            TreeNode root = new TreeNode(ele);
+            root.left = deserialize(data, lr, ele, idx);
+            root.right = deserialize(data, ele, rr, idx);
+            return root;
+        }
+
+        public TreeNode deserialize(String data) {
+            if (data.length() == 0) {
+                return null;
+            }
+            ArrayList<Integer> idx = new ArrayList<>();
+            idx.add(0);
+            String[] datas = data.split(" ");
+            // System.out.println(datas.length);
+            return deserialize(datas, (int) -1e9, (int) 1e9, idx);
+        }
+    }
+
+    // 1307 · Verify Preorder Sequence in Binary Search Tree
+    // https://www.lintcode.com/problem/1307/
+    public class Solution {
+        public static class TreeNode {
+            int val;
+            TreeNode left = null;
+            TreeNode right = null;
+
+            TreeNode(int val) {
+                this.val = val;
+            }
+        }
+
+        public static class Pair {
+            TreeNode node = null;
+            int lr = (int) -1e9;
+            int rr = (int) 1e9;
+
+            Pair() {
+            }
+
+            Pair(TreeNode node, int lr, int rr) {
+                this.node = node;
+                this.lr = lr;
+                this.rr = rr;
+            }
+        }
+
+        private static boolean bstFromPreOrder(int[] preOrder) {
+            LinkedList<Pair> st = new LinkedList<>();
+            st.addLast(new Pair());
+            int idx = 0;
+            while (st.size() != 0 && idx < preOrder.length) {
+                Pair rp = st.removeLast();
+                int ele = preOrder[idx];
+                if (rp.lr > ele || rp.rr < ele) {
+                    continue;
+                }
+                idx++;
+                TreeNode node = new TreeNode(ele);
+                if (rp.node == null) {
+                    rp.node = node;
+                } else {
+                    if (rp.node.val > ele) {
+                        rp.node.left = node;
+                    } else {
+                        rp.node.right = node;
+                    }
+                }
+                st.addLast(new Pair(node, rp.lr, ele));
+                st.addLast(new Pair(node, ele, rp.rr));
+            }
+            return (idx == preOrder.length);
+        }
+
+        public boolean verifyPreorder(int[] preorder) {
+            return bstFromPreOrder(preorder);
+        }
+    }
+
     public static void main(String[] args) {
         // Solution5.BinaryTreeToBST();
-        bstCall();
+        // bstCall();
     }
 }
