@@ -1,9 +1,29 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
 public class string_set {
+    public class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+
+        TreeNode() {
+        }
+
+        TreeNode(int val) {
+            this.val = val;
+        }
+
+        TreeNode(int val, TreeNode left, TreeNode right) {
+            this.val = val;
+            this.left = left;
+            this.right = right;
+        }
+    }
+
     // 516. Longest Palindromic Subsequence
     private static int longestPalindromeSubseq_rec(String s, int si, int sj) {
         if (si == sj) {
@@ -868,11 +888,172 @@ public class string_set {
         // String s = "ABCBBAD";
         // int[][] dp = new int[s.length()][s.length()];
         // longestPalindromeSubseq_tabu(s, 0, s.length() - 1, dp);
-        // System.out.println(longestPalindromicSubseq_BackEngine(s, 0, s.length() - 1, dp));
+        // System.out.println(longestPalindromicSubseq_BackEngine(s, 0, s.length() - 1,
+        // dp));
 
-        String s="catsanddog";
-        List<String>words=new ArrayList<>(Arrays.asList("cat","cats","and","sand","dog"));
-        System.out.println(wordBreak(s,words));
+        String s = "catsanddog";
+        List<String> words = new ArrayList<>(Arrays.asList("cat", "cats", "and", "sand", "dog"));
+        System.out.println(wordBreak(s, words));
+    }
+
+    // 1278. Palindrome Partitioning III
+    class Solution10 {
+        public void minChanges_(String s, int[][] dp) {
+            int si = 0;
+            int n = s.length();
+            for (int gap = 0; gap < n; gap++) {
+                for (int i = 0, j = gap; j < n; j++, i++) {
+                    if (gap == 0) {
+                        dp[i][j] = 0;
+                    } else if (gap == 1) {
+                        dp[i][j] = (s.charAt(i) == s.charAt(j) ? 0 : 1);
+                    } else {
+                        dp[i][j] = s.charAt(i) == s.charAt(j) ? dp[i + 1][j - 1] : dp[i + 1][j - 1] + 1;
+                    }
+                }
+            }
+        }
+
+        private static int minCut(String s, int si, int k, int[][] dp, int[][] minChanges) {
+            if (s.length() - si <= k) {
+                return dp[si][k] = s.length() - si == k ? 0 : (int) 1e8;
+            }
+            if (k == 1) {
+                return dp[si][k] = minChanges[si][s.length() - 1];
+            }
+            if (dp[si][k] != -1) {
+                return dp[si][k];
+            }
+            int minAns = (int) 1e8;
+            for (int cut = si; cut < s.length(); cut++) {
+                int minChangesInMyString = minChanges[si][cut];
+                int minChangesInRecString = minCut(s, cut + 1, k - 1, dp, minChanges);
+
+                if (minChangesInRecString != (int) 1e8)
+                    minAns = Math.min(minAns, minChangesInMyString + minChangesInRecString);
+            }
+            return dp[si][k] = minAns;
+        }
+
+        public int palindromePartition(String s, int k) {
+            int n = s.length();
+            int[][] minChanges = new int[n][n];
+            // pre-processing part for the O(1) finding of min-palindrome changes
+            minChanges_(s, minChanges);
+            int[][] dp = new int[s.length() + 1][k + 1];
+            for (int[] d : dp)
+                Arrays.fill(d, -1);
+            return minCut(s, 0, k, dp, minChanges);
+        }
+    }
+
+    // 198. House Robber
+    class Solution11 {
+        public static int solve(int[] nums, int idx, int[] dp) {
+            if (idx == nums.length) {
+                return dp[idx] = 0;
+            }
+            if (dp[idx] != -1) {
+                return dp[idx];
+            }
+            int a1 = nums[idx], a2 = 0;
+            if (idx + 2 <= nums.length) {
+                a1 = nums[idx] + solve(nums, idx + 2, dp);
+            }
+            a2 = solve(nums, idx + 1, dp);
+            return dp[idx] = Math.max(a1, a2);
+        }
+
+        public int rob(int[] nums) {
+            int[] dp = new int[nums.length + 1];
+            Arrays.fill(dp, -1);
+            return solve(nums, 0, dp);
+        }
+    }
+
+    // 213. House Robber II
+    class Solution12 {
+        private static int rob(int[] nums, int idx, boolean flag, int[][] dp) {
+            if (idx >= nums.length) {
+                if (idx == nums.length)
+                    return dp[idx][flag == true ? 1 : 0] = 0;
+                return 0;
+            }
+            if (dp[idx][flag == true ? 1 : 0] != -1) {
+                return dp[idx][flag == true ? 1 : 0];
+            }
+            int a1 = 0, a2 = 0, a3 = 0, a4 = 0;
+            if (idx == 0) {
+                a1 = nums[idx] + rob(nums, idx + 2, true, dp);
+            } else if (idx == nums.length - 1) {
+                int temp = rob(nums, idx + 1, flag, dp);
+                a2 = (flag == false ? nums[idx] : 0) + temp;
+            } else {
+                a3 = nums[idx] + rob(nums, idx + 2, flag, dp);
+            }
+            a4 = rob(nums, idx + 1, flag, dp);
+            return dp[idx][flag == true ? 1 : 0] = Math.max(a1, Math.max(a2, Math.max(a3, a4)));
+        }
+
+        public int rob(int[] nums) {
+            int[][] dp = new int[nums.length + 1][2];
+            for (int[] d : dp)
+                Arrays.fill(d, -1);
+            return rob(nums, 0, false, dp);
+        }
+    }
+
+    // 337. House Robber III
+    class Solution13 {
+        private int rob(TreeNode root, boolean check, HashMap<String, Integer> hm) {
+            if (root == null) {
+                return 0;
+            }
+            // forming key using root and check
+            String key = root + "-@-" + check;
+            if (hm.containsKey(key) == true) {
+                return hm.get(key);
+            }
+            int a1 = 0, a2 = 0;
+            if (check == true) {
+                a1 = root.val + rob(root.left, false, hm) + rob(root.right, false, hm);
+            }
+            a2 = rob(root.left, true, hm) + rob(root.right, true, hm);
+            hm.put(key, Math.max(a1, a2));
+            return hm.get(key);
+        }
+
+        public int rob(TreeNode root) {
+            HashMap<String, Integer> hm = new HashMap<>();
+            return rob(root, true, hm);
+        }
+    }
+
+    // Similar to House Robber 2
+    // 1388. Pizza With 3n Slices
+    class Solution14 {
+        private int maxSizeSlices(int[] slices, int si, int ei, int NoOfSlices, int[][] dp) {
+            if (si > ei || NoOfSlices == 0) {
+                return 0;
+            }
+            if (dp[ei][NoOfSlices] != -1) {
+                return dp[ei][NoOfSlices];
+            }
+            int takeThisSlice = slices[ei] + maxSizeSlices(slices, si, ei - 2, NoOfSlices - 1, dp);
+            int leaveThisSlice = maxSizeSlices(slices, si, ei - 1, NoOfSlices, dp);
+            return dp[ei][NoOfSlices] = Math.max(takeThisSlice, leaveThisSlice);
+        }
+
+        public int maxSizeSlices(int[] slices) {
+            int n = slices.length;
+            int[][] dp1 = new int[n + 1][n / 3 + 1];
+            int[][] dp2 = new int[n + 1][n / 3 + 1];
+            for (int[] d : dp1)
+                Arrays.fill(d, -1);
+            for (int[] d : dp2)
+                Arrays.fill(d, -1);
+            return Math.max(maxSizeSlices(slices, 0, n - 2, n / 3, dp1), maxSizeSlices(slices, 1, n - 1, n / 3, dp2));
+        }
     }
 
     public static void main(String[] args) {

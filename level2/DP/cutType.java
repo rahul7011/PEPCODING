@@ -1,4 +1,27 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class cutType {
+
+    public class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+
+        TreeNode() {
+        }
+
+        TreeNode(int val) {
+            this.val = val;
+        }
+
+        TreeNode(int val, TreeNode left, TreeNode right) {
+            this.val = val;
+            this.left = left;
+            this.right = right;
+        }
+    }
+
     // Matrix Chain Multiplication
     // https://practice.geeksforgeeks.org/problems/matrix-chain-multiplication0303/1
     class Solution {
@@ -241,6 +264,65 @@ public class cutType {
             minCost = Math.min(minCost, leftCost + rightCost);
         }
         return dp[si][ei] = minCost + sum;
+    }
+
+    // 1039. Minimum Score Triangulation of Polygon
+    class Solution3 {
+        public int minScoreTriangulation(int si, int ei, int[] values, int[][] dp) {
+            if (ei - si < 2) {
+                return dp[si][ei] = 0;
+            }
+            if (dp[si][ei] != 0) {
+                return dp[si][ei];
+            }
+            int bestAns = (int) 1e9;
+            for (int cut = si + 1; cut < ei; cut++) {
+                int left = minScoreTriangulation(si, cut, values, dp);
+                int right = minScoreTriangulation(cut, ei, values, dp);
+                bestAns = Math.min(bestAns, left + right + values[si] * values[cut] * values[ei]);
+            }
+            return dp[si][ei] = bestAns;
+        }
+
+        public int minScoreTriangulation(int[] values) {
+            int[][] dp = new int[values.length][values.length];
+            return minScoreTriangulation(0, values.length - 1, values, dp);
+        }
+    }
+
+    // Not Dp but based on cut strategy
+    // 95. Unique Binary Search Trees II
+    class Solution4 {
+        private List<TreeNode> generateTrees(int si, int ei) {
+            if (ei < si) {
+                List<TreeNode> base = new ArrayList<>();
+                base.add(null);
+                return base;
+            }
+            if (si == ei) {
+                List<TreeNode> base = new ArrayList<>();
+                base.add(new TreeNode(si));
+                return base;
+            }
+            List<TreeNode> ans = new ArrayList<>();
+            for (int cut = si; cut <= ei; cut++) {
+                List<TreeNode> left = generateTrees(si, cut - 1);
+                List<TreeNode> right = generateTrees(cut + 1, ei);
+                for (TreeNode leftNode : left) {
+                    for (TreeNode rightNode : right) {
+                        TreeNode node = new TreeNode(cut);
+                        node.left = leftNode == null ? null : leftNode;
+                        node.right = rightNode == null ? null : rightNode;
+                        ans.add(node);
+                    }
+                }
+            }
+            return ans;
+        }
+
+        public List<TreeNode> generateTrees(int n) {
+            return generateTrees(1, n);
+        }
     }
 
     public static void main(String[] args) {
