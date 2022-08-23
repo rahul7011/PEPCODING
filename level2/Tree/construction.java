@@ -594,6 +594,217 @@ public class construction {
         }
     }
 
+    // 105. Construct Binary Tree from Preorder and Inorder Traversal
+    class Solution1 {
+        public static int findIdx(int[] arr, int left, int right, int tar) {
+            for (int i = left; i <= right; i++) {
+                if (arr[i] == tar)
+                    return i;
+            }
+            return -1;
+
+        }
+
+        public static TreeNode buildTree(int[] preorder, int psi, int pei, int[] inorder, int isi, int iei) {
+            if (psi > pei) {
+                return null;
+            }
+            TreeNode node = new TreeNode(preorder[psi]);
+            int idx = findIdx(inorder, isi, iei, preorder[psi]);
+            int totalElement = idx - isi;
+            node.left = buildTree(preorder, psi + 1, psi + totalElement, inorder, isi, idx - 1);
+            node.right = buildTree(preorder, psi + totalElement + 1, pei, inorder, idx + 1, iei);
+            return node;
+        }
+
+        public TreeNode buildTree(int[] preorder, int[] inorder) {
+            // System.out.println(findIdx(inorder,0,preorder.length-1,preorder[0])+"
+            // "+preorder[0]);
+            // return null;
+            return buildTree(preorder, 0, preorder.length - 1, inorder, 0, inorder.length - 1);
+        }
+    }
+
+    // 106. Construct Binary Tree from Inorder and Postorder Traversal
+    class Solution2 {
+        public static int findIdx(int[] arr, int left, int right, int tar) {
+            for (int i = right; i >= left; i--) {
+                if (arr[i] == tar)
+                    return i;
+            }
+            return -1;
+
+        }
+
+        public static TreeNode buildTree(int[] postorder, int psi, int pei, int[] inorder, int isi, int iei) {
+            if (psi > pei) {
+                return null;
+            }
+            TreeNode node = new TreeNode(postorder[pei]);
+            int idx = findIdx(inorder, isi, iei, postorder[pei]);
+            int totalElement = iei - idx;
+            node.right = buildTree(postorder, pei - totalElement, pei - 1, inorder, idx + 1, iei);
+            node.left = buildTree(postorder, psi, pei - 1 - totalElement, inorder, isi, idx - 1);
+            return node;
+        }
+
+        public TreeNode buildTree(int[] inorder, int[] postorder) {
+            return buildTree(postorder, 0, postorder.length - 1, inorder, 0, inorder.length - 1);
+        }
+    }
+
+    // 889. Construct Binary Tree from Preorder and Postorder Traversal
+    class Solution6 {
+        public static int findIdx(int[] arr, int left, int right, int tar) {
+            for (int i = right; i >= left; i--) {
+                if (arr[i] == tar)
+                    return i;
+            }
+            return -1;
+
+        }
+
+        private TreeNode constructFromPrePost(int[] postOrder, int ppsi, int ppei, int[] preOrder, int psi, int pei) {
+            if (ppsi > ppei) {
+                return null;
+            }
+            TreeNode node = new TreeNode(preOrder[psi]);
+            if (psi == pei) {
+                return node;
+            }
+            int idx = findIdx(postOrder, ppsi, ppei, preOrder[psi + 1]);
+            int totalElement = idx - ppsi + 1;
+            node.left = constructFromPrePost(postOrder, ppsi, ppsi + totalElement - 1, preOrder, psi + 1,
+                    psi + totalElement);
+            node.right = constructFromPrePost(postOrder, ppsi + totalElement, ppei - 1, preOrder,
+                    psi + totalElement + 1, pei);
+            return node;
+        }
+
+        public TreeNode constructFromPrePost(int[] preorder, int[] postorder) {
+            return constructFromPrePost(postorder, 0, postorder.length - 1, preorder, 0, preorder.length - 1);
+        }
+    }
+
+    // 297. Serialize and Deserialize Binary Tree
+    // Alternate Aprroach could be to from levelorder traversal string and for
+    // deserailization use Queue data structure with check
+    public class Codec1 {
+
+        public class Pair {
+            TreeNode node = null;
+            int check = 0;
+
+            Pair(TreeNode node, int check) {
+                this.node = node;
+                this.check = check;
+            }
+        }
+
+        // Encodes a tree to a single string.
+        public String serialize(TreeNode root) {
+            if (root == null) {
+                return "-1001 ";
+            }
+            String preOrder = root.val + " ";
+            preOrder += serialize(root.left);
+            preOrder += serialize(root.right);
+            return preOrder;
+        }
+
+        // Decodes your encoded data to tree.
+        public TreeNode deserialize(String data) {
+            String[] preOrder = data.split(" ");
+            if (preOrder.length == 1) {
+                return null;
+            }
+            LinkedList<Pair> st = new LinkedList<>();
+            TreeNode root = new TreeNode(Integer.parseInt(preOrder[0]));
+            st.push(new Pair(root, 0));
+            int idx = 1;
+            while (st.size() != 0) {
+                Pair p = st.removeLast();
+                int elem = Integer.parseInt(preOrder[idx]);
+                // System.out.println(elem);
+                TreeNode node = elem == -1001 ? null : new TreeNode(elem);
+                if (p.check == 0) {
+                    // left add
+                    p.node.left = node;
+                    p.check++;
+                    st.addLast(p);
+                    if (node != null)
+                        st.addLast(new Pair(node, 0));
+                } else {
+                    // right add
+                    p.node.right = node;
+                    p.check++;
+                    if (node != null)
+                        st.addLast(new Pair(node, 0));
+                }
+                idx++;
+            }
+            return root;
+        }
+    }
+
+    // Largest BST
+    // https://practice.geeksforgeeks.org/problems/largest-bst/1
+    class Solution7 {
+
+        public static class Pair {
+            int size;
+            int max;
+            int min;
+            boolean isBst;
+
+            Pair() {
+
+            }
+
+            Pair(int size, int max, int min, boolean isBst) {
+                this.size = size;
+                this.max = max;
+                this.min = min;
+                this.isBst = isBst;
+            }
+        }
+
+        // Return the size of the largest sub-tree which is also a BST
+        private static Pair largestBst_(Node root) {
+            if (root == null) {
+                return new Pair(0, (int) -1e9, (int) 1e9, true);
+            }
+            Pair left = largestBst_(root.left);
+            Pair right = largestBst_(root.right);
+            Pair nPair = new Pair();
+            if (left.isBst && right.isBst) {
+                if (root.data > left.max && root.data < right.min) {
+                    nPair.size = left.size + right.size + 1;
+                    nPair.max = Math.max(left.max, Math.max(right.max, root.data));
+                    nPair.min = Math.min(left.min, Math.min(right.min, root.data));
+                    nPair.isBst = true;
+                } else {
+                    nPair.size = Math.max(left.size, right.size);
+                    nPair.max = Math.max(left.max, Math.max(right.max, root.data));
+                    nPair.min = Math.min(left.min, Math.min(right.min, root.data));
+                    nPair.isBst = false;
+                }
+            } else {
+                nPair.size = Math.max(left.size, right.size);
+                nPair.max = Math.max(left.max, Math.max(right.max, root.data));
+                nPair.min = Math.min(left.min, Math.min(right.min, root.data));
+                nPair.isBst = false;
+            }
+            return nPair;
+        }
+
+        static int largestBst(Node root) {
+            Pair p = largestBst_(root);
+            return p.size;
+        }
+
+    }
+
     public static void main(String[] args) {
         // Solution5.BinaryTreeToBST();
         // bstCall();
