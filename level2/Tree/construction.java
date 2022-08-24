@@ -780,7 +780,13 @@ public class construction {
             if (left.isBst && right.isBst) {
                 if (root.data > left.max && root.data < right.min) {
                     nPair.size = left.size + right.size + 1;
+                    // max can be found as:
+                    // max=(Math.max(root.data,right.max)) as In BST left side will always be
+                    // smaller than root && right childs
                     nPair.max = Math.max(left.max, Math.max(right.max, root.data));
+                    // Similarly,min can be found as:
+                    // min=(Math.min(root.data,left.min)) as In BST left side will always be
+                    // smaller than root && right childs
                     nPair.min = Math.min(left.min, Math.min(right.min, root.data));
                     nPair.isBst = true;
                 } else {

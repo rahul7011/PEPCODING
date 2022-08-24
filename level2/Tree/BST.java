@@ -99,6 +99,62 @@ public class BST {
         return (lca != null && findData(lca, p.val) && findData(lca, q.val)) ? lca : null;
     }
 
+    // 701. Insert into a Binary Search Tree
+    class Solution {
+        private TreeNode insertIntoBST_(TreeNode root, int val) {
+            if (root == null) {
+                return new TreeNode(val);
+            }
+            if (root.val < val) {
+                root.right = insertIntoBST_(root.right, val);
+            } else {
+                root.left = insertIntoBST_(root.left, val);
+            }
+            return root;
+        }
+
+        public TreeNode insertIntoBST(TreeNode root, int val) {
+            return insertIntoBST_(root, val);
+        }
+    }
+
+    // 450. Delete Node in a BST
+    class Solution1 {
+        private int getRightMost(TreeNode root) {
+            TreeNode curr = root;
+            while (curr.right != null) {
+                curr = curr.right;
+            }
+            int val = curr.val;
+            curr = null;
+            return val;
+        }
+
+        private TreeNode deleteNode_(TreeNode root, int key) {
+            if (root == null) {
+                return null;
+            }
+            if (root.val == key) {
+                if (root.left == null || root.right == null) {
+                    return root.left != null ? root.left : root.right;
+                } else {
+                    int leftMax = getRightMost(root.left);
+                    root.val = leftMax;
+                    root.left = deleteNode_(root.left, leftMax);
+                }
+            } else if (root.val < key) {
+                root.right = deleteNode_(root.right, key);
+            } else {
+                root.left = deleteNode_(root.left, key);
+            }
+            return root;
+        }
+
+        public TreeNode deleteNode(TreeNode root, int key) {
+            return deleteNode_(root, key);
+        }
+    }
+
     public static void main(String[] args) {
         // TreeNode root = new TreeNode(6);
         // root.left = new TreeNode(2);
