@@ -52,7 +52,7 @@ class LRUCache {
 
         }else if(this.tail==node)
         {
-            //when the node to be removed is head
+            //when the node to be removed is tail
             Node nextNode=node.next;
             nextNode.prev=null;
             node.next=null;
