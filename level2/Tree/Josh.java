@@ -1,3 +1,5 @@
+import java.util.LinkedList;
+
 public class Josh {
     public static class Node {
         int data;
@@ -45,4 +47,41 @@ public class Josh {
         }
     }
     
+    //sliding window
+    private static int minFlips(String s,int k)
+    {
+        int ans=0;
+        int sum=0;
+        LinkedList<Integer>list=new LinkedList<>();
+        for (int i = 0; i < s.length(); i++) {
+            int val=s.charAt(i)-'0';
+            if(i<k)
+            {
+                sum+=val;
+                list.addLast(val);
+                continue;
+            }
+            if(sum==0)
+            {
+                ans++;
+            }
+            sum-=list.removeFirst();
+            list.addLast(val);
+            sum+=val;
+        }
+        if(sum==0)
+        {
+            ans++;
+        }
+        return ans;
+    }
+    public static void main(String[] args) {
+        System.out.println(minFlips("0011", 2));
+        System.out.println(minFlips("101", 2));
+        System.out.println(minFlips("001010000", 3));
+        System.out.println(minFlips("001010000", 9));
+        // System.out.println(minFlips("0011", 2));
+        // System.out.println(minFlips("0011", 2));
+    }
+
 }
