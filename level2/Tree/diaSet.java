@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class diaSet {
@@ -252,6 +253,45 @@ public class diaSet {
 
         public void recoverTree(TreeNode root) {
             morrisInorderTraversal(root);
+        }
+    }
+
+    // 662. Maximum Width of Binary Tree
+    class Solution7 {
+        public static class Pair{
+            TreeNode node;
+            int idx;
+            Pair(TreeNode node,int idx)
+            {
+                this.node=node;
+                this.idx=idx;
+            }
+        }
+        public int widthOfBinaryTree(TreeNode root) {
+            LinkedList<Pair>q=new LinkedList<>();
+            q.addLast(new Pair(root,0));
+            int max=0;
+            while(q.size()!=0)
+            {
+                int size=q.size();
+                max=Math.max(max,q.peekLast().idx-q.peekFirst().idx+1);            
+                while(size-- > 0)
+                {
+                    Pair rp=q.removeFirst();
+                    // we will use it while inserting it children
+                    // left child will be 2 * idx + 1;
+                    // right chils will be 2 * idx + 2;
+                    if(rp.node.left!=null)
+                    {
+                        q.addLast(new Pair(rp.node.left,2*rp.idx+1));
+                    }
+                    if(rp.node.right!=null)
+                    {
+                        q.addLast(new Pair(rp.node.right,2*rp.idx+2));
+                    }
+                }
+            }
+            return max;
         }
     }
 
