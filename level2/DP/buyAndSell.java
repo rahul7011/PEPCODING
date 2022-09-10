@@ -74,3 +74,25 @@ class Solution3 {
         return dp_i_k_0;
     }
 }
+
+// 188. Best Time to Buy and Sell Stock IV
+class Solution4 {
+    public int maxProfit(int k, int[] prices) {
+        // basically in this question k transaction is only allowed
+        int[][][] dp = new int[prices.length][k][2];
+        if (k == 0 || prices.length == 0) {
+            return 0;
+        }
+        dp[0][0][0] = 0;
+        dp[0][0][1] = (int) -1e9;
+        for (int i = 0; i < prices.length; i++) {
+            int price = prices[i];
+            for (int j = 0; j < k; j++) {
+                dp[i][j][0] = Math.max(i == 0 ? 0 : dp[i - 1][j][0], i == 0 ? (int) -1e9 : dp[i - 1][j][1] + price);
+                dp[i][j][1] = Math.max(i == 0 ? (int) -1e9 : dp[i - 1][j][1],
+                        (i == 0 || j == 0) ? 0 - price : dp[i - 1][j - 1][0] - price);
+            }
+        }
+        return dp[prices.length - 1][k - 1][0];
+    }
+}
