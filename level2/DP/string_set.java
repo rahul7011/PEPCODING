@@ -146,6 +146,38 @@ public class string_set {
         System.out.println(longestCommonSubsequence_tabu(s1, s2, n, m, dp));
     }
 
+    // 718. Maximum Length of Repeated Subarray
+    class Solution0 {
+        private static int longestCommonSubstring_tabu(int[] s1, int[] s2, int N, int M, int[][] dp) {
+            // ei- ending index
+            int maxLen = 0, ei = 0;
+            for (int n = 0; n <= N; n++) {
+                for (int m = 0; m <= M; m++) {
+                    if (n == 0 || m == 0) {
+                        dp[n][m] = 0;
+                        continue;
+                    }
+                    if (s1[n - 1] == s2[m - 1]) {
+                        dp[n][m] = dp[n - 1][m - 1] + 1; // longestCommonSubsequence(s1, s2, n - 1, m - 1, dp) + 1;
+                        if (maxLen < dp[n][m]) {
+                            maxLen = dp[n][m];
+                            ei = n;
+                        }
+                    }
+                }
+            }
+            // String longestSubstring=s1.substring(ei-maxLen,ei);
+            // System.out.println(longestSubstring);
+            return maxLen;
+        }
+
+        public int findLength(int[] nums1, int[] nums2) {
+            int n = nums1.length, m = nums2.length;
+            int[][] dp = new int[n + 1][m + 1];
+            return longestCommonSubstring_tabu(nums1, nums2, n, m, dp);
+        }
+    }
+
     // 115. Distinct Subsequences(My approach)
     class Solution {
         private static int numDistinct_rec(String s1, String s2, int i, int j) {
