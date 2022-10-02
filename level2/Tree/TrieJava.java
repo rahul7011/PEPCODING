@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class TrieJava {
 
     // 208. Implement Trie (Prefix Tree)
@@ -145,6 +147,102 @@ public class TrieJava {
                 node = node.children[ch - 'a'];
             }
             return helper(node);
+        }
+    }
+
+    // 720. Longest Word in Dictionary
+    class Solution {
+        public static class Node {
+            boolean eow; // eow:end of word
+            Node[] children = new Node[26];
+        }
+
+        Node root;
+        String res = "";
+
+        public void insert(String word) {
+            Node node = root;
+            for (char ch : word.toCharArray()) {
+                if (node.children[ch - 'a'] == null) {
+                    node.children[ch - 'a'] = new Node();
+                }
+                node = node.children[ch - 'a'];
+            }
+            node.eow = true;
+        }
+
+        private void helper(Node node, StringBuilder sb) {
+            if (res.length() < sb.length()) {
+                res = sb.toString();
+            }
+            for (char ch = 'a'; ch <= 'z'; ch++) {
+                if (node.children[ch - 'a'] != null && node.children[ch - 'a'].eow == true) {
+                    sb.append(ch);
+                    helper(node.children[ch - 'a'], sb);
+                    sb.deleteCharAt(sb.length() - 1);
+                }
+            }
+        }
+
+        public String longestWord(String[] words) {
+            root = new Node();
+            for (String word : words) {
+                insert(word);
+            }
+            helper(root, new StringBuilder());
+            return res;
+        }
+    }
+
+    // 648. Replace Words
+    class Solution1 {
+        public static class Node {
+            boolean eow; // eow:end of word
+            Node[] children = new Node[26];
+        }
+
+        Node root;
+        String res = "";
+
+        public void insert(String word) {
+            Node node = root;
+            for (char ch : word.toCharArray()) {
+                if (node.children[ch - 'a'] == null) {
+                    node.children[ch - 'a'] = new Node();
+                }
+                node = node.children[ch - 'a'];
+            }
+            node.eow = true;
+        }
+
+        private String helper(Node root, String sentence) {
+            String[] words = sentence.split(" ");
+            for (int i = 0; i < words.length; i++) {
+                String word = words[i];
+                Node node = root;
+                for (int j = 0; j < word.length(); j++) {
+                    char ch = word.charAt(j);
+                    if (node.children[ch - 'a'] == null) {
+                        break;
+                    } else {
+                        node = node.children[ch - 'a'];
+                        if (node.eow == true) {
+                            words[i] = word.substring(0, j + 1);
+                            break;
+                        }
+                    }
+                }
+            }
+            return String.join(" ", words);
+        }
+
+        public String replaceWords(List<String> dictionary, String sentence) {
+            root = new Node();
+            for (String word : dictionary) {
+                insert(word);
+            }
+
+            return helper(root, sentence);
         }
     }
 }
