@@ -242,23 +242,18 @@ public class l002 {
 
     // 1248. Count Number of Nice Subarrays
     class Solution8 {
-        private int numberOfSubArraysAtMost(int[] nums, int k) {
-            HashMap<Integer, Integer> hm = new HashMap<>();
-            int si = 0, ei = 0, count = 0, n = nums.length;
+        private int numberOfSubarraysAtMostK(int[] nums, int k) {
+            int ei = 0, si = 0, count = 0, len = 0;
+            int n = nums.length;
             while (ei < n) {
-                int num = nums[ei];
-                if (num % 2 == 1) {
+                if (nums[ei] % 2 != 0) {
                     k--;
                 }
-                hm.put(num, hm.getOrDefault(num, 0) + 1);
                 ei++;
                 while (k == -1) {
-                    num = nums[si];
-                    if (num % 2 == 1) {
+                    if (nums[si] % 2 != 0) {
                         k++;
-                        hm.remove(num);
-                    } else
-                        hm.put(num, hm.get(num) - 1);
+                    }
                     si++;
                 }
                 count += ei - si;
@@ -267,7 +262,94 @@ public class l002 {
         }
 
         public int numberOfSubarrays(int[] nums, int k) {
-            return numberOfSubArraysAtMost(nums, k) - numberOfSubArraysAtMost(nums, k - 1);
+            return numberOfSubarraysAtMostK(nums, k) - numberOfSubarraysAtMostK(nums, k - 1);
+        }
+    }
+
+    // 904. Fruit Into Baskets
+    class Solution9 {
+        public int totalFruit(int[] nums) {
+            int n = nums.length, ei = 0, si = 0, len = 0, count = 0;
+            HashMap<Integer, Integer> hm = new HashMap<>();
+            int k = 2;
+            while (ei < n) {
+                if (hm.containsKey(nums[ei]) == false) {
+                    k--;
+                }
+                hm.put(nums[ei], hm.getOrDefault(nums[ei], 0) + 1);
+                ei++;
+                while (k == -1) {
+                    if (hm.get(nums[si]) == 1) {
+                        k++;
+                        hm.remove(nums[si]);
+                    } else {
+                        hm.put(nums[si], hm.get(nums[si]) - 1);
+                    }
+                    si++;
+                }
+                len = ei - si;
+                count = Math.max(count, len);
+            }
+            return count;
+        }
+    }
+
+    // 485. Max Consecutive Ones
+    class Solution10 {
+        public int findMaxConsecutiveOnes(int[] nums) {
+            int count = 0, max = 0, len = 0;
+            int ei = 0, si = 0, n = nums.length;
+            while (ei < n) {
+                if (nums[ei++] == 0) {
+                    si = ei;
+                }
+                len = ei - si;
+                max = Math.max(max, len);
+            }
+            return max;
+        }
+    }
+
+    // https://www.lintcode.com/problem/883/description
+    // 883 · Max Consecutive Ones II
+    public class Solution11 {
+        public int findMaxConsecutiveOnes(int[] nums) {
+            int len = 0, count = 1, si = 0, ei = 0, n = nums.length;
+            while (ei < n) {
+                if (nums[ei] == 0) {
+                    count--;
+                }
+                ei++;
+                while (count == -1) {
+                    if (nums[si] == 0) {
+                        count++;
+                    }
+                    si++;
+                }
+                len = Math.max(len, ei - si);
+            }
+            return len;
+        }
+    }
+
+    // 1004. Max Consecutive Ones III
+    class Solution12 {
+        public int longestOnes(int[] nums, int k) {
+            int len = 0, count = k, si = 0, ei = 0, n = nums.length;
+            while (ei < n) {
+                if (nums[ei] == 0) {
+                    count--;
+                }
+                ei++;
+                while (count == -1) {
+                    if (nums[si] == 0) {
+                        count++;
+                    }
+                    si++;
+                }
+                len = Math.max(len, ei - si);
+            }
+            return len;
         }
     }
 }
