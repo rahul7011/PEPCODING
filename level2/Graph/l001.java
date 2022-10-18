@@ -124,7 +124,7 @@ public class l001 {
 
     public static void hamiltonianPath(ArrayList<Edge>[] graph, int src, int visitedCount, boolean[] visited,
             String psf) {
-        if (visitedCount == graph.length-1) {
+        if (visitedCount == graph.length - 1) {
             System.out.println(psf + "" + src);
         }
         visited[src] = true;
@@ -138,8 +138,8 @@ public class l001 {
 
     public static void hamiltonianCycle(ArrayList<Edge>[] graph, int src, int visitedCount, boolean[] visited,
             String psf) {
-        if (visitedCount == graph.length-1) {
-            for (Edge e : graph[src]){
+        if (visitedCount == graph.length - 1) {
+            for (Edge e : graph[src]) {
                 if (e.v == 0)
                     System.out.println(psf + "" + src);
             }
@@ -152,6 +152,30 @@ public class l001 {
         }
         visited[src] = false;
     }
+
+    // get connected components
+    private static void dfs_compo(ArrayList<Edge>[] graph, int src, boolean[] visited) {
+        visited[src] = true;
+        for (Edge e : graph[src]) {
+            if (visited[e.v] == false) {
+                dfs_compo(graph, e.v, visited);
+            }
+        }
+    }
+
+    public static void gcc(ArrayList<Edge>[] graph) {
+        int N = graph.length;
+        boolean[] visited = new boolean[N];
+        int components = 0;
+        for (int i = 0; i < N; i++) {
+            if (visited[i] == false) {
+                components++;
+                dfs_compo(graph, i, visited);
+            }
+        }
+        System.out.println(components);
+    }
+
 
     @SuppressWarnings("unchecked")
     public static void constructGraph() {
