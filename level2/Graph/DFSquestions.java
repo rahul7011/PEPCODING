@@ -118,8 +118,46 @@ public class DFSquestions {
         }
     }
 
-    // 463. Island Perimeter(iterative)
     class Solution2 {
+        int[][] dir = { { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 } };
+
+        private int gcc(int[][] grid, int i, int j) {
+            grid[i][j] = 0;
+            int count = 0;
+            for (int d = 0; d < dir.length; d++) {
+                int sr = i + dir[d][0];
+                int sc = j + dir[d][1];
+                if (sr >= 0 && sc >= 0 && sr < grid.length && sc < grid[i].length && grid[sr][sc] == 1) {
+                    count += gcc(grid, sr, sc);
+                }
+            }
+            return count + 1;
+        }
+
+        public int numEnclaves(int[][] grid) {
+            for (int i = 0; i < grid.length; i++) {
+                for (int j = 0; j < grid[i].length; j++) {
+                    if (i == 0 || i == grid.length - 1 || j == 0 || j == grid[i].length - 1) {
+                        if (grid[i][j] == 1) {
+                            gcc(grid, i, j);
+                        }
+                    }
+                }
+            }
+            int count = 0;
+            for (int i = 0; i < grid.length; i++) {
+                for (int j = 0; j < grid[i].length; j++) {
+                    if (grid[i][j] == 1) {
+                        count += gcc(grid, i, j);
+                    }
+                }
+            }
+            return count;
+        }
+    }
+
+    // 463. Island Perimeter(iterative)
+    class Solution3 {
         int[][] dir = { { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 } };
 
         private int iterative(int[][] grid) {
@@ -148,7 +186,7 @@ public class DFSquestions {
     }
 
     // 463. Island Perimeter(Recursive)
-    class Solution3 {
+    class Solution4 {
         int[][] dir = { { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 } };
 
         private int gcc(int[][] grid, int i, int j) {
@@ -180,9 +218,55 @@ public class DFSquestions {
         }
     }
 
+    // 130. Surrounded Regions
+    class Solution5 {
+        int[][] dir = { { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 } };
+
+        private void gcc(char[][] grid, int i, int j, char put) {
+            grid[i][j] = put;
+            for (int d = 0; d < dir.length; d++) {
+                int sr = i + dir[d][0];
+                int sc = j + dir[d][1];
+                if (sr >= 0 && sc >= 0 && sr < grid.length && sc < grid[0].length && grid[sr][sc] == 'O') {
+                    gcc(grid, sr, sc, put);
+                }
+            }
+        }
+
+        public void display(char[][] grid) {
+            for (char[] d : grid) {
+                for (char x : d) {
+                    System.out.print(x + " ");
+                }
+                System.out.println();
+            }
+        }
+
+        public void solve(char[][] grid) {
+            for (int i = 0; i < grid.length; i++) {
+                for (int j = 0; j < grid[0].length; j++) {
+                    if (i == 0 || i == grid.length - 1 || j == 0 || j == grid[0].length - 1) {
+                        if (grid[i][j] == 'O') {
+                            gcc(grid, i, j, 'Y');
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i < grid.length; i++) {
+                for (int j = 0; j < grid[0].length; j++) {
+                    if (grid[i][j] == 'O')
+                        grid[i][j] = 'X';
+                    if (grid[i][j] == 'Y') {
+                        grid[i][j] = 'O';
+                    }
+                }
+            }
+        }
+    }
+
     // https://practice.geeksforgeeks.org/problems/number-of-distinct-islands/1
     // Number of Distinct Islands
-    class Solution4 {
+    class Solution6 {
         int[][] dir = { { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 } };
         char[] Pos = { 'U', 'R', 'D', 'L' };
 
@@ -212,4 +296,5 @@ public class DFSquestions {
             return hs.size();
         }
     }
+
 }
