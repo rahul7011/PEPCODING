@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class l001 {
     public static class Edge {
@@ -176,6 +177,102 @@ public class l001 {
         System.out.println(components);
     }
 
+    // ====================BFS==================================
+
+    // Complexity:O(E) E:Edges
+    // This approach adds multiples same vertices(We can do better)
+    // Preferable to use this approach when we are dealing with anything related to
+    // cycles in graph
+    public static void bfs(ArrayList<Edge>[] graph, int src, boolean[] visited) {
+        LinkedList<Integer> q = new LinkedList<>();
+        q.addLast(src);
+        int level = 0;
+        while (q.size() != 0) {
+            System.out.print("level --> " + level + ": ");
+            int size = q.size();
+
+            while (size-- > 0) {
+                int vtx = q.removeFirst();
+                if (visited[vtx] == true) {
+                    System.out.print("Cycle has been found, ");
+                    continue;
+                }
+
+                visited[vtx] = true;
+                System.out.print(vtx + ", ");
+                for (Edge e : graph[vtx]) {
+                    if (visited[e.v] == false)
+                        q.addLast(e.v);
+                }
+            }
+            level++;
+            System.out.println();
+        }
+    }
+
+    // Complexity:O(V)
+    public static void bfs_WithoutCycle(ArrayList<Edge>[] graph, int src, boolean[] visited) {
+        LinkedList<Integer> q = new LinkedList<>();
+        q.addLast(src);
+        visited[src] = true;
+        int level = 0;
+        while (q.size() != 0) {
+            System.out.print("level --> " + level + ": ");
+            int size = q.size();
+
+            while (size-- > 0) {
+                int vtx = q.removeFirst();
+
+                System.out.print(vtx + ", ");
+                for (Edge e : graph[vtx]) {
+                    if (visited[e.v] == false) {
+                        visited[e.v] = true;
+                        q.addLast(e.v);
+                    }
+                }
+            }
+            level++;
+            System.out.println();
+        }
+    }
+
+    public static void bipartite(ArrayList<Edge>[] graph, int src, int[] visited) {
+        LinkedList<Integer> q = new LinkedList<>();
+        q.addLast(src);
+        // -1 :No color,0:Red,1:Green
+        int color = 0;
+        boolean isCycle = false, isBipartite = true;
+        while (q.size() != 0) {
+            int size = q.size();
+            while (size-- > 0) {
+                int vtx = q.removeFirst();
+
+                if (visited[vtx] != -1) {
+                    isCycle = true;
+                    // Cycle has been found
+                    if (visited[vtx] != color)// Means a conflict hence odd cycle
+                    {
+                        isBipartite = false;
+                    }
+                    continue;
+                }
+                visited[vtx] = color;
+                for (Edge e : graph[vtx]) {
+                    if (visited[e.v] == -1) {
+                        q.addLast(e.v);
+                    }
+                }
+            }
+            color = (color + 1) % 2;    //0 ,1 ,0 ,1 .....
+        }
+        if (isCycle == false) {
+            System.out.println("No Cycle is present,Hence Bipartite");
+        } else {
+            if (isBipartite == false)
+                System.out.println("Bipartite Graph with even length cycle");
+            System.out.println("Non-Bipartite Graph with odd length cycle");
+        }
+    }
 
     @SuppressWarnings("unchecked")
     public static void constructGraph() {
@@ -193,7 +290,7 @@ public class l001 {
         addEdge(graph, 4, 5, 2);
         addEdge(graph, 4, 6, 8);
         addEdge(graph, 5, 6, 3);
-        addEdge(graph, 6, 0, 60);
+        // addEdge(graph, 6, 0, 60);
         display(graph);
 
         // System.out.println(findEdge(graph, 3, 2));
@@ -211,12 +308,16 @@ public class l001 {
         // System.out.println(allPath(graph, 0, 6, visited, " "));
 
         // Pair ans = heavyPath(graph, 0, 7, visited);
-        Pair ans = heavyPath(graph, 0, 6, visited);
-        System.out.println(ans.heavyPath + " @ " + ans.psf);
+        // Pair ans = heavyPath(graph, 0, 6, visited);
+        // System.out.println(ans.heavyPath + " @ " + ans.psf);
 
         // hamiltonianPath(graph, 0, 0, visited, "");
 
         // hamiltonianCycle(graph, 0, 0, visited, "");
+
+        // ===============bfs================
+        // bfs(graph, 0, visited);
+        bfs_WithoutCycle(graph, 0, visited);
     }
 
     public static void main(String[] args) {

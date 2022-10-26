@@ -118,6 +118,7 @@ public class DFSquestions {
         }
     }
 
+    // 1020. Number of Enclaves
     class Solution2 {
         int[][] dir = { { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 } };
 
