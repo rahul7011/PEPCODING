@@ -471,4 +471,82 @@ public class UnionFindQuestions {
             return ans;
         }
     }
+
+    // Water Supply In A Village
+    // https://www.codingninjas.com/codestudio/problems/water-supply-in-a-village_1380956
+    public class Solution11 {
+        // ===================== DSU ========================
+        static int[] par, size;
+
+        public static int findPar(int u) {
+            return par[u] == u ? u : (par[u] = findPar(par[u]));
+        }
+
+        // Optional:With Union our TC would be O(4) else it would be O(6-7)
+        public static void union(int p1, int p2) {
+            if (size[p1] < size[p2]) {
+                par[p1] = p2;
+                size[p2] += size[p1];
+            } else {
+                par[p2] = p1;
+                size[p1] += size[p2];
+            }
+        }
+
+        // {{u,v,w}}
+        public static int unionFind(int[][] Edges, int N) {
+            par = new int[N];
+            size = new int[N];
+
+            for (int i = 0; i < N; i++) {
+                par[i] = i; // Initially all are parent of themselves
+                size[i] = 1; // and their size is 1
+            }
+            int ans = 0;
+            for (int[] e : Edges) {
+                int u = e[0], v = e[1], w = e[2];
+
+                int p1 = findPar(u);
+                int p2 = findPar(v);
+
+                if (p1 != p2) {
+                    union(p1, p2);
+                    ans += w;
+                } else {
+                    // this part denotes a cycle
+                }
+            }
+            return ans;
+        }
+
+        public static int kruskal(int[][] Edges, int N) {
+            // {{u,v,w}}
+            // Sorted on the basis of weight
+            Arrays.sort(Edges, (a, b) -> {
+                return a[2] - b[2];
+            });
+
+            // Now just simple plain DSU
+            return unionFind(Edges, N);
+        }
+
+        public static int supplyWater(int n, int k, int[] wells, int[][] pipes) {
+            // Forming new Edges
+            int[][] Edges = new int[n + k][3];
+            for (int i = 0; i < pipes.length; i++) {
+                for (int j = 0; j < pipes[i].length; j++) {
+                    // Getting old Edges
+                    Edges[i][j] = pipes[i][j];
+                }
+            }
+            int kk = 1;
+            for (int i = k; i < Edges.length; i++) {
+                // Now Making new Edges with vertice 0 and their weights
+                Edges[i] = new int[] { 0, (kk), wells[kk - 1] };
+                kk++;
+            }
+            return kruskal(Edges, Edges.length);
+        }
+
+    }
 }

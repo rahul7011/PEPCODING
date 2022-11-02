@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class l003_unionFind {
     public static class Edge {
@@ -99,5 +100,18 @@ public class l003_unionFind {
                 // this part denotes a cycle
             }
         }
+    }
+
+    // ========KRUSKAL ALGO =================
+    // Gives MST
+    public static void kruskal(int[][] Edges, int N) {
+        // {{u,v,w}}
+        // Sorted on the basis of weight
+        Arrays.sort(Edges, (a, b) -> {
+            return a[2] - b[2];
+        });
+
+        // Now just simple plain DSU
+        unionFind(Edges, N);
     }
 }
