@@ -272,4 +272,184 @@ public class BFSquestions {
             gcc(rooms);
         }
     }
+
+    // 743. Network Delay Time
+    class Solution6 {
+        private static int dijkstra(ArrayList<int[]>[] graph, int src) {
+            int V = graph.length;
+            boolean[] vis = new boolean[V];
+            int[] dis = new int[V];
+
+            Arrays.fill(dis, (int) 1e9);
+
+            // {V,wsf}
+            PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> {
+                return a[1] - b[1];
+            });
+
+            pq.add(new int[] { src, 0 });
+
+            while (pq.size() != 0) {
+                int[] rp = pq.remove();
+                if (vis[rp[0]] == true) {
+                    continue;
+                }
+                vis[rp[0]] = true;
+                dis[rp[0]] = rp[1];
+
+                for (int[] p : graph[rp[0]]) {
+                    if (vis[p[0]] == false) {
+                        pq.add(new int[] { p[0], p[1] + rp[1] });
+                    }
+                }
+            }
+            // checking ,if we are abel to visited every node or not
+            // from 1 because nodes are given from 1 to N
+            int maxTime = -1;
+            for (int i = 1; i < V; i++) {
+                if (dis[i] == (int) 1e9) {
+                    return -1;
+                } else {
+                    maxTime = Math.max(maxTime, dis[i]);
+                }
+            }
+            return maxTime;
+        }
+
+        public int networkDelayTime(int[][] times, int n, int k) {
+            // forming graph now
+            // {v,w}
+            ArrayList<int[]>[] graph = new ArrayList[n + 1];
+            for (int i = 1; i < graph.length; i++) {
+                graph[i] = new ArrayList<>();
+            }
+
+            for (int[] time : times) {
+                int u = time[0];
+                int v = time[1];
+                int w = time[2];
+                graph[u].add(new int[] { v, w });
+            }
+            return dijkstra(graph, k);
+        }
+    }
+
+    // 743. Network Delay Time
+    // With better dijkstra
+    class Solution7 {
+        public static class Pair {
+            int src;
+            int wsf;
+
+            Pair(int src, int wsf) {
+                this.src = src;
+                this.wsf = wsf;
+            }
+        }
+
+        public static class Edge {
+            int v;
+            int w;
+
+            Edge(int v, int w) {
+                this.v = v;
+                this.w = w;
+            }
+        }
+
+        private static int dijkstra_btr(ArrayList<Edge>[] graph, int src) {
+            int N = graph.length;
+            boolean[] vis = new boolean[N];
+            int[] par = new int[N];
+            Arrays.fill(par, -1);
+            int[] dis = new int[N];
+            Arrays.fill(dis, (int) 1e9);
+            PriorityQueue<Pair> pq = new PriorityQueue<>((a, b) -> {
+                return a.wsf - b.wsf;
+            });
+            pq.add(new Pair(src, 0));
+            par[src] = -1;
+            dis[src] = 0;
+            while (pq.size() != 0) {
+                Pair rp = pq.remove();
+                if (vis[rp.src] == true) {
+                    continue;
+                }
+                vis[rp.src] = true;
+                for (Edge e : graph[rp.src]) {
+                    if (vis[e.v] == false && dis[e.v] > rp.wsf + e.w) {
+                        pq.add(new Pair(e.v, rp.wsf + e.w));
+                        par[e.v] = rp.src;
+                        dis[e.v] = rp.wsf + e.w;
+                    }
+                }
+            }
+            // checking ,if we are abel to visited every node or not
+            // from 1 because nodes are given from 1 to N
+            int maxTime = -1;
+            for (int i = 1; i < N; i++) {
+                if (dis[i] == (int) 1e9) {
+                    return -1;
+                } else {
+                    maxTime = Math.max(maxTime, dis[i]);
+                }
+            }
+            return maxTime;
+        }
+
+        public int networkDelayTime(int[][] times, int n, int k) {
+            // forming graph now
+            // {v,w}
+            ArrayList<Edge>[] graph = new ArrayList[n + 1];
+            for (int i = 1; i < graph.length; i++) {
+                graph[i] = new ArrayList<>();
+            }
+
+            for (int[] time : times) {
+                int u = time[0];
+                int v = time[1];
+                int w = time[2];
+                graph[u].add(new Edge(v, w));
+            }
+            return dijkstra_btr(graph, k);
+        }
+    }
+
+    class Solution8 {
+        private static int bellmanFord(int[][] edges, int N, int src, int dst, int k) {
+            int[] prev = new int[N];
+            Arrays.fill(prev, (int) 1e9);
+            prev[src] = 0;
+
+            for (int edgeCount = 0; edgeCount <= k; edgeCount++) {
+                // copying prev in each iteration
+                int[] curr = new int[N];
+                for (int i = 0; i < prev.length; i++) {
+                    curr[i] = prev[i];
+                }
+                boolean isAnyUpdate = false;
+                // Now iterating over each edge to determine shorter distance
+                for (int[] e : edges) {
+                    int u = e[0], v = e[1], w = e[2];
+                    if (prev[u] + w < curr[v]) {
+                        curr[v] = prev[u] + w;
+                        isAnyUpdate = true;
+                    }
+                }
+                if (isAnyUpdate == false) {
+                    return curr[dst] == (int) 1e9 ? -1 : curr[dst];
+                }
+
+                for (int i = 0; i < prev.length; i++) {
+                    prev[i] = curr[i];
+                }
+            }
+            return prev[dst] == (int) 1e9 ? -1 : prev[dst];
+        }
+
+        public int findCheapestPrice(int n, int[][] flights, int src, int dst, int k) {
+            return bellmanFord(flights, n, src, dst, k);
+        }
+    }
+
 }

@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class UnionFindQuestions {
@@ -549,5 +550,259 @@ public class UnionFindQuestions {
             return kruskal(Edges, Edges.length);
         }
 
+    }
+
+    // 1584. Min Cost to Connect All Points
+    class Solution12 {
+        static int[] par, size;
+
+        private static int findPar(int u) {
+            return par[u] == u ? u : (par[u] = findPar(par[u]));
+        }
+
+        private static void union(int p1, int p2) {
+            if (size[p1] < size[p2]) {
+                par[p1] = p2;
+                size[p2] += size[p1];
+            } else {
+                par[p2] = p1;
+                size[p1] += size[p2];
+            }
+        }
+
+        private static int unionFind(ArrayList<int[]> newPoints, int N) {
+            par = new int[N];
+            size = new int[N];
+            for (int i = 0; i < N; i++) {
+                par[i] = i;
+                size[i] = 1;
+            }
+            int minWt = 0;
+            for (int[] e : newPoints) {
+                int u = e[0], v = e[1], w = e[2];
+                int p1 = findPar(u);
+                int p2 = findPar(v);
+                if (p1 != p2) {
+                    union(p1, p2);
+                    minWt += w;
+                }
+            }
+            return minWt;
+        }
+
+        private static int kruskal(ArrayList<int[]> newPoints, int N) {
+            Collections.sort(newPoints, (a, b) -> {
+                return a[2] - b[2];
+            });
+            return unionFind(newPoints, N);
+        }
+
+        public int minCostConnectPoints(int[][] points) {
+            ArrayList<int[]> newPoints = new ArrayList<>();
+            int n = points[0].length;
+            int mxDist = 0;
+            for (int i = 0; i < points.length; i++) {
+                int x1 = points[i][0];
+                int y1 = points[i][1];
+                for (int j = i + 1; j < points.length; j++) {
+                    int x2 = points[j][0];
+                    int y2 = points[j][1];
+
+                    int dist = Math.abs(Math.abs(x1 - x2) + Math.abs(y1 - y2));
+                    mxDist = Math.max(mxDist, dist);
+                    newPoints.add(new int[] { i, j, dist });
+                }
+            }
+            return kruskal(newPoints, points.length);
+        }
+    }
+
+    // 924. Minimize Malware Spread
+    class Solution13 {
+        static int[] par, population; // population a.k.a size
+
+        private static int findPar(int u) {
+            return par[u] == u ? u : (par[u] = findPar(par[u]));
+        }
+
+        private static void union(int p1, int p2) {
+            if (population[p1] < population[p2]) {
+                par[p1] = p2;
+                population[p2] += population[p1];
+            } else {
+                par[p2] = p1;
+                population[p1] += population[p2];
+            }
+        }
+
+        public int minMalwareSpread(int[][] graph, int[] initial) {
+            int N = graph.length;
+            par = new int[N];
+            population = new int[N];
+            for (int i = 0; i < N; i++) {
+                par[i] = i;
+                population[i] = 1;
+            }
+            // Now we will get the connected components
+            for (int i = 0; i < graph.length; i++) {
+                for (int j = 0; j < graph[i].length; j++) {
+                    if (graph[i][j] == 1) {
+                        int p1 = findPar(i);
+                        int p2 = findPar(j);
+                        if (p1 != p2) {
+                            union(p1, p2);
+                        }
+                    }
+                }
+            }
+            // now we are finding ,infected nodes in the country,initially
+            int[] infected = new int[N];
+            for (int e : initial) {
+                int p = findPar(e);
+                infected[p]++;
+            }
+            // Now determing which node(malware) to choose for removal so that we can
+            // minimize the affect maximally
+            Arrays.sort(initial);
+
+            int maxPopulation = 0;
+            int ans = initial[0];
+            for (int e : initial) {
+                int p = findPar(e);
+                if (infected[p] == 1 && population[p] > maxPopulation) {
+                    maxPopulation = population[p];
+                    ans = e;
+                }
+            }
+            return ans;
+        }
+    }
+
+    // 959. Regions Cut By Slashes
+    class Solution14 {
+        static int[] par, size;
+
+        private static int findPar(int u) {
+            return par[u] == u ? u : (par[u] = findPar(par[u]));
+        }
+
+        private static void union(int p1, int p2) {
+            if (size[p1] < size[p2]) {
+                par[p1] = p2;
+                size[p2] += size[p1];
+            } else {
+                par[p2] = p1;
+                size[p1] += size[p2];
+            }
+        }
+
+        public int regionsBySlashes(String[] grid) {
+            int n = grid.length + 1;
+            par = new int[n * n];
+            size = new int[n * n];
+            for (int i = 0; i < par.length; i++) {
+                par[i] = i;
+                size[i] = 1;
+            }
+            int[][] newGrid = new int[n][n];
+            // Making boundary elements parents same
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (i == 0 || i == n - 1 || j == 0 || j == n - 1) {
+                        int p1 = findPar(0);
+                        int p2 = findPar(i * n + j);
+                        union(p1, p2);
+                    }
+                }
+            }
+            int count = 1;// default
+            for (int i = 0; i < grid.length; i++) {
+                String s = grid[i];
+                int j = 0;
+                while (j < s.length()) {
+                    char ch = s.charAt(j);
+                    if (ch == '/') {
+                        // (x,y)->(x,y+1) and (x+1,y)
+                        int p1 = findPar(i * n + (j + 1));
+                        int p2 = findPar((i + 1) * n + j);
+                        if (p1 == p2) {
+                            count++;
+
+                        } else {
+                            union(p1, p2);
+                        }
+                    } else if (ch == '\\') {
+                        // (x,y)->(x,y) and (x+1,y+1)
+                        int p1 = findPar(i * n + j);
+                        int p2 = findPar((i + 1) * n + (j + 1));
+                        if (p1 == p2) {
+                            count++;
+                        } else {
+                            union(p1, p2);
+                        }
+                    }
+                    j++;
+                }
+            }
+            return count; 
+        }
+    }
+
+    // 990. Satisfiability of Equality Equations
+    class Solution15 {
+        static int[] par, size;
+
+        private static int findPar(int u) {
+            return par[u] == u ? u : (par[u] = findPar(par[u]));
+        }
+
+        private static void union(int p1, int p2) {
+            if (size[p1] < size[p2]) {
+                par[p1] = p2;
+                size[p2] += size[p1];
+            } else {
+                par[p2] = p1;
+                size[p1] += size[p2];
+            }
+        }
+
+        public boolean equationsPossible(String[] equations) {
+            int n = equations.length;
+            par = new int[26];
+            size = new int[26];
+            for (int i = 0; i < 26; i++) {
+                par[i] = i;
+                size[i] = 1;
+            }
+            // sbse phle sbko join krdo,jo join hone wale ho
+            for (String s : equations) {
+                char a = s.charAt(0);
+                char sign = s.charAt(1);
+                char b = s.charAt(3);
+
+                if (sign == '=') {
+                    int p1 = findPar(a - 'a');
+                    int p2 = findPar(b - 'a');
+                    if (p1 != p2) {
+                        union(p1, p2);
+                    }
+                }
+            }
+            // ab check kro,jinko join nhi hona tha agr woh bhi joined hai toh return false
+            for (String s : equations) {
+                char a = s.charAt(0);
+                char sign = s.charAt(1);
+                char b = s.charAt(3);
+
+                if (sign == '!') {
+                    int p1 = findPar(a - 'a');
+                    int p2 = findPar(b - 'a');
+                    if (p1 == p2) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
     }
 }
