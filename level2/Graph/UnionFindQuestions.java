@@ -473,6 +473,8 @@ public class UnionFindQuestions {
         }
     }
 
+    //Kruskal Algorithm
+
     // Water Supply In A Village
     // https://www.codingninjas.com/codestudio/problems/water-supply-in-a-village_1380956
     // https://leetcode.ca/2019-02-10-1168-Optimize-Water-Distribution-in-a-Village/

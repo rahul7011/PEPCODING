@@ -198,7 +198,7 @@ public class l004_Algos {
     // O(EV)
     private static void bellmanFord(int[][] edges, int N, int src) {
         int[] prev = new int[N];
-        Arrays.fill(prev, (int) 1e9);
+        Arrays.fill(prev, (int) 1e9);   //infinity
         prev[src] = 0;
         boolean isAnyNegativeCycle = false;
         for (int edgeCount = 0; edgeCount <= N; edgeCount++) {

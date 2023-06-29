@@ -113,6 +113,7 @@ public class l001 {
         for (Edge e : graph[src]) {
             if (visited[e.v] == false) {
                 Pair recAns = heavyPath(graph, e.v, dest, visited);
+                //Very good case to think about,usually we tend to forget this ;)
                 if (recAns.heavyPath != -1 && recAns.heavyPath + e.w > ans.heavyPath) {
                     ans.heavyPath = recAns.heavyPath + e.w;
                     ans.psf = recAns.psf + src;
@@ -308,8 +309,8 @@ public class l001 {
         // System.out.println(allPath(graph, 0, 6, visited, " "));
 
         // Pair ans = heavyPath(graph, 0, 7, visited);
-        // Pair ans = heavyPath(graph, 0, 6, visited);
-        // System.out.println(ans.heavyPath + " @ " + ans.psf);
+        Pair ans = heavyPath(graph, 0, 6, visited);
+        System.out.println(ans.heavyPath + " @ " + ans.psf);
 
         // hamiltonianPath(graph, 0, 0, visited, "");
 
@@ -317,7 +318,7 @@ public class l001 {
 
         // ===============bfs================
         // bfs(graph, 0, visited);
-        bfs_WithoutCycle(graph, 0, visited);
+        // bfs_WithoutCycle(graph, 0, visited);
     }
 
     public static void main(String[] args) {

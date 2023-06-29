@@ -92,6 +92,7 @@ public class l002_directedGraph {
         }
     }
 
+    //Questions can be formed from this concept aswell
     private static void kahnsAlgo_levels(int n, ArrayList<Edge>[] graph) {
         // calculating indegree of each vertex
         int[] indegree = new int[n];
