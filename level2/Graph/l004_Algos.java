@@ -198,12 +198,15 @@ public class l004_Algos {
     // O(EV)
     private static void bellmanFord(int[][] edges, int N, int src) {
         int[] prev = new int[N];
-        Arrays.fill(prev, (int) 1e9);   //infinity
+        Arrays.fill(prev, (int) 1e9); // infinity
         prev[src] = 0;
         boolean isAnyNegativeCycle = false;
         for (int edgeCount = 0; edgeCount <= N; edgeCount++) {
             // copying prev in each iteration
             int[] curr = new int[N];
+            for (int i = 0; i < N; i++) {
+                curr[i] = prev[i];
+            }
             boolean isAnyUpdate = false;
             // Now iterating over each edge to determine shorter distance
             for (int[] e : edges) {
