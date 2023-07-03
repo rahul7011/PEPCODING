@@ -452,4 +452,185 @@ public class BFSquestions {
         }
     }
 
+    // Leetcode 490
+    // https://leetcode.ca/all/490.html
+    // https://www.lintcode.com/problem/787/description
+    public class Solution9 {
+        public boolean hasPath(int[][] maze, int[] start, int[] dst) {
+            int m = maze.length;
+            int n = maze[0].length;
+            int sr = start[0], sc = start[1], er = dst[0], ec = dst[1];
+            boolean[][] visited = new boolean[m][n];
+            LinkedList<Integer> q = new LinkedList<>();
+            q.addLast(sr * n + sc);
+            visited[sr][sc] = true;
+            while (q.size() != 0) {
+                int size = q.size();
+                while (size-- > 0) {
+                    int rm = q.removeFirst();
+                    int i = rm / n;
+                    int j = rm % n;
+                    int[][] dir = { { 0, 1 }, { 0, -1 }, { 1, 0 }, { -1, 0 } };
+                    for (int d = 0; d < dir.length; d++) {
+                        int r = i;
+                        int c = j;
+                        // This is another way of writing radius loop
+                        while (r >= 0 && r < m && c >= 0 && c < n && maze[r][c] == 0) {
+                            r += dir[d][0];
+                            c += dir[d][1];
+                        }
+                        r -= dir[d][0];
+                        c -= dir[d][1];
+
+                        if (visited[r][c] == true) {
+                            continue;
+                        }
+                        visited[r][c] = true;
+                        q.addLast(r * n + c);
+                        if (r == er && c == ec) {
+                            // I can write this here,beacause we are just interested in finding a path
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+    }
+
+    // 505. The Maze II
+    // https://leetcode.ca/all/505.html
+    // https://www.lintcode.com/problem/788/record
+    public class Solution10 {
+        public static class pair implements Comparable<pair> {
+            int r = 0, c = 0, steps = 0;
+
+            pair(int r, int c, int steps) {
+                this.r = r;
+                this.c = c;
+                this.steps = steps;
+            }
+
+            @Override
+            public int compareTo(pair o) {
+                return this.steps - o.steps;
+            }
+        }
+
+        public int shortestDistance(int[][] maze, int[] start, int[] destination) {
+            int n = maze.length, m = maze[0].length, sr = start[0], sc = start[1], er = destination[0],
+                    ec = destination[1];
+            int[][] dir = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+
+            int[][] dis = new int[n][m];
+            for (int[] d : dis)
+                Arrays.fill(d, (int) 1e8);
+
+            PriorityQueue<pair> que = new PriorityQueue<>();
+            que.add(new pair(sr, sc, 0));
+            dis[sr][sc] = 0;
+
+            while (que.size() != 0) {
+                int size = que.size();
+                while (size-- > 0) {
+                    pair p = que.remove();
+                    if (p.r == er && p.c == ec) {
+                        // I can't write this inside the dir loop because,here we want minimum distance
+                        // and that's
+                        // why we can't check the coordinates when we are inserting them into the PQ
+                        // beacause that
+                        // won't guarantee the min distance
+                        return p.steps;
+                    }
+                    for (int[] d : dir) {
+                        int r = p.r, c = p.c, steps = p.steps;
+                        while (r >= 0 && c >= 0 && r < n && c < m && maze[r][c] == 0) {
+                            r += d[0];
+                            c += d[1];
+                            steps++;
+                        }
+
+                        r -= d[0];
+                        c -= d[1];
+                        steps--;
+
+                        if (steps >= dis[r][c])
+                            continue;
+
+                        que.add(new pair(r, c, steps));
+                        dis[r][c] = steps;
+                    }
+                }
+            }
+            return -1;
+        }
+    }
+
+    // https://leetcode.ca/all/499.html
+    // premium question of leetcode and lintcode aswell :(
+    public static class pair implements Comparable<pair> {
+        int r = 0, c = 0, steps = 0;
+        String psf = "";
+
+        pair(int r, int c, int steps, String psf) {
+            this.r = r;
+            this.c = c;
+            this.steps = steps;
+            this.psf = psf;
+        }
+
+        @Override
+        public int compareTo(pair o) {
+            if (this.steps != o.steps)
+                return this.steps - o.steps;
+            else
+                return this.psf.compareTo(o.psf);
+        }
+    }
+
+    public String findShortestWay(int[][] maze, int[] start, int[] destination) {
+        int n = maze.length, m = maze[0].length, sr = start[0], sc = start[1], er = destination[0], ec = destination[1];
+        int[][] dir = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+        String[] dirS = { "d", "u", "r", "l" };
+        pair[][] dis = new pair[n][m];
+        for (int i = 0; i < n * m; i++)
+            dis[i / m][i % m] = new pair(i / m, i % m, (int) 1e8, "");
+
+        PriorityQueue<pair> que = new PriorityQueue<>();
+        pair src = new pair(sr, sc, 0, "");
+
+        que.add(src);
+        dis[sr][sc] = src;
+
+        while (que.size() != 0) {
+            pair p = que.remove();
+            for (int i = 0; i < 4; i++) {
+                int[] d = dir[i];
+
+                int r = p.r, c = p.c, steps = p.steps;
+                while (r >= 0 && c >= 0 && r < n && c < m && maze[r][c] == 0 && !(r == er && c == ec)) {
+                    /* !(r == er && c == ec) == (r != er ||c != ec) */
+                    r += d[0];
+                    c += d[1];
+                    steps++;
+                }
+
+                if (!(r == er && c == ec)) { // why it is necc. ???
+                    r -= d[0];
+                    c -= d[1];
+                    steps--;
+                }
+
+                pair np = new pair(r, c, steps, p.psf + dirS[i]);
+                if (steps > dis[r][c].steps || dis[r][c].compareTo(np) <= 0) // why this kind of check ???
+                    continue;
+
+                que.add(np);
+                dis[r][c] = np;
+            }
+        }
+
+        pair ans = dis[er][ec];
+        return ans.steps != (int) 1e8 ? ans.psf : "impossible";
+    }
 }
