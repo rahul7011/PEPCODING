@@ -1,5 +1,7 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Stack;
 
 public class l002_directedGraph {
     public static class Edge {
@@ -54,6 +56,20 @@ public class l002_directedGraph {
         graph[u].add(new Edge(v, w));
     }
 
+    // ========================= Topological Sort ============================
+    // if our graph does not contains cycle then we can use this post order dfs for
+    // topological sort
+    // beacause post order won't be able to tell us about the cycle in our graph
+    private void dfs_topo(int src, ArrayList<Edge>[] graph, boolean[] visited, Stack<Integer> st) {
+        visited[src] = true;
+        for (Edge e : graph[src]) {
+            if (visited[e.v] == false) {
+                dfs_topo(e.v, graph, visited, st);
+            }
+        }
+        st.push(src);
+    }
+
     // ======================kahn's algorithm===================
 
     private static void kahnsAlgo(int n, ArrayList<Edge>[] graph) {
@@ -92,7 +108,7 @@ public class l002_directedGraph {
         }
     }
 
-    //Questions can be formed from this concept aswell
+    // Questions can be formed from this concept aswell
     private static void kahnsAlgo_levels(int n, ArrayList<Edge>[] graph) {
         // calculating indegree of each vertex
         int[] indegree = new int[n];
@@ -242,7 +258,7 @@ public class l002_directedGraph {
         }
     }
 
-    //================= DFS with cycle detection ============================
+    // ================= DFS with cycle detection ============================
 
     // 207. Course Schedule
     // (again but this tym using dfs with cycle
@@ -349,6 +365,66 @@ public class l002_directedGraph {
             }
             return level;
         }
+    }
+
+    // ================ Kosaraju's Algo ===================
+    /*
+     * Steps:
+     * 1. Topological sort(dfs(post order) not kahn's)
+     * 2. Inverse of graph
+     * 3. Dfs(post order) on graph on the basis of topological sort order
+     */
+    private void dfs_01(int src, ArrayList<Edge>[] graph, boolean[] visited, LinkedList<Integer> st) {
+        visited[src] = true;
+        for (Edge e : graph[src]) {
+            if (visited[e.v] == false) {
+                dfs_01(e.v, graph, visited, st);
+            }
+        }
+        st.addLast(src);
+    }
+
+    private void dfs_02(int src, ArrayList<Edge>[] graph, boolean[] visited) {
+        visited[src] = true;
+        // If we have been asked to print vertices then we can do this
+        // System.out.println(src);
+        for (Edge e : graph[src]) {
+            if (visited[e.v] == false) {
+                dfs_02(e.v, graph, visited);
+            }
+        }
+    }
+
+    private void KosarajuAlgo(int N, ArrayList<Edge>[] graph) {
+        boolean[] visited = new boolean[N];
+        LinkedList<Integer> st = new LinkedList<>();
+        // 1.Topological sort(dfs(post order) not kahn's)
+        for (int i = 0; i < N; i++) {
+            if (visited[i] == false) {
+                dfs_01(i, graph, visited, st);
+            }
+        }
+        // 2.Inverse of graph
+        ArrayList<Edge>[] InvGraph = new ArrayList[N];
+        for (int i = 0; i < InvGraph.length; i++) {
+            InvGraph[i] = new ArrayList<>();
+        }
+        for (int i = 0; i < N; i++) {
+            for (Edge e : graph[i]) {
+                InvGraph[e.v].add(new Edge(i, e.w));
+            }
+        }
+        // 3. Dfs(post order) on graph on the basis of topological sort order
+        visited = new boolean[N];
+        int count = 0;
+        while (st.size() != 0) {
+            int rm = st.removeLast();
+            if (visited[rm] == false) {
+                dfs_02(rm, InvGraph, visited);
+                count++;
+            }
+        }
+        System.out.println("No of strongly connected components are:" + count);
     }
 
     @SuppressWarnings("unchecked")

@@ -298,4 +298,44 @@ public class DFSquestions {
         }
     }
 
+    //Mother Vertex
+    //https://practice.geeksforgeeks.org/problems/mother-vertex/1?utm_source=gfg&utm_medium=article&utm_campaign=bottom_sticky_on_article
+    class Solution7 {
+        void dfs_motherVtx(int src, ArrayList<ArrayList<Integer>> graph, boolean[] vis) {
+            vis[src] = true;
+            for (int v : graph.get(src)) {
+                if (!vis[v])
+                    dfs_motherVtx(v, graph, vis);
+            }
+        }
+
+        int dfs_motherVtx_02(int src, ArrayList<ArrayList<Integer>> graph, boolean[] vis) {
+
+            vis[src] = true;
+            int size = 1;
+            for (int v : graph.get(src)) {
+                if (!vis[v])
+                    size += dfs_motherVtx_02(v, graph, vis);
+            }
+
+            return size;
+        }
+
+        public int findMotherVertex(int V, ArrayList<ArrayList<Integer>> graph) {
+            boolean[] vis = new boolean[V];
+            int lastVtx = -1;
+            for (int i = 0; i < V; i++) {
+                if (!vis[i]) {
+                    dfs_motherVtx(i, graph, vis);
+                    lastVtx = i;
+                }
+            }
+
+            vis = new boolean[V];
+            int count = dfs_motherVtx_02(lastVtx, graph, vis);
+            return count == V ? lastVtx : -1;
+        }
+
+    }
+
 }
