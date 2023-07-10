@@ -58,7 +58,7 @@ public class L001 {
                         + upperBound);
             else
                 System.out.println("The upper bound of " + key
-                        + " does not exists.");
+                        + " does not exists."+ upperBound);
             return;
         }
 

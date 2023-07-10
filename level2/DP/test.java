@@ -1,6 +1,20 @@
+import java.lang.reflect.Array;
 import java.util.Arrays;
 
 public class test {
+    private static void display(int[] dp) {
+        for (int i = 0; i < dp.length; i++) {
+            System.out.print(dp[i] + " ");
+        }
+    }
+
+    private static void display2D(int[][] dp) {
+        for (int i = 0; i < dp.length; i++) {
+            display(dp[i]);
+            System.out.println();
+        }
+    }
+
     private static int friendsPairing(int n, String psf, boolean[] visited) {
         int idx = 1;
         while (idx <= n) {
@@ -151,10 +165,157 @@ public class test {
         System.out.println(regularExpressionMatching_memo(s1, s2, s1.length(), s2.length(), dp));
     }
 
+    private static int maze_rec(int i, int j, int n, int m, int[][] dir) {
+        if (i == n - 1 && j == m - 1) {
+            return 1;
+        }
+        int count = 0;
+        for (int d = 0; d < dir.length; d++) {
+            int x = i + dir[d][0];
+            int y = j + dir[d][1];
+            if (x >= 0 && x < n && y >= 0 && y < m) {
+                count += maze_rec(x, y, n, m, dir);
+            }
+        }
+        return count;
+    }
+
+    private static int maze_memo(int i, int j, int n, int m, int[][] dir, int[][] dp) {
+        if (i == n - 1 && j == m - 1) {
+            return dp[i][j] = 1;
+        }
+        if (dp[i][j] != -1) {
+            return dp[i][j];
+        }
+        int count = 0;
+        for (int d = 0; d < dir.length; d++) {
+            int x = i + dir[d][0];
+            int y = j + dir[d][1];
+            if (x >= 0 && x < n && y >= 0 && y < m) {
+                count += maze_memo(x, y, n, m, dir, dp);
+            }
+        }
+        return dp[i][j] = count;
+    }
+
+    private static int maze_tabu(int I, int J, int N, int M, int[][] dir, int[][] dp) {
+        for (int i = N - 1; i >= 0; i--) {
+            for (int j = M - 1; j >= 0; j--) {
+                if (i == N - 1 && j == M - 1) {
+                    dp[i][j] = 1;
+                    continue;
+                }
+                int count = 0;
+                for (int d = 0; d < dir.length; d++) {
+                    int x = i + dir[d][0];
+                    int y = j + dir[d][1];
+                    if (x >= 0 && x < N && y >= 0 && y < M) {
+                        count += dp[x][y]; // maze_memo(x, y, N, M, dir, dp);
+                    }
+                }
+                dp[i][j] = count;
+            }
+        }
+        return dp[I][J];
+    }
+
+    private static void mazeCall() {
+        int n = 3, m = 3;
+        int[][] dir = { { 0, 1 }, { 1, 0 }, { 1, 1 } };
+        // System.out.println(maze_rec(0, 0, n, m,dir));
+        // int[][] dp = new int[n][m];
+        // for (int[] d : dp) {
+        // Arrays.fill(d, -1);
+        // }
+        // System.out.println(maze_memo(0, 0, n, m, dir, dp));
+        // System.out.println(maze_tabu(0, 0, n, m, dir, dp));
+
+    }
+
+    private static int mazeJump_rec(int sr, int sc, int er, int ec, int[][] dir) {
+        if (sr == er - 1 && sc == ec - 1) {
+            return 1;
+        }
+        int count = 0;
+        for (int d = 0; d < dir.length; d++) {
+            for (int r = 1; r <= Math.min(er, ec); r++) {
+                int x = sr + r * dir[d][0];
+                int y = sc + r * dir[d][1];
+                if (x >= 0 && x < er && y >= 0 && y < ec) {
+                    count += mazeJump_rec(x, y, er, ec, dir);
+                } else {
+                    break;
+                }
+            }
+        }
+        return count;
+    }
+
+    private static int mazeJump_memo(int sr, int sc, int er, int ec, int[][] dir, int[][] dp) {
+        if (sr == er - 1 && sc == ec - 1) {
+            return dp[sr][sc] = 1;
+        }
+        if (dp[sr][sc] != -1) {
+            return dp[sr][sc];
+        }
+        int count = 0;
+        for (int d = 0; d < dir.length; d++) {
+            for (int r = 1; r <= Math.min(er, ec); r++) {
+                int x = sr + r * dir[d][0];
+                int y = sc + r * dir[d][1];
+                if (x >= 0 && x < er && y >= 0 && y < ec) {
+                    count += mazeJump_memo(x, y, er, ec, dir, dp);
+                } else {
+                    break;
+                }
+            }
+        }
+        return dp[sr][sc] = count;
+    }
+
+    private static int mazeJump_tabu(int SR, int SC, int ER, int EC, int[][] dir, int[][] dp) {
+        for (int sr = ER - 1; sr >= 0; sr--) {
+            for (int sc = EC - 1; sc >= 0; sc--) {
+                if (sr == ER - 1 && sc == EC - 1) {
+                    dp[sr][sc] = 1;
+                    continue;
+                }
+                int count = 0;
+                for (int d = 0; d < dir.length; d++) {
+                    for (int r = 1; r <= Math.min(ER, EC); r++) {
+                        int x = sr + r * dir[d][0];
+                        int y = sc + r * dir[d][1];
+                        if (x >= 0 && x < ER && y >= 0 && y < EC) {
+                            count += dp[x][y]; // mazeJump_memo(x, y, ER, EC, dir);
+                        } else {
+                            break;
+                        }
+                    }
+                }
+                dp[sr][sc] = count;
+            }
+        }
+        return dp[SR][SC];
+    }
+
+    private static void mazeJumpCall() {
+        int n = 3, m = 3;
+        int[][] dir = { { 0, 1 }, { 1, 0 }, { 1, 1 } };
+        // System.out.println(mazeJump_rec(0, 0, n, m, dir));
+        int[][] dp = new int[n][m];
+        for (int[] d : dp)
+            Arrays.fill(d, -1);
+        // System.out.println(mazeJump_memo(0, 0, n, m, dir, dp));
+        // System.out.println(mazeJump_tabu(0, 0, n, m, dir, dp));
+        // display2D(dp);
+    }
+
     public static void main(String[] args) {
         // friendsCall();
         // distinceSubseqCall();
         // regularExpMatchCall();
-        System.out.println(Math.floor(Math.sqrt(10)));
+        // System.out.println(Math.floor(Math.sqrt(10)));
+        // mazeCall();
+        mazeJumpCall();
     }
 }
