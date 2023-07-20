@@ -160,7 +160,7 @@ public class l003 {
         // int[][] mat = { { 1, 1 }, { 1, 1 } };
         // ArrayList<String> res = new ArrayList<>();
         // System.out.println(mazePath_shortest(0, 0, mat, dir, dirS, res, ""));
-        // equal();
-        permuteCall();
+        equal();
+        // permuteCall();
     }
 }
