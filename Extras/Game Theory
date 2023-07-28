@@ -1,0 +1,44 @@
+class Solution {
+    //Logic OP
+//      [3,2,4]
+//        3/\4---------- 1st player's decision
+//     [2,4] [3,2]
+//     2/ \4  3/ \2----- 2nd player's decision
+//     [4][2] [2][3]
+
+// currently 1st with choosable i, j,
+//         1.if 1st picks nums[i], 2nd can pick either ends of nums[i + 1, j]
+//             a.if 2nd picks nums[i + 1], 1st can pick either ends of nums[i + 2, j]
+//             b.if 2nd picks nums[j], 1st can pick either ends of nums[i + 1, j - 1]
+//             since 2nd plays to maximize his score, 1st can get nums[i] + min(1.a, 1.b)
+						
+//         2.if 1st picks nums[j], 2nd can pick either ends of nums[i, j - 1]
+//             a.if 2nd picks nums[i], 1st can pick either ends of nums[i + 1, j - 1];
+//             b.if 2nd picks nums[j - 1], 1st can pick either ends of nums[i, j - 2];
+//             since 2nd plays to maximize his score, 1st can get nums[j] + min(2.a, 2.b)
+        
+//         since the 1st plays to maximize his score, 1st can get max(nums[i] + min(1.a, 1.b), nums[j] + min(2.a, 2.b));
+    
+    
+    //Leetcode 486. Predict the Winner
+    private int solve(int[] nums,int si,int en)
+    {
+        if(si>en)
+        {
+            return 0;
+        }
+        if(si==en)
+        {
+            return nums[si];
+        }
+        int score=Math.max(nums[si]+Math.min(solve(nums,si+2,en),solve(nums,si+1,en-1)),nums[en]+Math.min(solve(nums,si+1,en-1),solve(nums,si,en-2)));
+        return score;
+    }
+    public boolean PredictTheWinner(int[] nums) {
+        int total=0;
+        for(int x:nums)
+            total+=x;
+        int firstPersonMaxScore=solve(nums,0,nums.length-1);
+        return firstPersonMaxScore>=(total-firstPersonMaxScore);
+    }
+}
