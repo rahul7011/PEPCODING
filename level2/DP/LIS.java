@@ -1,7 +1,7 @@
 import java.util.Arrays;
 
 public class LIS {
-    // 300. Longest Increasing Subsequence
+    // 300. Longest Increasing Subsequence O(n2)
     class Solution {
         public static int longestIncreasingSubseq(int[] arr, int ei) {
             int max = 1;
@@ -44,6 +44,35 @@ public class LIS {
             return max;
         }
 
+
+    private static int lower_bound(List<Integer> nums, int target) {
+        int low = 0, high = nums.size() - 1;
+        while (low < high) {
+            int mid = low + (high - low) / 2;
+            if (nums.get(mid) < target)
+                low = mid + 1;
+            else
+                high = mid;
+        }
+        if (low < nums.size() && nums.get(low) < target)
+            return low + 1;
+        return low;
+    }
+
+    // O(nlogn) now we are talking
+    private static int LIS_optimised(int[] arr, int[] dp) {
+        List<Integer> lis = new ArrayList<>();
+        lis.add(arr[0]);
+        for (int i = 1; i < arr.length; i++) {
+            if (lis.get(lis.size() - 1) < arr[i]) {
+                lis.add(arr[i]);
+            } else {
+                int idx = lower_bound(lis, arr[i]);
+                lis.set(idx, arr[i]);
+            }
+        }
+        return lis.size();
+    }
         public int lengthOfLIS(int[] arr) {
             int[] dp = new int[arr.length];
             // int max=0;
@@ -53,7 +82,8 @@ public class LIS {
             // max=Math.max(max,longestIncreasingSubseq_memo(arr, i,dp));
             // }
             // return max;
-            return longestIncreasingSubseq_tabu(arr, dp);
+            // return longestIncreasingSubseq_tabu(arr, dp);
+            return LIS_optimised(arr, dp);
         }
     }
 
