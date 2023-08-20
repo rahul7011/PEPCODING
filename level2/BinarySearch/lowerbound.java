@@ -22,6 +22,8 @@ public class lowerbound {
     }
 }
 /*
+ *    the next smallest number just greater than or equal to that number
+ *
  * Input : 4 6 10 12 18 18 20 20 30 45
  * Output : lower_bound for element 18 at index 4
  * 
