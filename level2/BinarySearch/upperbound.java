@@ -25,6 +25,8 @@ public class upperbound {
 }
 
 /*
+ *    returns the index of the first element in the array which has a value greater than key or last if no such element is found
+ *
  * Input : 10 20 30 30 40 50
  * Output : upper_bound for element 30 is 40 at index 4
  * Input : 10 20 30 40 50
