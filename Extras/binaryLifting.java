@@ -89,3 +89,93 @@ public class binaryLifting {
         }
     }
 }
+
+//Lowest Common Ancestor 
+//O(n) to precompute but after that logn operation for finding LCA
+//Note:This solution is perfect but it wont work on leetcode because of the constraints of node's value(-1e5 to 1e5) which is not possible to s
+//store inside an primitive array,to solve this using binary Lifting i have to use Maps but using maps I would have lost the original 
+//binaryLifting concept thats why I havent used it here.
+// https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/description/
+class Solution {
+    private void getDepth(TreeNode node,int currDepth,HashMap<Integer,Integer>depth)
+    {
+        if(node==null)
+        {
+            return;
+        }
+        depth.put(node.val,currDepth);
+        getDepth(node.left,currDepth+1,depth);
+        getDepth(node.right,currDepth+1,depth);
+    }
+    //up[node][2^i level]
+    private static void bLifting(TreeNode node, TreeNode par,TreeNode[][] up) {
+        if(node==null)
+        {
+            return;
+        }
+        up[node.val][0]=par;
+        for(int i=1;i<20;i++)
+        {
+            if(up[node.val][i-1]!=null)
+            {
+                up[node.val][i]=up[(up[node.val][i-1]).val][i-1];
+            }else{
+                up[node.val][i]=null;
+            }
+        }
+        bLifting(node.left,node,up);
+        bLifting(node.right,node,up);
+    }
+    private TreeNode makeLevelSame(TreeNode node,int k,TreeNode[][] up)
+    {
+        if (node == null || k == 0) {
+            return node;
+        }
+        for(int i=19;i>=0;i--)
+        {
+            int mask=(1<<i);
+            if ((mask & k) != 0) {
+                return makeLevelSame(up[node.val][i], k - mask, up);
+            }
+        }
+        return null;
+    }
+    private TreeNode LCAusingBLifting(TreeNode p,TreeNode q,TreeNode[][]up)
+    {
+        //if parents are same then we have got the LCA
+        if(up[p.val][0]==up[q.val][0])
+        {
+            return up[p.val][0];
+        }
+        for(int i=19;i>=0;i--)
+        {
+            if (up[p.val][i]!=up[q.val][i]) {
+                return LCAusingBLifting(up[p.val][i],up[q.val][i],up);
+            }
+        }
+        return null;
+    }
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        HashMap<Integer,Integer>depth=new HashMap<>();
+        getDepth(root,0,depth);
+        //There are 10^5 nodes that means log2(10^5) ~= 17 => 17+3 => 20
+        TreeNode[][]up=new TreeNode[(int)1e5+3][17+3];
+        bLifting(root,null,up);
+        int depthP=depth.get(p.val);
+        int depthQ=depth.get(q.val);
+        //Now we need to make sure that they are on the same depth
+        if(depthP<depthQ)
+        {
+            q=makeLevelSame(q,depthQ-depthP,up);
+        }else{
+            p=makeLevelSame(p,depthP-depthQ,up);
+        }
+        //Now they are on same depth
+        if(p==q)
+        {
+            return p;
+        }else{
+            return LCAusingBLifting(p,q,up);
+        }
+    }
+}
